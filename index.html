@@ -6,6 +6,8 @@
 <meta name="color-scheme" content="dark light">
 <title>Lobby</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link rel="preconnect" href="https://www.google.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -106,14 +108,14 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .hd.rz{left:-8px;bottom:-8px;width:12px;height:12px;cursor:pointer;background:#fff;color:#2b2540;font-size:9px;line-height:8px;text-align:center;font-weight:800;border-color:#9d8cff}
 .vids{display:none;font-size:.8rem;color:var(--muted)}
 .vids.has{display:block}
-.vbox{position:absolute;width:320px;aspect-ratio:16/9;pointer-events:auto;background:#000;border:2px solid #9d8cff;border-radius:10px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.vbox{position:absolute;width:320px;aspect-ratio:16/9;pointer-events:auto;background:#000;border:2px solid #9d8cff;border-radius:10px;overflow:visible;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .vbox.drag{opacity:.85;z-index:2}
-.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.vbar{position:absolute;left:0;right:0;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.2rem .6rem;font-size:.7rem;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;color:#fff;background:rgba(20,16,42,.35);opacity:.6;transition:opacity .2s}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:8px}
+.vbar{position:absolute;left:0;right:0;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.2rem .6rem;font-size:.7rem;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;color:#fff;background:rgba(20,16,42,.35);border-radius:8px 8px 0 0;opacity:.6;transition:opacity .2s}
 .vbox:hover .vbar,.vbox.drag .vbar{opacity:1}
 .vbar a{color:inherit}
 .vbox.drag .vbar{cursor:grabbing}
-.vgrip{position:absolute;right:0;bottom:0;z-index:1;width:22px;height:22px;cursor:nwse-resize;touch-action:none;background:linear-gradient(135deg,transparent 50%,rgba(157,140,255,.8) 50%);opacity:.7}
+.vgrip{position:absolute;right:-10px;bottom:-10px;z-index:2;width:18px;height:18px;border-radius:50%;background:#9d8cff;border:2px solid #fff;cursor:nwse-resize;touch-action:none}
 .vghost{position:absolute;border:2px dashed #9d8cff;border-radius:10px;background:rgba(157,140,255,.18);pointer-events:none}
 .social{display:flex;gap:1rem}
 .social a{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;color:var(--panel-ink);border:1.5px solid currentColor;transition:transform .2s}
@@ -387,7 +389,7 @@ function ytParse(raw){
     return {id:id,start:/^\d+s?$/.test(t)?parseInt(t,10):0};
   }catch(e){return null}
 }
-function placeV(k){var b=vnodes[k],p=vpos[k];if(b&&p){b.style.left=p.x+"px";b.style.top=p.y+"px";b.style.width=(p.w||320)+"px"}}
+function placeV(k){var b=vnodes[k],p=vpos[k];if(b&&p){b.style.left=p.x+"px";b.style.top=p.y+"px";b.style.width=Math.max(240,p.w||320)+"px"}}
 function makeVbox(f){
   var k=f.key,box=el("div","vbox"),bar=el("div","vbar");
   bar.appendChild(el("span","","Drag to move"));
@@ -395,7 +397,7 @@ function makeVbox(f){
   bar.appendChild(a);
   var fr=document.createElement("iframe");
   fr.src="https://www.youtube-nocookie.com/embed/"+f.id+"?rel=0"+(f.start?"&start="+f.start:"");
-  fr.title="YouTube video";fr.loading="lazy";
+  fr.title="YouTube video";
   fr.allow="accelerometer; encrypted-media; picture-in-picture; fullscreen";
   fr.setAttribute("allowfullscreen","");fr.referrerPolicy="strict-origin-when-cross-origin";
   var grip=el("div","vgrip");grip.title="Resize";
@@ -432,7 +434,7 @@ function makeVbox(f){
   });
   grip.addEventListener("pointermove",function(e){
     if(!rs)return;
-    var w=Math.min(900,Math.max(160,rs.w+e.clientX-rs.sx));
+    var w=Math.min(900,Math.max(240,rs.w+e.clientX-rs.sx));
     vpos[k].w=Math.round(w);box.style.width=vpos[k].w+"px";
   });
   function rend(){if(rs){rs=null;$("emsg").textContent="Press Save to keep your changes."}}
