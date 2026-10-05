@@ -30,7 +30,7 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .loaded .hero h1{opacity:1;transform:none}
 .panel{position:relative;z-index:1;background:var(--panel);min-height:100vh;display:flex;flex-direction:column;margin-top:-32px;padding-top:32px}
 .panel section{min-height:80vh;padding:15vh 8vw}
-.panel footer{margin-top:auto;padding:12vh 6vw calc(2rem + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;justify-content:space-between;gap:2rem}
+.panel footer{margin-top:auto;padding:2.2rem 6vw calc(2rem + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;border-top:1px solid rgba(127,127,127,.25)}
 .tiny{font-size:.55rem;line-height:1.4;max-width:34ch;color:var(--muted)}
 
 .hero{flex-direction:column;gap:2rem}
@@ -121,6 +121,25 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .vbox.drag .vbar{cursor:grabbing}
 .vgrip{position:absolute;right:-10px;bottom:-10px;z-index:2;width:18px;height:18px;border-radius:50%;background:#9d8cff;border:2px solid #fff;cursor:nwse-resize;touch-action:none}
 .vghost{position:absolute;border:2px dashed #9d8cff;border-radius:10px;background:rgba(157,140,255,.18);pointer-events:none}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(620px 420px at 12% 18%,rgba(157,140,255,.2),transparent 70%),radial-gradient(520px 380px at 88% 70%,rgba(90,140,255,.14),transparent 70%)}
+.panel>*{position:relative}
+.home{flex:1;display:flex;flex-direction:column;justify-content:center;gap:2.2rem;width:min(1000px,100%);margin:0 auto;padding:10vh 6vw}
+.eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
+.intro h2{font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.03em;line-height:1.05}
+.intro p{color:var(--muted);margin-top:.7rem;max-width:44ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem}
+.card{font:inherit;text-align:left;color:inherit;display:flex;flex-direction:column;gap:.5rem;padding:1.6rem;border-radius:22px;border:1.5px solid rgba(127,127,127,.35);background:rgba(127,127,127,.08);min-height:190px;transition:transform .2s,border-color .2s,box-shadow .2s}
+button.card{cursor:pointer}
+button.card:hover{transform:translateY(-4px);border-color:#9d8cff;box-shadow:0 12px 34px rgba(157,140,255,.22)}
+button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
+.card .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--hero);color:#f2eefc;margin-bottom:.6rem}
+.card .ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:1.4rem;letter-spacing:-.02em}
+.card p{color:var(--muted);font-size:.95rem}
+.card .go{margin-top:auto;font-size:.9rem;font-weight:800}
+.card.soon{border-style:dashed;opacity:.65;justify-content:center}
+.rsbtn{right:auto;left:1rem}
+@media (prefers-reduced-motion:reduce){button.card{transition:none}}
 .social{display:flex;gap:1rem}
 .social a{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;color:var(--panel-ink);border:1.5px solid currentColor;transition:transform .2s}
 .social a:hover{transform:translateY(-3px)}
@@ -173,7 +192,7 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
   <button class="link" id="ncancel" type="button">Cancel</button>
 </div></div>
 <div class="overlay" id="ed"><div class="modal-card editor" role="dialog" aria-label="Note editor">
-  <button class="back fsbtn" id="fsbtn" type="button">Fullscreen</button>
+  <button class="back fsbtn rsbtn" id="rsbtn" type="button">Reset size</button><button class="back fsbtn" id="fsbtn" type="button">Fullscreen</button>
   <div class="edgrip l" id="edgl" title="Resize"></div><div class="edgrip r" id="edgr" title="Resize"></div>
   <h2 class="ntitle" id="etitle"></h2>
   <div class="page"><textarea class="ntext" id="etext" aria-label="Note text" placeholder="Start writing... Type :play:yt: followed by a YouTube link to add a video"></textarea><div class="mir" id="mir" aria-hidden="true"></div><div class="layer" id="layer"></div><div class="layer" id="vlayer"></div></div>
@@ -187,10 +206,27 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
   <p class="welcome hidden" id="wel"></p>
 </header>
 <main class="panel">
-  <section class="first"><button class="shared-btn" id="sharedbtn" type="button">My Notes</button></section>
-  <section></section>
+  <div class="home">
+    <div class="intro">
+      <p class="eyebrow">Your space</p>
+      <h2 id="greet">Welcome to the Lobby</h2>
+      <p id="sub">Write things down, keep them safe, and come back to them anytime.</p>
+    </div>
+    <div class="cards">
+      <button class="card" id="sharedbtn" type="button">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/></svg></span>
+        <h3>My Notes</h3>
+        <p id="ncount">Log in to start writing.</p>
+        <span class="go">Open &rarr;</span>
+      </button>
+      <div class="card soon">
+        <h3>More coming soon</h3>
+        <p>New things will show up here.</p>
+      </div>
+    </div>
+  </div>
   <footer>
-    <p class="tiny">Lobby is a notebook for keeping information and socials in one place. Write things down, they save automatically, and you can post them when you want to share.</p>
+    <div><p class="tiny">Lobby is a notebook for keeping information and socials in one place. Write things down, they save automatically, and you can post them when you want to share.</p><p class="tiny" style="margin-top:.7rem">Version I</p></div>
     <nav class="social" aria-label="Contact">
       <a href="https://www.instagram.com/didderblud/" target="_blank" rel="noopener" aria-label="Instagram">
         <svg viewBox="0 0 24 24"><path d="M12 7.4A4.6 4.6 0 1 0 12 16.6 4.6 4.6 0 0 0 12 7.4Zm0 7.6a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm5.9-7.8a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0ZM21 8.1c-.1-1.5-.4-2.8-1.5-3.9S17.400 2.700 15.900 2.600C14.300 2.500 9.700 2.500 8.100 2.600 6.600 2.700 5.300 3 4.200 4.100S2.700 6.600 2.600 8.100c-.1 1.600-.1 6.200 0 7.800.1 1.500.4 2.800 1.500 3.900s2.400 1.400 3.900 1.500c1.600.1 6.200.1 7.800 0 1.500-.1 2.800-.4 3.900-1.500s1.400-2.400 1.500-3.900c.1-1.600.1-6.200 0-7.800Zm-2 9.500a3.200 3.200 0 0 1-1.800 1.800c-1.300.5-4.300.4-5.700.4s-4.400.1-5.700-.4a3.200 3.200 0 0 1-1.800-1.800c-.5-1.300-.4-4.300-.4-5.700s-.1-4.400.4-5.700A3.200 3.200 0 0 1 6.300 4.400c1.300-.5 4.300-.4 5.700-.4s4.400-.1 5.700.4a3.200 3.200 0 0 1 1.800 1.800c.5 1.300.4 4.300.4 5.700s.1 4.400-.4 5.700Z"/></svg>
@@ -229,6 +265,7 @@ function render(){
   $("pout").classList.toggle("hidden",!!u);
   $("pin").classList.toggle("hidden",!u);
   if(u)$("pname").value=u.name||"";
+  $("greet").textContent=u?"Welcome back, "+(u.name||current.split("@")[0]):"Welcome to the Lobby";
   if(typeof buildNotes==="function"&&$("nlist"))buildNotes();
 }
 function openAuth(m){
@@ -517,11 +554,13 @@ function applyEdSize(){
   function end(){if(st){st=null;try{localStorage.setItem("lobby_edsize",JSON.stringify(edSize))}catch(e){}}}
   h.addEventListener("pointerup",end);h.addEventListener("pointercancel",end);
 });
+$("rsbtn").onclick=function(){edSize=null;try{localStorage.removeItem("lobby_edsize")}catch(e){}applyEdSize()};
 var curNote=null,delArm=false;
 function myNotes(){var u=current&&users()[current];if(!u)return null;if(!u.notes)u.notes=[];return u.notes}
 function saveNotes(notes){var all=users();if(!current||!all[current])return false;all[current].notes=notes;return save(USERS,all)}
 function buildNotes(){
   var n=myNotes();
+  $("ncount").textContent=n?(n.length===1?"1 note":n.length+" notes"):"Log in to start writing.";
   $("nout").classList.toggle("hidden",!!n);
   $("nin").classList.toggle("hidden",!n);
   var list=$("nlist");list.innerHTML="";
