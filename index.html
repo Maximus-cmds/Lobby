@@ -13,7 +13,7 @@
 :root{
   --hero:#2b2540; --hero-ink:#f2eefc;
   --panel:#ebe9f2; --panel-ink:#2b2540; --muted:#6d6785;
-  --shadow:rgba(10,6,25,.45);
+  --shadow:rgba(10,6,25,.45);--accent:var(--accent);--glow1:color-mix(in srgb,var(--accent) 20%,transparent);--glow2:rgba(90,140,255,.14);--scrim:rgba(10,6,25,.4);
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
 }
@@ -38,25 +38,25 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .loaded .auth-actions{opacity:1}
 .btn{font:inherit;font-weight:500;font-size:1rem;padding:.7rem 1.5rem;border-radius:999px;border:1.5px solid var(--hero-ink);background:transparent;color:var(--hero-ink);cursor:pointer}
 .btn.fill{background:var(--hero-ink);color:var(--hero)}
-.btn:focus-visible,.pbtn:focus-visible,.field input:focus-visible{outline:3px solid #9d8cff;outline-offset:2px}
+.btn:focus-visible,.pbtn:focus-visible,.field input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .welcome{color:var(--hero-ink);opacity:.8;font-size:1.05rem}
-.pbtn{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));right:16px;z-index:20;width:44px;height:44px;border-radius:50%;border:1.5px solid #f2eefc;background:#2b2540;color:#f2eefc;display:grid;place-items:center;cursor:pointer;overflow:hidden;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.pbtn{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));right:16px;z-index:20;width:44px;height:44px;border-radius:50%;border:2px solid var(--hero-ink);background:var(--hero);color:var(--hero-ink);display:grid;place-items:center;cursor:pointer;overflow:hidden;padding:0;box-shadow:0 0 0 2px var(--hero),0 4px 14px rgba(0,0,0,.35)}
 .pbtn svg{width:24px;height:24px;fill:currentColor}
 .pbtn img{width:100%;height:100%;object-fit:cover}
-.pop,.modal-card{background:var(--panel);color:var(--panel-ink);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pop,.modal-card{background:var(--panel);color:var(--panel-ink);border:1.5px solid rgba(127,127,127,.35);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .pop{position:fixed;top:calc(68px + env(safe-area-inset-top,0px));right:16px;z-index:20;width:min(280px,calc(100vw - 32px));padding:1.2rem;display:none;flex-direction:column;gap:.8rem}
 .pop.open{display:flex}
-.avatar{width:84px;height:84px;border-radius:50%;margin:0 auto;background:var(--hero);color:#f2eefc;display:grid;place-items:center;overflow:hidden}
+.avatar{width:84px;height:84px;border-radius:50%;margin:0 auto;background:var(--hero);color:var(--hero-ink);box-shadow:0 0 0 2px var(--muted);display:grid;place-items:center;overflow:hidden}
 .avatar img{width:100%;height:100%;object-fit:cover}
 .avatar svg{width:44px;height:44px;fill:currentColor}
 .link{background:none;border:0;font:inherit;color:var(--muted);text-decoration:underline;cursor:pointer;padding:.2rem;align-self:center}
 .field{display:flex;flex-direction:column;gap:.3rem;font-size:.9rem}
 .field input{font:inherit;padding:.65rem .8rem;border-radius:10px;border:1.5px solid var(--muted);background:transparent;color:inherit}
-.btn.dark{background:var(--hero);color:#f2eefc;border-color:var(--hero)}
+.btn.dark{background:var(--hero);color:var(--hero-ink);border-color:var(--hero-ink)}
 .btn.dark.full{width:100%}
 .msg{font-size:.85rem;min-height:1.1em;color:#c0392b}
 .msg.ok{color:#2e8b57}
-.overlay{position:fixed;inset:0;z-index:30;background:rgba(10,6,25,.6);display:none;align-items:center;justify-content:center;padding:1rem}
+.overlay{position:fixed;inset:0;z-index:30;background:var(--scrim);display:none;align-items:center;justify-content:center;padding:1rem}
 .overlay.open{display:flex}
 .modal-card{width:min(380px,100%);padding:1.6rem;display:flex;flex-direction:column;gap:.9rem}
 .modal-card h2{font-size:1.6rem;letter-spacing:-.02em}
@@ -64,7 +64,7 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 
 .panel section.first{min-height:50vh;padding-top:6vh}
 .shared-btn{font:inherit;font-weight:500;font-size:1.05rem;padding:.8rem 2.2rem;border-radius:999px;border:2px solid var(--panel-ink);background:transparent;color:var(--panel-ink);cursor:pointer}
-.shared-btn:focus-visible,.back:focus-visible,.nbox:focus-visible,.ntext:focus-visible,.ntitle:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
+.shared-btn:focus-visible,.back:focus-visible,.nbox:focus-visible,.ntext:focus-visible,.ntitle:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .shared-page{position:fixed;inset:0;z-index:15;background:var(--panel);color:var(--panel-ink);overflow:auto;display:none}
 .shared-page.open{display:block}
 .shared-inner{max-width:560px;margin:0 auto;padding:calc(1.2rem + env(safe-area-inset-top,0px)) 1.2rem 4rem}
@@ -85,7 +85,7 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .srow{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:.85rem;color:var(--muted)}
 .zoom{display:flex;align-items:center;gap:.4rem;border:1.5px solid var(--muted);border-radius:999px;padding:.15rem .3rem}
 .zoom button{font:inherit;width:28px;height:28px;border-radius:50%;border:0;background:transparent;color:var(--panel-ink);cursor:pointer;font-size:1.1rem;line-height:1}
-.zoom button:focus-visible{outline:3px solid #9d8cff}
+.zoom button:focus-visible{outline:3px solid var(--accent)}
 .zoom output{min-width:3.2em;text-align:center;color:var(--panel-ink)}
 .erow{display:flex;justify-content:space-between;align-items:center;gap:1rem}
 .erow .btn{width:auto}
@@ -101,27 +101,26 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:10px}
 .pimg{position:absolute;pointer-events:auto;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 .pimg img{display:block;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
-.pimg.sel{outline:2px solid #9d8cff}
-.hd{position:absolute;display:none;width:14px;height:14px;border-radius:50%;background:#9d8cff;border:2px solid #fff;touch-action:none}
+.pimg.sel{outline:2px solid var(--accent)}
+.hd{position:absolute;display:none;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid #fff;touch-action:none}
 .pimg.sel .hd{display:block}
 .hd.rs{right:-8px;bottom:-8px;cursor:nwse-resize}
 .hd.rx{right:-8px;top:50%;margin-top:-7px;cursor:ew-resize;border-radius:4px;height:22px}
 .hd.ry{bottom:-8px;left:50%;margin-left:-7px;cursor:ns-resize;border-radius:4px;width:22px}
 .hd.ro{left:50%;top:-28px;margin-left:-5px;width:10px;height:10px;cursor:grab}
 .hd.dl{right:-8px;top:-8px;cursor:pointer;background:#c0392b;color:#fff;font-size:11px;line-height:10px;text-align:center;font-weight:800;width:16px;height:16px}
-.hd.rz{left:-8px;bottom:-8px;width:12px;height:12px;cursor:pointer;background:#fff;color:#2b2540;font-size:9px;line-height:8px;text-align:center;font-weight:800;border-color:#9d8cff}
+.hd.rz{left:-8px;bottom:-8px;width:12px;height:12px;cursor:pointer;background:#fff;color:#2b2540;font-size:9px;line-height:8px;text-align:center;font-weight:800;border-color:var(--accent)}
 .vids{display:none;font-size:.8rem;color:var(--muted)}
 .vids.has{display:block}
-.vbox{position:absolute;width:320px;aspect-ratio:16/9;pointer-events:auto;background:#000;border:2px solid #9d8cff;border-radius:10px;overflow:visible;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.vbox{position:absolute;width:320px;aspect-ratio:16/9;pointer-events:auto;background:#000;border:2px solid var(--accent);border-radius:10px;overflow:visible;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .vbox.drag{opacity:.85;z-index:2}
 .vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:8px}
 .vbar{position:absolute;left:0;right:0;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.2rem .6rem;font-size:.7rem;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;color:#fff;background:rgba(20,16,42,.35);border-radius:8px 8px 0 0;opacity:.6;transition:opacity .2s}
 .vbox:hover .vbar,.vbox.drag .vbar{opacity:1}
 .vbar a{color:inherit}
 .vbox.drag .vbar{cursor:grabbing}
-.vgrip{position:absolute;right:-10px;bottom:-10px;z-index:2;width:18px;height:18px;border-radius:50%;background:#9d8cff;border:2px solid #fff;cursor:nwse-resize;touch-action:none}
-.vghost{position:absolute;border:2px dashed #9d8cff;border-radius:10px;background:rgba(157,140,255,.18);pointer-events:none}
-.panel::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(620px 420px at 12% 18%,rgba(157,140,255,.2),transparent 70%),radial-gradient(520px 380px at 88% 70%,rgba(90,140,255,.14),transparent 70%)}
+.vgrip{position:absolute;right:-10px;bottom:-10px;z-index:2;width:18px;height:18px;border-radius:50%;background:var(--accent);border:2px solid #fff;cursor:nwse-resize;touch-action:none}
+.vghost{position:absolute;border:2px dashed var(--accent);border-radius:10px;background:color-mix(in srgb,var(--accent) 18%,transparent);pointer-events:none}
 .panel>*{position:relative}
 .home{flex:1;display:flex;flex-direction:column;justify-content:center;gap:2.2rem;width:min(1000px,100%);margin:0 auto;padding:10vh 6vw}
 .eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
@@ -130,9 +129,9 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem}
 .card{font:inherit;text-align:left;color:inherit;display:flex;flex-direction:column;gap:.5rem;padding:1.6rem;border-radius:22px;border:1.5px solid rgba(127,127,127,.35);background:rgba(127,127,127,.08);min-height:190px;transition:transform .2s,border-color .2s,box-shadow .2s}
 button.card{cursor:pointer}
-button.card:hover{transform:translateY(-4px);border-color:#9d8cff;box-shadow:0 12px 34px rgba(157,140,255,.22)}
-button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
-.card .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--hero);color:#f2eefc;margin-bottom:.6rem}
+button.card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 12px 34px color-mix(in srgb,var(--accent) 22%,transparent)}
+button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.card .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--hero);color:var(--hero-ink);border:1.5px solid rgba(127,127,127,.4);margin-bottom:.6rem}
 .card .ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .card h3{font-size:1.4rem;letter-spacing:-.02em}
 .card p{color:var(--muted);font-size:.95rem}
@@ -146,28 +145,49 @@ button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
 .social a:focus-visible{outline:3px solid var(--muted);outline-offset:3px}
 .social svg{width:20px;height:20px;fill:currentColor}
 @media (prefers-reduced-motion:reduce){.auth-actions{transition:none}.hero h1{transition:none;opacity:1;transform:none}html{scroll-behavior:auto}.social a{transition:none}}
-.chips{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0 1.4rem}
-.chip{font:inherit;font-size:.9rem;display:flex;align-items:center;gap:.5rem;padding:.45rem .9rem;border-radius:999px;border:1.5px solid var(--muted);background:transparent;color:var(--panel-ink);cursor:pointer}
-.chip.on{border-color:#9d8cff;background:rgba(157,140,255,.18)}
-.chip .dot{width:9px;height:9px;border-radius:50%}
-.chip:focus-visible,.lav:focus-visible,.sw:focus-visible,.linp:focus-visible,.cbtn:focus-visible{outline:3px solid #9d8cff;outline-offset:2px}
-.lcard{border:1.5px solid rgba(127,127,127,.35);border-radius:16px;padding:1.2rem;display:flex;flex-direction:column;gap:1rem;background:rgba(127,127,127,.08)}
-.lhead{display:flex;align-items:center;gap:1rem}
-.lav{width:64px;height:64px;border-radius:50%;border:2px solid var(--muted);background:var(--hero);color:#f2eefc;font-size:1.6rem;cursor:pointer;overflow:hidden;padding:0;flex:none}
-.lav img{width:100%;height:100%;object-fit:cover}
-.swatches{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
-.sw{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
-.sw.on{border-color:var(--panel-ink)}
-.swc{width:28px;height:28px;border:0;padding:0;background:none;cursor:pointer}
-.lcap{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
-.lrow{display:flex;gap:.6rem;align-items:flex-start}
-.linp{flex:1;min-width:0;font:inherit;padding:.65rem .8rem;border-radius:10px;border:1.5px solid var(--muted);background:transparent;color:inherit;resize:vertical}
-.cbtn{font:inherit;font-size:.85rem;padding:.4rem .8rem;border-radius:8px;border:1.5px solid #d98a3d;background:transparent;color:#d98a3d;cursor:pointer}
+
+.cog{position:absolute;top:.7rem;right:.7rem;width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;padding:0}
+.cog svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s ease}
+.pop.set .cog svg{transform:rotate(90deg)}
+.cog:focus-visible,.drop:focus-visible,.field select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pop.set #pav,.pop.set #pout,.pop.set #pin{display:none!important}
+.pop:not(.set) #pset{display:none}
+#pset{display:flex;flex-direction:column;gap:.9rem;padding-top:.3rem}
+#pset h3{font-size:1.3rem;letter-spacing:-.02em}
+.field select{font:inherit;padding:.65rem .8rem;border-radius:10px;border:1.5px solid var(--muted);background:var(--panel);color:inherit}
+.crow{display:flex;gap:.6rem;align-items:center}
+.crow input[type=color]{width:48px;height:38px;padding:0;border:1.5px solid var(--muted);border-radius:10px;background:transparent;cursor:pointer}
+.avatar{cursor:pointer}
+.drop{font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:.7rem;padding:2rem 1rem;text-align:center;border:2px dashed var(--muted);border-radius:16px;background:rgba(127,127,127,.08);cursor:pointer}
+.drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.drop svg{width:34px;height:34px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.crst{display:flex;flex-direction:column;align-items:center;gap:.7rem}
+#crc{width:100%;max-width:280px;aspect-ratio:1;border-radius:14px;background:#000;cursor:grab;touch-action:none}
+#crz{width:100%;max-width:280px;accent-color:var(--accent)}
+.hint{font-size:.8rem;color:var(--muted)}
+.vbox.sp{aspect-ratio:auto;height:auto}
+.sphost{position:relative;height:152px;border-radius:8px 8px 0 0;overflow:hidden}
+.vbox.sp.tall .sphost{height:352px}
+.spctl{display:flex;align-items:center;gap:.5rem;padding:.35rem .6rem;background:#121212;color:#fff;font-size:.75rem;border-radius:0 0 8px 8px}
+.spctl input{flex:1;min-width:0;accent-color:var(--accent)}
+.spbtn{font:inherit;background:transparent;border:1.5px solid #fff;color:#fff;border-radius:999px;padding:.1rem .55rem;cursor:pointer}
+.spbtn:focus-visible{outline:3px solid var(--accent)}
+.sptm{white-space:nowrap;min-width:6.5em;text-align:right}
+.swatches{display:flex;flex-wrap:wrap;gap:.5rem}
+.sw{width:30px;height:30px;border-radius:50%;border:2px solid var(--muted);cursor:pointer;padding:0}
+.sw:hover{transform:scale(1.12)}
+.sw:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
 <button class="pbtn" id="pbtn" aria-label="Profile"><svg viewBox="0 0 24 24" id="pico"><path d="M12 12a4.500 4.500 0 1 0 0-9 4.500 4.500 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg></button>
 <div class="pop" id="pop" role="dialog" aria-label="Profile">
+  <button class="cog" id="cog" type="button" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  <div id="pset"><h3 id="sett">Settings</h3>
+    <label class="field">Language<select id="slang"><option value="en">English</option><option value="ja">日本語</option><option value="hu">Magyar</option><option value="zh">中文</option><option value="es">Español</option><option value="mx">Español (México)</option><option value="de">Deutsch</option><option value="la">Latina</option></select></label>
+    <div class="field"><span id="scolt">Site colour</span><div class="crow"><input type="color" id="ccol" value="#2b2540" aria-label="Site colour"><button class="btn dark" id="scolr" type="button">Reset colour</button></div></div>
+    <div class="field"><span id="srect">Recommended colours</span><div class="swatches" id="sw"></div></div>
+  </div>
   <div class="avatar" id="pav"><svg viewBox="0 0 24 24"><path d="M12 12a4.500 4.500 0 1 0 0-9 4.500 4.500 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg></div>
   <div id="pout" class="hidden" style="text-align:center">
     <p style="margin-bottom:.8rem">Log in to set your name and picture.</p>
@@ -194,6 +214,15 @@ button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
     <button class="link" id="aclose" type="button">Cancel</button>
   </div>
 </div>
+<div class="overlay" id="cr"><div class="modal-card" role="dialog" aria-labelledby="crt">
+  <h2 id="crt">Profile picture</h2>
+  <input type="file" id="crfile" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden>
+  <button class="drop" id="crdrop" type="button"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><span id="crdt">Insert picture .jpg, .png, .webp here</span></button>
+  <div class="crst hidden" id="crst"><canvas id="crc" width="280" height="280"></canvas><input type="range" id="crz" min="1" max="4" step="0.01" value="1" aria-label="Zoom"><p class="hint" id="crhint">Drag to move, slide to zoom.</p></div>
+  <p class="msg" id="crm" role="alert"></p>
+  <button class="btn dark full hidden" id="crok" type="button">Apply</button>
+  <button class="link" id="crcancel" type="button">Cancel</button>
+</div></div>
 <div class="shared-page" id="sp" role="dialog" aria-label="My Notes">
   <div class="shared-inner">
     <div class="sbar"><button class="back" id="sback" type="button">Back</button><h2>My Notes</h2></div>
@@ -208,31 +237,11 @@ button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
   <button class="btn dark full" id="nmake" type="button">Create</button>
   <button class="link" id="ncancel" type="button">Cancel</button>
 </div></div>
-<div class="shared-page" id="lp" role="dialog" aria-label="Lorebooks"><div class="shared-inner">
-  <div class="sbar"><button class="back" id="lback" type="button">Back</button><h2>Lorebooks</h2></div>
-  <div id="lout" class="hidden"><p>Log in to make lorebooks. Only you can see them.</p><p style="margin-top:1rem"><button class="btn dark" id="llogin" type="button">Log in / Sign up</button></p></div>
-  <div id="lin" class="hidden"><button class="btn dark" id="lmake" type="button">Create module</button><div class="nlist" id="llist"></div></div>
-</div></div>
-<div class="overlay" id="lm"><div class="modal-card" role="dialog" aria-labelledby="lmt">
-  <h2 id="lmt">New module</h2>
-  <label class="field">Name<input id="lmn" maxlength="60" placeholder="My first lorebook"></label>
-  <label class="field">Description<input id="lmd" maxlength="140" placeholder="What is it about?"></label>
-  <p class="msg" id="lmm" role="alert"></p>
-  <button class="btn dark full" id="lmsave" type="button">Save</button>
-  <button class="link" id="lmcancel" type="button">Cancel</button>
-</div></div>
-<div class="shared-page" id="lv" role="dialog" aria-label="Lorebook module"><div class="shared-inner">
-  <div class="sbar"><button class="back" id="vback" type="button">Back</button><h2 id="vtitle"></h2></div>
-  <p class="eyebrow" id="vmeta"></p>
-  <div class="chips" id="chips"></div>
-  <div id="vbody"></div>
-  <p style="margin-top:2rem;text-align:center"><button class="link" id="vdel" type="button">Delete module</button></p>
-</div></div>
 <div class="overlay" id="ed"><div class="modal-card editor" role="dialog" aria-label="Note editor">
   <button class="back fsbtn rsbtn" id="rsbtn" type="button">Reset size</button><button class="back fsbtn" id="fsbtn" type="button">Fullscreen</button>
   <div class="edgrip l" id="edgl" title="Resize"></div><div class="edgrip r" id="edgr" title="Resize"></div>
   <h2 class="ntitle" id="etitle"></h2>
-  <div class="page"><textarea class="ntext" id="etext" aria-label="Note text" placeholder="Start writing... Type :play:yt: followed by a YouTube link to add a video"></textarea><div class="mir" id="mir" aria-hidden="true"></div><div class="layer" id="layer"></div><div class="layer" id="vlayer"></div></div>
+  <div class="page"><textarea class="ntext" id="etext" aria-label="Note text" placeholder="Start writing... Type :play:yt: + YouTube link for a video, or :play:sp: + Spotify link for a song"></textarea><div class="mir" id="mir" aria-hidden="true"></div><div class="layer" id="layer"></div><div class="layer" id="vlayer"></div></div>
   <div class="vids" id="vids"></div>
   <div class="srow"><span id="ecount">0 characters</span><button class="link" id="addpic" type="button">Add picture</button><input type="file" id="picfile" accept="image/*" multiple hidden><div class="zoom" aria-label="Text size"><button type="button" id="zout" aria-label="Smaller text">&minus;</button><output id="zval">100%</output><button type="button" id="zin" aria-label="Larger text">+</button></div></div>
   <p class="msg ok" id="emsg" role="status"></p>
@@ -254,12 +263,6 @@ button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
         <span class="ic"><svg viewBox="0 0 24 24"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/></svg></span>
         <h3>My Notes</h3>
         <p id="ncount">Log in to start writing.</p>
-        <span class="go">Open &rarr;</span>
-      </button>
-      <button class="card" id="lorebtn" type="button">
-        <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 8h6"/></svg></span>
-        <h3>Lorebooks</h3>
-        <p id="lcount">Log in to start.</p>
         <span class="go">Open &rarr;</span>
       </button>
       <div class="card soon">
@@ -300,7 +303,7 @@ function render(){
   if(!u){current=null}
   $("acts").classList.toggle("hidden",!!u);
   $("wel").classList.toggle("hidden",!u);
-  if(u)$("wel").textContent="Welcome, "+(u.name||current);
+  if(u)$("wel").textContent=t("welcome_u")+(u.name||current);
   var pic=u&&u.pfp;
   var ph='<svg viewBox="0 0 24 24"><path d="M12 12a4.500 4.500 0 1 0 0-9 4.500 4.500 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg>';
   $("pbtn").innerHTML=pic?'<img alt="" src="'+pic+'">':ph;
@@ -308,15 +311,14 @@ function render(){
   $("pout").classList.toggle("hidden",!!u);
   $("pin").classList.toggle("hidden",!u);
   if(u)$("pname").value=u.name||"";
-  $("greet").textContent=u?"Welcome back, "+(u.name||current.split("@")[0]):"Welcome to the Lobby";
+  $("greet").textContent=u?t("back")+(u.name||current.split("@")[0]):t("welcome");
   if(typeof buildNotes==="function"&&$("nlist"))buildNotes();
-  if(typeof buildLore==="function"&&$("llist"))buildLore();
 }
 function openAuth(m){
   mode=m;
-  $("mt").textContent=m==="signup"?"Sign up":"Log in";
-  $("asubmit").textContent=m==="signup"?"Create account":"Log in";
-  $("aswap").textContent=m==="signup"?"I already have an account":"I need an account";
+  $("mt").textContent=m==="signup"?t("signup"):t("login");
+  $("asubmit").textContent=m==="signup"?t("create"):t("login");
+  $("aswap").textContent=m==="signup"?t("haveacc"):t("needacc");
   $("pw2row").classList.toggle("hidden",m!=="signup");
   $("pw").autocomplete=m==="signup"?"new-password":"current-password";
   $("amsg").textContent="";$("pw").value="";$("pw2").value="";
@@ -354,41 +356,82 @@ $("asubmit").onclick=async function(){
 };
 $("plogout").onclick=function(){current=null;try{localStorage.removeItem(SESS)}catch(e){}$("pop").classList.remove("open");render()};
 var pendingPic=null;
-$("ppick").onclick=function(){$("pfile").click()};
-$("pfile").onchange=function(){
-  var f=this.files[0];if(!f)return;
-  var img=new Image(),url=URL.createObjectURL(f);
-  img.onload=function(){
-    var c=document.createElement("canvas"),n=160;c.width=c.height=n;
-    var s=Math.min(img.width,img.height),x=(img.width-s)/2,y=(img.height-s)/2;
-    c.getContext("2d").drawImage(img,x,y,s,s,0,0,n,n);
-    pendingPic=c.toDataURL("image/jpeg",.85);URL.revokeObjectURL(url);
-    $("pav").innerHTML='<img alt="" src="'+pendingPic+'">';
-    $("pmsg").textContent="Picture ready. Press Save profile.";
+var cr={img:null,min:1,s:1,x:0,y:0,d:null};
+function crReset(){cr.img=null;$("crst").classList.add("hidden");$("crdrop").classList.remove("hidden");$("crok").classList.add("hidden");$("crm").textContent="";$("crfile").value=""}
+function openCrop(){crReset();$("cr").classList.add("open");$("pop").classList.remove("open")}
+function closeCrop(){$("cr").classList.remove("open")}
+function crDraw(){
+  if(!cr.img)return;
+  var c=$("crc"),g=c.getContext("2d"),w=cr.img.width*cr.s,h=cr.img.height*cr.s;
+  cr.x=Math.min(20,Math.max(260-w,cr.x));cr.y=Math.min(20,Math.max(260-h,cr.y));
+  g.clearRect(0,0,280,280);g.drawImage(cr.img,cr.x,cr.y,w,h);
+  g.fillStyle="rgba(10,6,25,.65)";g.beginPath();g.rect(0,0,280,280);g.arc(140,140,120,0,Math.PI*2,true);g.fill("evenodd");
+  g.strokeStyle="#fff";g.lineWidth=3;g.beginPath();g.arc(140,140,120,0,Math.PI*2);g.stroke();
+}
+function crZoom(z){
+  z=Math.min(4,Math.max(1,z));var px=(140-cr.x)/cr.s,py=(140-cr.y)/cr.s;
+  cr.s=cr.min*z;cr.x=140-px*cr.s;cr.y=140-py*cr.s;$("crz").value=z;crDraw();
+}
+function crLoad(f){
+  if(!f)return;
+  if(!/^image\/(jpeg|png|webp)$/.test(f.type)){$("crm").textContent=t("badtype");return}
+  var im=new Image(),u=URL.createObjectURL(f);
+  im.onload=function(){
+    URL.revokeObjectURL(u);cr.img=im;cr.min=240/Math.min(im.width,im.height);cr.s=cr.min;
+    cr.x=140-im.width*cr.s/2;cr.y=140-im.height*cr.s/2;$("crz").value=1;$("crm").textContent="";
+    $("crdrop").classList.add("hidden");$("crst").classList.remove("hidden");$("crok").classList.remove("hidden");crDraw();
   };
-  img.onerror=function(){$("pmsg").textContent="That file isn't an image."};
-  img.src=url;
+  im.onerror=function(){$("crm").textContent=t("badtype")};
+  im.src=u;
+}
+$("ppick").onclick=openCrop;
+$("pav").onclick=function(){if(current)openCrop()};
+$("crdrop").onclick=function(){$("crfile").click()};
+$("crfile").onchange=function(){crLoad(this.files[0])};
+["dragenter","dragover"].forEach(function(n){$("cr").addEventListener(n,function(e){e.preventDefault();$("crdrop").classList.add("over")})});
+$("cr").addEventListener("dragleave",function(){$("crdrop").classList.remove("over")});
+$("cr").addEventListener("drop",function(e){e.preventDefault();$("crdrop").classList.remove("over");if(e.dataTransfer.files[0])crLoad(e.dataTransfer.files[0])});
+$("crz").oninput=function(){crZoom(parseFloat(this.value))};
+$("crc").addEventListener("wheel",function(e){e.preventDefault();crZoom(parseFloat($("crz").value)*(e.deltaY<0?1.08:.93))},{passive:false});
+$("crc").addEventListener("pointerdown",function(e){e.preventDefault();cr.d={x:e.clientX,y:e.clientY};this.setPointerCapture(e.pointerId)});
+$("crc").addEventListener("pointermove",function(e){
+  if(!cr.d)return;var f=280/this.getBoundingClientRect().width;
+  cr.x+=(e.clientX-cr.d.x)*f;cr.y+=(e.clientY-cr.d.y)*f;cr.d={x:e.clientX,y:e.clientY};crDraw();
+});
+$("crc").addEventListener("pointerup",function(){cr.d=null});
+$("crc").addEventListener("pointercancel",function(){cr.d=null});
+$("crcancel").onclick=closeCrop;
+$("cr").addEventListener("click",function(e){if(e.target===$("cr"))closeCrop()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeCrop()});
+$("crok").onclick=function(e){
+  e.stopPropagation();
+  if(!cr.img||!current)return;
+  var o=document.createElement("canvas");o.width=o.height=256;
+  var k=1/cr.s;o.getContext("2d").drawImage(cr.img,(20-cr.x)*k,(20-cr.y)*k,240*k,240*k,0,0,256,256);
+  var all=users();all[current].pfp=o.toDataURL("image/jpeg",.9);
+  save(USERS,all);closeCrop();render();
+  $("pop").classList.add("open");$("pmsg").textContent=t("saved");
 };
 $("psave").onclick=function(){
   var all=users();if(!current||!all[current])return;
   all[current].name=$("pname").value.trim();
   if(pendingPic)all[current].pfp=pendingPic;
   pendingPic=null;
-  $("pmsg").textContent=save(USERS,all)?"Saved.":"Couldn't save in this browser.";
+  $("pmsg").textContent=save(USERS,all)?t("saved"):t("failsave");
   render();
 };
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 var zoom=100;
 try{var zs=parseInt(localStorage.getItem("lobby_zoom"),10);if(zs>=50&&zs<=200)zoom=zs}catch(e){}
 function applyZoom(){$("etext").parentNode.style.setProperty("--fs",zoom/100);$("zval").textContent=zoom+"%";try{localStorage.setItem("lobby_zoom",zoom)}catch(e){}}
-function updCount(){var t=$("etext").value,w=t.trim()?t.trim().split(/\s+/).length:0;$("ecount").textContent=t.length+" characters, "+w+" words"}
+function updCount(){var x=$("etext").value,w=x.trim()?x.trim().split(/\s+/).length:0;$("ecount").textContent=t("chars").replace("{c}",x.length).replace("{w}",w)}
 $("zin").onclick=function(){zoom=Math.min(200,zoom+10);applyZoom()};
 $("zout").onclick=function(){zoom=Math.max(50,zoom-10);applyZoom()};
 $("etext").addEventListener("input",updCount);
 applyZoom();
 var imgs=[],selId=null;
 function selectImg(id){selId=id;Array.prototype.forEach.call(document.querySelectorAll(".pimg"),function(x){x.classList.toggle("sel",x.dataset.id===id)})}
-function removeImg(id){imgs=imgs.filter(function(m){return m.id!==id});if(selId===id)selId=null;renderImgs();$("emsg").textContent="Press Save to keep your changes."}
+function removeImg(id){imgs=imgs.filter(function(m){return m.id!==id});if(selId===id)selId=null;renderImgs();$("emsg").textContent=t("keep")}
 function renderImgs(){
   var L=$("layer");L.innerHTML="";
   imgs.forEach(function(m){
@@ -409,7 +452,7 @@ function renderImgs(){
     d.addEventListener("pointerdown",function(e){
       if(e.target===hs.dl){removeImg(m.id);return}
       e.preventDefault();selectImg(m.id);
-      if(e.target===hs.rz){m.w=m.w0||m.w;m.h=m.h0||m.h;place();$("emsg").textContent="Press Save to keep your changes.";return}
+      if(e.target===hs.rz){m.w=m.w0||m.w;m.h=m.h0||m.h;place();$("emsg").textContent=t("keep");return}
       var k=Object.keys(hs).filter(function(n){return hs[n]===e.target})[0]||"mv";
       var r=d.getBoundingClientRect();
       st={mode:k,sx:e.clientX,sy:e.clientY,x:m.x,y:m.y,w:m.w,h:m.h,cx:r.left+r.width/2,cy:r.top+r.height/2};
@@ -425,7 +468,7 @@ function renderImgs(){
       else if(st.mode==="ro"){m.rot=Math.round(Math.atan2(e.clientY-st.cy,e.clientX-st.cx)*180/Math.PI+90)}
       place();
     });
-    function end(){if(st){st=null;$("emsg").textContent="Press Save to keep your changes."}}
+    function end(){if(st){st=null;$("emsg").textContent=t("keep")}}
     d.addEventListener("pointerup",end);d.addEventListener("pointercancel",end);
     L.appendChild(d);
   });
@@ -442,7 +485,7 @@ function addFiles(files){
       var m={id:"i"+Date.now()+i,src:c.toDataURL(png?"image/png":"image/jpeg",.85),x:30+(imgs.length%6)*24,y:30+(imgs.length%6)*24,w:Math.min(240,c.width),rot:0};
       m.h=m.w*c.height/c.width;m.w0=m.w;m.h0=m.h;
       URL.revokeObjectURL(url);imgs.push(m);selId=m.id;renderImgs();
-      $("emsg").textContent="Press Save to keep your pictures.";
+      $("emsg").textContent=t("keep");
     };
     img.onerror=function(){URL.revokeObjectURL(url);$("emsg").textContent="That file couldn't be read as a picture."};
     img.src=url;
@@ -456,11 +499,11 @@ $("ed").addEventListener("drop",function(e){e.preventDefault();if(e.dataTransfer
 $("ed").addEventListener("pointerdown",function(e){if(!e.target.closest(".pimg"))selectImg(null)});
 document.addEventListener("keydown",function(e){if((e.key==="Delete")&&selId&&$("ed").classList.contains("open")&&document.activeElement!==$("etext"))removeImg(selId)});
 function setFull(on){
-  $("ed").classList.toggle("full",on);$("fsbtn").textContent=on?"Exit fullscreen":"Fullscreen";applyEdSize();
+  $("ed").classList.toggle("full",on);$("fsbtn").textContent=on?t("exitfs"):t("fullscreen");applyEdSize();
   try{if(on){var p=$("ed").requestFullscreen&&$("ed").requestFullscreen();if(p&&p.catch)p.catch(function(){})}else if(document.fullscreenElement){document.exitFullscreen()}}catch(e){}
 }
 $("fsbtn").onclick=function(){setFull(!$("ed").classList.contains("full"))};
-document.addEventListener("fullscreenchange",function(){if(!document.fullscreenElement&&$("ed").classList.contains("full")){$("ed").classList.remove("full");$("fsbtn").textContent="Fullscreen";applyEdSize()}});
+document.addEventListener("fullscreenchange",function(){if(!document.fullscreenElement&&$("ed").classList.contains("full")){$("ed").classList.remove("full");$("fsbtn").textContent=t("fullscreen");applyEdSize()}});
 var vt=null,vpos={},vkeys=[],vnodes={},vlinks=[];
 function ytParse(raw){
   try{
@@ -472,22 +515,56 @@ function ytParse(raw){
     }
     if(!/^[\w-]{11}$/.test(id))return null;
     var t=u.searchParams.get("t")||u.searchParams.get("start")||"";
-    return {id:id,start:/^\d+s?$/.test(t)?parseInt(t,10):0};
+    return {type:"yt",id:id,start:/^\d+s?$/.test(t)?parseInt(t,10):0};
   }catch(e){return null}
 }
+function spParse(raw){try{var u=new URL(raw.trim());if(u.hostname!=="open.spotify.com")return null;var p=u.pathname.split("/").filter(Boolean);if(/^intl-/.test(p[0]))p.shift();if(!/^(track|album|playlist|episode|show|artist)$/.test(p[0])||!/^[A-Za-z0-9]{22}$/.test(p[1]||""))return null;return {type:"sp",kind:p[0],id:p[1]}}catch(e){return null}}
+function mediaParse(r){return ytParse(r)||spParse(r)}
 function placeV(k){var b=vnodes[k],p=vpos[k];if(b&&p){b.style.left=p.x+"px";b.style.top=p.y+"px";b.style.width=Math.max(240,p.w||320)+"px"}}
+var spApi=null,spQ=[],spLoading=false;
+function withSp(cb){
+  if(spApi)return cb(spApi);
+  spQ.push(cb);if(spLoading)return;spLoading=true;
+  window.onSpotifyIframeApiReady=function(a){spApi=a;spQ.splice(0).forEach(function(f){f(a)})};
+  var sc=document.createElement("script");sc.src="https://open.spotify.com/embed/iframe-api/v1";sc.async=true;document.head.appendChild(sc);
+}
+function spTall(f,p){return !/^(track|episode)$/.test(f.kind)||!!(p&&p.w>=460)}
+function mountSp(box,fr,f){
+  var host=el("div","sphost"),ctl=el("div","spctl hidden"),rb=el("button","spbtn","\u23EE"),rg=document.createElement("input"),tm=el("span","sptm","0:00");
+  rb.type="button";rb.title=t("restart");rg.type="range";rg.min=0;rg.max=1;rg.step=1;rg.value=0;rg.setAttribute("aria-label",t("restart"));
+  ctl.appendChild(rb);ctl.appendChild(rg);ctl.appendChild(tm);box.appendChild(host);box.appendChild(ctl);
+  var c=null,fb=false,drag=false;
+  function fmt(ms){var q=Math.floor(ms/1000);return Math.floor(q/60)+":"+("0"+q%60).slice(-2)}
+  var timer=setTimeout(function(){if(c)return;fb=true;host.textContent="";host.appendChild(fr)},5000);
+  withSp(function(api){
+    if(fb)return;
+    var d=document.createElement("div");host.appendChild(d);
+    api.createController(d,{uri:"spotify:"+f.kind+":"+f.id,width:"100%",height:"100%"},function(ctrl){
+      c=ctrl;clearTimeout(timer);
+      ctrl.addListener("playback_update",function(e){
+        var x=e.data;if(!x||!x.duration)return;
+        rg.max=x.duration;ctl.classList.remove("hidden");
+        if(!drag)rg.value=x.position;
+        tm.textContent=fmt(drag?+rg.value:x.position)+" / "+fmt(x.duration);
+      });
+    });
+  });
+  rg.addEventListener("input",function(){drag=true;tm.textContent=fmt(+rg.value)+" / "+fmt(+rg.max)});
+  rg.addEventListener("change",function(){if(c)c.seek(+rg.value/1000);drag=false});
+  rb.onclick=function(){if(c){c.seek(0);c.resume()}};
+}
 function makeVbox(f){
   var k=f.key,box=el("div","vbox"),bar=el("div","vbar");
-  bar.appendChild(el("span","","Drag to move"));
-  var a=el("a","","Open on YouTube");a.href="https://www.youtube.com/watch?v="+f.id+(f.start?"&t="+f.start+"s":"");a.target="_blank";a.rel="noopener";
+  bar.appendChild(el("span","",t("dragmove")));
+  var sp=f.type==="sp";var a=el("a","",sp?t("opensp"):t("openyt"));a.href=sp?"https://open.spotify.com/"+f.kind+"/"+f.id:"https://www.youtube.com/watch?v="+f.id+(f.start?"&t="+f.start+"s":"");a.target="_blank";a.rel="noopener";
   bar.appendChild(a);
   var fr=document.createElement("iframe");
-  fr.src="https://www.youtube-nocookie.com/embed/"+f.id+"?rel=0"+(f.start?"&start="+f.start:"");
-  fr.title="YouTube video";
-  fr.allow="accelerometer; encrypted-media; picture-in-picture; fullscreen";
+  fr.src=sp?"https://open.spotify.com/embed/"+f.kind+"/"+f.id:"https://www.youtube-nocookie.com/embed/"+f.id+"?rel=0"+(f.start?"&start="+f.start:"");
+  fr.title=sp?"Spotify player":"YouTube video";if(sp){box.classList.add("sp");if(spTall(f,vpos[k]))box.classList.add("tall")}
+  fr.allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; fullscreen";
   fr.setAttribute("allowfullscreen","");fr.referrerPolicy="strict-origin-when-cross-origin";
   var grip=el("div","vgrip");grip.title="Resize";
-  box.appendChild(fr);box.appendChild(bar);box.appendChild(grip);
+  if(sp)mountSp(box,fr,f);else box.appendChild(fr);box.appendChild(bar);box.appendChild(grip);
   var st=null,ghost=null,rs=null;
   function snap(v,max){return Math.min(max,Math.max(0,Math.round(v/10)*10))}
   function placeGhost(x,y){ghost.style.left=x+"px";ghost.style.top=y+"px"}
@@ -511,7 +588,7 @@ function makeVbox(f){
     vpos[k]={x:st.gx,y:st.gy,w:vpos[k].w||320};placeV(k);
     if(ghost){ghost.remove();ghost=null}
     box.classList.remove("drag");st=null;
-    $("emsg").textContent="Press Save to keep your changes.";
+    $("emsg").textContent=t("keep");
   }
   bar.addEventListener("pointerup",end);bar.addEventListener("pointercancel",end);
   grip.addEventListener("pointerdown",function(e){
@@ -521,9 +598,9 @@ function makeVbox(f){
   grip.addEventListener("pointermove",function(e){
     if(!rs)return;
     var w=Math.min(900,Math.max(240,rs.w+e.clientX-rs.sx));
-    vpos[k].w=Math.round(w);box.style.width=vpos[k].w+"px";
+    vpos[k].w=Math.round(w);box.style.width=vpos[k].w+"px";if(sp)box.classList.toggle("tall",spTall(f,{w:w}));
   });
-  function rend(){if(rs){rs=null;$("emsg").textContent="Press Save to keep your changes."}}
+  function rend(){if(rs){rs=null;$("emsg").textContent=t("keep")}}
   grip.addEventListener("pointerup",rend);grip.addEventListener("pointercancel",rend);
   return box;
 }
@@ -543,9 +620,9 @@ function renderMirror(){
 }
 function buildVids(){
   var ta=$("etext"),text=ta.value,caret=ta.selectionStart,newCaret=caret,removedTotal=0,bad=false,counts={};
-  var re=/:play:yt:(?:\(([^)]*)\)|(\S+))/g;
+  var re=/:play:(?:yt|sp):(?:\(([^)]*)\)|(\S+))/g;
   var out=text.replace(re,function(full,p1,p2,offset){
-    var raw=(p1!==undefined?p1:p2).trim(),clean=raw.replace(/[.,;!?]+$/,""),tail=raw.slice(clean.length),f=ytParse(clean);
+    var raw=(p1!==undefined?p1:p2).trim(),clean=raw.replace(/[.,;!?]+$/,""),tail=raw.slice(clean.length),f=mediaParse(clean);
     if(!f){bad=true;return full}
     var ok=f.id+"@"+f.start;counts[ok]=(counts[ok]||0)+1;
     var oldKey=ok+"#"+(counts[ok]-1);
@@ -560,8 +637,8 @@ function buildVids(){
   if(out!==text){ta.value=out;try{ta.setSelectionRange(newCaret,newCaret)}catch(e){}updCount()}
   vlinks=vlinks.filter(function(u){return out.indexOf(u)>=0});
   var vids=[];
-  vlinks.forEach(function(u){var f=ytParse(u);if(f){f.key=u;vids.push(f)}});
-  $("vids").textContent=bad?"A :play:yt: link couldn't be read. Paste the full YouTube link right after it.":"";
+  vlinks.forEach(function(u){var f=mediaParse(u);if(f){f.key=u;vids.push(f)}});
+  $("vids").textContent=bad?t("badlink"):"";
   $("vids").classList.toggle("has",bad);
   vkeys=vids.map(function(f){return f.key});
   Object.keys(vnodes).forEach(function(k){if(vkeys.indexOf(k)<0){vnodes[k].remove();delete vnodes[k]}});
@@ -604,23 +681,23 @@ function myNotes(){var u=current&&users()[current];if(!u)return null;if(!u.notes
 function saveNotes(notes){var all=users();if(!current||!all[current])return false;all[current].notes=notes;return save(USERS,all)}
 function buildNotes(){
   var n=myNotes();
-  $("ncount").textContent=n?(n.length===1?"1 note":n.length+" notes"):"Log in to start writing.";
+  $("ncount").textContent=n?(n.length===1?t("note1"):t("notesN").replace("{n}",n.length)):t("startw");
   $("nout").classList.toggle("hidden",!!n);
   $("nin").classList.toggle("hidden",!n);
   var list=$("nlist");list.innerHTML="";
   if(!n)return;
-  if(!n.length){list.appendChild(el("p","empty","No notes yet. Press Create note to start."));return}
+  if(!n.length){list.appendChild(el("p","empty",t("nonotes")));return}
   n.slice().sort(function(x,y){return y.updated-x.updated}).forEach(function(it){
     var b=el("button","nbox");b.type="button";
     b.appendChild(el("b","",it.name));
-    b.appendChild(el("span","","Edited "+new Date(it.updated).toLocaleDateString()));
+    b.appendChild(el("span","",t("edited")+new Date(it.updated).toLocaleDateString(loc())));
     b.onclick=function(){openEditor(it.id)};
     list.appendChild(b);
   });
 }
 function openEditor(id){
   var n=myNotes()||[],it=n.filter(function(x){return x.id===id})[0];if(!it)return;
-  curNote=id;delArm=false;$("edel").textContent="Delete";
+  curNote=id;delArm=false;$("edel").textContent=t("del");
   $("etitle").textContent=it.name;$("etext").value=it.text||"";$("emsg").textContent="";updCount();vpos=JSON.parse(JSON.stringify(it.vpos||{}));vlinks=(it.vlinks||[]).slice();buildVids();imgs=JSON.parse(JSON.stringify(it.images||[]));selId=null;renderImgs();
   $("ed").classList.add("open");applyEdSize();$("etext").focus();
 }
@@ -633,11 +710,11 @@ $("ncreate").onclick=function(){$("nname").value="";$("nnm").textContent="";$("n
 $("ncancel").onclick=function(){$("nn").classList.remove("open")};
 function makeNote(){
   var name=$("nname").value.trim();
-  if(!name){$("nnm").textContent="Give your note a name.";return}
+  if(!name){$("nnm").textContent=t("giveName");return}
   var n=myNotes();if(!n)return;
   var it={id:"n"+Date.now(),name:name,text:"",updated:Date.now()};
   n.push(it);
-  if(!saveNotes(n)){$("nnm").textContent="Couldn't save in this browser.";return}
+  if(!saveNotes(n)){$("nnm").textContent=t("failsave");return}
   $("nn").classList.remove("open");buildNotes();openEditor(it.id);
 }
 $("nmake").onclick=makeNote;
@@ -645,12 +722,12 @@ $("nname").addEventListener("keydown",function(e){if(e.key==="Enter")makeNote()}
 $("esave").onclick=function(){
   var n=myNotes()||[],it=n.filter(function(x){return x.id===curNote})[0];if(!it)return;
   it.text=$("etext").value;it.images=JSON.parse(JSON.stringify(imgs));it.vpos=vposSave();it.vlinks=vlinks.slice();it.updated=Date.now();
-  $("emsg").textContent=saveNotes(n)?"Saved.":"Couldn't save. The pictures may be too big for this browser.";
+  $("emsg").textContent=saveNotes(n)?t("saved"):t("failsave");
   buildNotes();
 };
 $("eclose").onclick=closeEditor;
 $("edel").onclick=function(){
-  if(!delArm){delArm=true;this.textContent="Tap again to delete";return}
+  if(!delArm){delArm=true;this.textContent=t("delconfirm");return}
   var n=(myNotes()||[]).filter(function(x){return x.id!==curNote});
   saveNotes(n);closeEditor();buildNotes();
 };
@@ -658,157 +735,48 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"){
   if($("ed").classList.contains("open")){if($("ed").classList.contains("full")&&!document.fullscreenElement)setFull(false);else closeEditor()}
   else if($("nn").classList.contains("open"))$("nn").classList.remove("open");
   else if($("sp").classList.contains("open")&&!$("ov").classList.contains("open"))closeNotes();}});
-var work=null,curChar=null,lnote="",lArm=false,cArm=false;
-var COLORS=["#c0392b","#d98a3d","#d9b84a","#2e8b57","#4a90b8","#5b4aa6","#b05aa8","#8a8a8a"];
-function myLore(){var u=current&&users()[current];if(!u)return null;if(!u.lore)u.lore=[];return u.lore}
-function saveLore(l){var all=users();if(!current||!all[current])return false;all[current].lore=l;return save(USERS,all)}
-function saveWork(){var l=myLore();if(!l||!work)return false;l=l.map(function(m){return m.id===work.id?JSON.parse(JSON.stringify(work)):m});return saveLore(l)}
-function fmtDate(t){return new Date(t).toLocaleString([],{dateStyle:"medium",timeStyle:"short"})}
-function buildLore(){
-  var l=myLore();
-  $("lcount").textContent=l?(l.length===1?"1 module":l.length+" modules"):"Log in to start.";
-  $("lout").classList.toggle("hidden",!!l);$("lin").classList.toggle("hidden",!l);
-  var list=$("llist");list.innerHTML="";if(!l)return;
-  if(!l.length){list.appendChild(el("p","empty","No modules yet. Press Create module to start."));return}
-  l.slice().sort(function(a,b){return b.created-a.created}).forEach(function(m){
-    var b=el("button","nbox");b.type="button";
-    b.appendChild(el("b","",m.name));
-    if(m.desc)b.appendChild(el("span","",m.desc));
-    b.appendChild(el("span","","Created "+fmtDate(m.created)));
-    b.onclick=function(){openMod(m.id)};
-    list.appendChild(b);
-  });
+var T={"en": {"signup": "Sign up", "login": "Log in", "loginsignup": "Log in / Sign up", "loginprompt": "Log in to set your name and picture.", "changepic": "Change picture", "name": "Name", "yourname": "Your name", "save": "Save profile", "logout": "Log out", "settings": "Settings", "language": "Language", "color": "Site colour", "reset": "Reset colour", "email": "Email", "password": "Password", "confirm": "Confirm password", "create": "Create account", "haveacc": "I already have an account", "needacc": "I need an account", "cancel": "Cancel", "yourspace": "Your space", "welcome": "Welcome to the Lobby", "back": "Welcome back, ", "welcome_u": "Welcome, ", "sub": "Write things down, keep them safe, and come back to them anytime.", "mynotes": "My Notes", "open": "Open →", "more": "More coming soon", "more2": "New things will show up here.", "startw": "Log in to start writing.", "note1": "1 note", "notesN": "{n} notes", "croptitle": "Profile picture", "drop": "Insert picture .jpg, .png, .webp here", "apply": "Apply", "hint": "Drag to move, slide to zoom.", "badtype": "Use a .jpg, .png or .webp picture.", "saved": "Saved."}, "ja": {"signup": "新規登録", "login": "ログイン", "loginsignup": "ログイン / 新規登録", "loginprompt": "ログインして名前と画像を設定しましょう。", "changepic": "画像を変更", "name": "名前", "yourname": "あなたの名前", "save": "プロフィールを保存", "logout": "ログアウト", "settings": "設定", "language": "言語", "color": "サイトの色", "reset": "色をリセット", "email": "メールアドレス", "password": "パスワード", "confirm": "パスワード（確認）", "create": "アカウント作成", "haveacc": "アカウントをお持ちの方", "needacc": "アカウントが必要です", "cancel": "キャンセル", "yourspace": "あなたのスペース", "welcome": "ロビーへようこそ", "back": "おかえりなさい、", "welcome_u": "ようこそ、", "sub": "書き留めて、安全に保管して、いつでも戻ってこられます。", "mynotes": "マイノート", "open": "開く →", "more": "近日公開", "more2": "新しいものがここに表示されます。", "startw": "ログインして書き始めましょう。", "note1": "ノート1件", "notesN": "ノート{n}件", "croptitle": "プロフィール画像", "drop": ".jpg、.png、.webp の画像をここに挿入", "apply": "適用", "hint": "ドラッグで移動、スライダーで拡大縮小。", "badtype": ".jpg、.png、.webp の画像を使用してください。", "saved": "保存しました。"}, "hu": {"signup": "Regisztráció", "login": "Belépés", "loginsignup": "Belépés / Regisztráció", "loginprompt": "Lépj be a neved és képed beállításához.", "changepic": "Kép módosítása", "name": "Név", "yourname": "A neved", "save": "Profil mentése", "logout": "Kilépés", "settings": "Beállítások", "language": "Nyelv", "color": "Az oldal színe", "reset": "Szín visszaállítása", "email": "E-mail", "password": "Jelszó", "confirm": "Jelszó megerősítése", "create": "Fiók létrehozása", "haveacc": "Már van fiókom", "needacc": "Fiókra van szükségem", "cancel": "Mégse", "yourspace": "A te helyed", "welcome": "Üdv a Lobbyban", "back": "Üdv újra, ", "welcome_u": "Üdv, ", "sub": "Írj le dolgokat, őrizd meg őket, és térj vissza hozzájuk bármikor.", "mynotes": "Jegyzeteim", "open": "Megnyitás →", "more": "Hamarosan még több", "more2": "Itt új dolgok jelennek meg.", "startw": "Lépj be az íráshoz.", "note1": "1 jegyzet", "notesN": "{n} jegyzet", "croptitle": "Profilkép", "drop": "Húzd ide a .jpg, .png, .webp képet", "apply": "Alkalmaz", "hint": "Húzással mozgasd, csúszkával nagyítsd.", "badtype": "Használj .jpg, .png vagy .webp képet.", "saved": "Mentve."}, "zh": {"signup": "注册", "login": "登录", "loginsignup": "登录 / 注册", "loginprompt": "登录后设置你的名字和头像。", "changepic": "更换头像", "name": "名字", "yourname": "你的名字", "save": "保存资料", "logout": "退出登录", "settings": "设置", "language": "语言", "color": "网站颜色", "reset": "重置颜色", "email": "电子邮箱", "password": "密码", "confirm": "确认密码", "create": "创建账号", "haveacc": "我已有账号", "needacc": "我需要账号", "cancel": "取消", "yourspace": "你的空间", "welcome": "欢迎来到大厅", "back": "欢迎回来，", "welcome_u": "欢迎，", "sub": "写下来，妥善保存，随时回来查看。", "mynotes": "我的笔记", "open": "打开 →", "more": "敬请期待", "more2": "新内容将显示在这里。", "startw": "登录后开始书写。", "note1": "1 条笔记", "notesN": "{n} 条笔记", "croptitle": "头像", "drop": "在此插入 .jpg、.png、.webp 图片", "apply": "应用", "hint": "拖动移动，滑动缩放。", "badtype": "请使用 .jpg、.png 或 .webp 图片。", "saved": "已保存。"}, "es": {"signup": "Registrarse", "login": "Iniciar sesión", "loginsignup": "Iniciar sesión / Registrarse", "loginprompt": "Inicia sesión para poner tu nombre e imagen.", "changepic": "Cambiar imagen", "name": "Nombre", "yourname": "Tu nombre", "save": "Guardar perfil", "logout": "Cerrar sesión", "settings": "Ajustes", "language": "Idioma", "color": "Color del sitio", "reset": "Restablecer color", "email": "Correo electrónico", "password": "Contraseña", "confirm": "Confirmar contraseña", "create": "Crear cuenta", "haveacc": "Ya tengo una cuenta", "needacc": "Necesito una cuenta", "cancel": "Cancelar", "yourspace": "Tu espacio", "welcome": "Bienvenido al Lobby", "back": "Bienvenido de nuevo, ", "welcome_u": "Bienvenido, ", "sub": "Escribe tus cosas, guárdalas y vuelve a ellas cuando quieras.", "mynotes": "Mis notas", "open": "Abrir →", "more": "Pronto habrá más", "more2": "Aquí aparecerán cosas nuevas.", "startw": "Inicia sesión para empezar a escribir.", "note1": "1 nota", "notesN": "{n} notas", "croptitle": "Imagen de perfil", "drop": "Inserta aquí una imagen .jpg, .png, .webp", "apply": "Aplicar", "hint": "Arrastra para mover, desliza para hacer zoom.", "badtype": "Usa una imagen .jpg, .png o .webp.", "saved": "Guardado."}, "de": {"signup": "Registrieren", "login": "Anmelden", "loginsignup": "Anmelden / Registrieren", "loginprompt": "Melde dich an, um Namen und Bild festzulegen.", "changepic": "Bild ändern", "name": "Name", "yourname": "Dein Name", "save": "Profil speichern", "logout": "Abmelden", "settings": "Einstellungen", "language": "Sprache", "color": "Farbe der Seite", "reset": "Farbe zurücksetzen", "email": "E-Mail", "password": "Passwort", "confirm": "Passwort bestätigen", "create": "Konto erstellen", "haveacc": "Ich habe schon ein Konto", "needacc": "Ich brauche ein Konto", "cancel": "Abbrechen", "yourspace": "Dein Bereich", "welcome": "Willkommen in der Lobby", "back": "Willkommen zurück, ", "welcome_u": "Willkommen, ", "sub": "Schreib Dinge auf, bewahre sie sicher auf und komm jederzeit zurück.", "mynotes": "Meine Notizen", "open": "Öffnen →", "more": "Bald mehr", "more2": "Hier erscheinen neue Dinge.", "startw": "Melde dich an, um zu schreiben.", "note1": "1 Notiz", "notesN": "{n} Notizen", "croptitle": "Profilbild", "drop": "Bild .jpg, .png, .webp hier einfügen", "apply": "Übernehmen", "hint": "Zum Verschieben ziehen, zum Zoomen schieben.", "badtype": "Nutze ein .jpg-, .png- oder .webp-Bild.", "saved": "Gespeichert."}, "la": {"signup": "Inscribere", "login": "Intrare", "loginsignup": "Intrare / Inscribere", "loginprompt": "Intra ut nomen et imaginem ponas.", "changepic": "Imaginem muta", "name": "Nomen", "yourname": "Nomen tuum", "save": "Profilum serva", "logout": "Exire", "settings": "Optiones", "language": "Lingua", "color": "Color paginae", "reset": "Colorem restitue", "email": "Epistula electronica", "password": "Tessera", "confirm": "Tesseram confirma", "create": "Rationem crea", "haveacc": "Rationem iam habeo", "needacc": "Rationem desidero", "cancel": "Omitte", "yourspace": "Locus tuus", "welcome": "Salve in Atrio", "back": "Salve iterum, ", "welcome_u": "Salve, ", "sub": "Scribe, serva, et semper revertere.", "mynotes": "Notae meae", "open": "Aperi →", "more": "Plura mox", "more2": "Nova hic apparebunt.", "startw": "Intra ut scribere incipias.", "note1": "1 nota", "notesN": "{n} notae", "croptitle": "Imago profili", "drop": "Pone imaginem .jpg, .png, .webp hic", "apply": "Applica", "hint": "Trahe ut moveas, labere ut amplifices.", "badtype": "Utere imagine .jpg, .png vel .webp.", "saved": "Servatum."}};T.mx=Object.assign({},T.es,{"changepic": "Cambiar foto", "yourname": "Tu nombre", "croptitle": "Foto de perfil", "drop": "Inserta tu foto .jpg, .png, .webp aquí", "badtype": "Usa una foto .jpg, .png o .webp."});
+var T2={"en": {"back2": "Back", "createnote": "Create note", "nonotes": "No notes yet. Press Create note to start.", "nloginmsg": "Log in to see and write your notes. Only you can see them.", "edited": "Edited ", "nameyour": "Name your note", "notename": "My first note", "mk": "Create", "giveName": "Give your note a name.", "resetsize": "Reset size", "fullscreen": "Fullscreen", "exitfs": "Exit fullscreen", "startwrite": "Start writing... Type :play:yt: + YouTube link for a video, or :play:sp: + Spotify link for a song", "chars": "{c} characters, {w} words", "addpic": "Add picture", "del": "Delete", "delconfirm": "Tap again to delete", "close": "Close", "saveN": "Save", "keep": t("keep"), "failsave": "Couldn't save in this browser.", "dragmove": "Drag to move", "openyt": "Open on YouTube", "opensp": "Open on Spotify", "badlink": "A :play: link couldn't be read. Paste the full YouTube or Spotify link right after it."}, "ja": {"back2": "戻る", "createnote": "ノートを作成", "nonotes": "ノートはまだありません。「ノートを作成」を押して始めましょう。", "nloginmsg": "ログインしてノートを見たり書いたりできます。あなただけが見られます。", "edited": "編集日 ", "nameyour": "ノートに名前を付ける", "notename": "最初のノート", "mk": "作成", "giveName": "ノートに名前を付けてください。", "resetsize": "サイズをリセット", "fullscreen": "全画面", "exitfs": "全画面を終了", "startwrite": "書き始めましょう... :play:yt: + YouTubeリンクで動画、:play:sp: + Spotifyリンクで曲を追加", "chars": "{c}文字、{w}語", "addpic": "画像を追加", "del": "削除", "delconfirm": "もう一度押すと削除", "close": "閉じる", "saveN": "保存", "keep": "変更を残すには保存を押してください。", "failsave": "このブラウザでは保存できませんでした。", "dragmove": "ドラッグで移動", "openyt": "YouTubeで開く", "opensp": "Spotifyで開く", "badlink": ":play: のリンクを読み取れませんでした。直後にYouTubeまたはSpotifyの完全なリンクを貼ってください。"}, "hu": {"back2": "Vissza", "createnote": "Jegyzet létrehozása", "nonotes": "Még nincs jegyzet. Nyomd meg a Jegyzet létrehozása gombot.", "nloginmsg": "Lépj be a jegyzeteid megtekintéséhez és írásához. Csak te látod őket.", "edited": "Szerkesztve: ", "nameyour": "Nevezd el a jegyzetet", "notename": "Az első jegyzetem", "mk": "Létrehozás", "giveName": "Adj nevet a jegyzetnek.", "resetsize": "Méret visszaállítása", "fullscreen": "Teljes képernyő", "exitfs": "Kilépés a teljes képernyőből", "startwrite": "Kezdj írni... :play:yt: + YouTube-link videóhoz, :play:sp: + Spotify-link zenéhez", "chars": "{c} karakter, {w} szó", "addpic": "Kép hozzáadása", "del": "Törlés", "delconfirm": "Koppints újra a törléshez", "close": "Bezárás", "saveN": "Mentés", "keep": "Nyomd meg a Mentést a módosítások megtartásához.", "failsave": "Ebben a böngészőben nem sikerült menteni.", "dragmove": "Húzd a mozgatáshoz", "openyt": "Megnyitás YouTube-on", "opensp": "Megnyitás Spotify-on", "badlink": "A :play: link nem olvasható. Illeszd be közvetlenül utána a teljes YouTube- vagy Spotify-linket."}, "zh": {"back2": "返回", "createnote": "创建笔记", "nonotes": "还没有笔记。点击“创建笔记”开始。", "nloginmsg": "登录后即可查看和书写你的笔记。只有你能看到。", "edited": "编辑于 ", "nameyour": "为笔记命名", "notename": "我的第一条笔记", "mk": "创建", "giveName": "请给笔记起个名字。", "resetsize": "重置大小", "fullscreen": "全屏", "exitfs": "退出全屏", "startwrite": "开始书写... 输入 :play:yt: + YouTube 链接添加视频，或 :play:sp: + Spotify 链接添加歌曲", "chars": "{c} 个字符，{w} 个词", "addpic": "添加图片", "del": "删除", "delconfirm": "再点一次以删除", "close": "关闭", "saveN": "保存", "keep": "按“保存”以保留更改。", "failsave": "无法在此浏览器中保存。", "dragmove": "拖动移动", "openyt": "在 YouTube 打开", "opensp": "在 Spotify 打开", "badlink": "无法读取 :play: 链接。请在其后粘贴完整的 YouTube 或 Spotify 链接。"}, "es": {"back2": "Atrás", "createnote": "Crear nota", "nonotes": "Aún no hay notas. Pulsa Crear nota para empezar.", "nloginmsg": "Inicia sesión para ver y escribir tus notas. Solo tú puedes verlas.", "edited": "Editado ", "nameyour": "Ponle nombre a tu nota", "notename": "Mi primera nota", "mk": "Crear", "giveName": "Ponle un nombre a tu nota.", "resetsize": "Restablecer tamaño", "fullscreen": "Pantalla completa", "exitfs": "Salir de pantalla completa", "startwrite": "Empieza a escribir... Escribe :play:yt: + enlace de YouTube para un video, o :play:sp: + enlace de Spotify para una canción", "chars": "{c} caracteres, {w} palabras", "addpic": "Añadir imagen", "del": "Eliminar", "delconfirm": "Toca otra vez para eliminar", "close": "Cerrar", "saveN": "Guardar", "keep": "Pulsa Guardar para conservar tus cambios.", "failsave": "No se pudo guardar en este navegador.", "dragmove": "Arrastra para mover", "openyt": "Abrir en YouTube", "opensp": "Abrir en Spotify", "badlink": "No se pudo leer el enlace :play:. Pega el enlace completo de YouTube o Spotify justo después."}, "de": {"back2": "Zurück", "createnote": "Notiz erstellen", "nonotes": "Noch keine Notizen. Tippe auf Notiz erstellen, um zu beginnen.", "nloginmsg": "Melde dich an, um deine Notizen zu sehen und zu schreiben. Nur du kannst sie sehen.", "edited": "Bearbeitet am ", "nameyour": "Gib deiner Notiz einen Namen", "notename": "Meine erste Notiz", "mk": "Erstellen", "giveName": "Gib deiner Notiz einen Namen.", "resetsize": "Größe zurücksetzen", "fullscreen": "Vollbild", "exitfs": "Vollbild beenden", "startwrite": "Schreib los... Tippe :play:yt: + YouTube-Link für ein Video oder :play:sp: + Spotify-Link für einen Song", "chars": "{c} Zeichen, {w} Wörter", "addpic": "Bild hinzufügen", "del": "Löschen", "delconfirm": "Zum Löschen erneut tippen", "close": "Schließen", "saveN": "Speichern", "keep": "Drücke Speichern, um deine Änderungen zu behalten.", "failsave": "In diesem Browser konnte nicht gespeichert werden.", "dragmove": "Zum Verschieben ziehen", "openyt": "Auf YouTube öffnen", "opensp": "Auf Spotify öffnen", "badlink": "Der :play:-Link konnte nicht gelesen werden. Füge direkt danach den vollständigen YouTube- oder Spotify-Link ein."}, "la": {"back2": "Redi", "createnote": "Notam crea", "nonotes": "Nullae notae adhuc. Preme \"Notam crea\" ut incipias.", "nloginmsg": "Intra ut notas tuas videas et scribas. Solus tu eas vides.", "edited": "Mutata ", "nameyour": "Notae nomen da", "notename": "Prima nota mea", "mk": "Crea", "giveName": "Notae nomen da.", "resetsize": "Magnitudinem restitue", "fullscreen": "Tota scaena", "exitfs": "Exi e tota scaena", "startwrite": "Incipe scribere... Scribe :play:yt: + nexum YouTube pro video, vel :play:sp: + nexum Spotify pro cantu", "chars": "{c} litterae, {w} verba", "addpic": "Imaginem adde", "del": "Dele", "delconfirm": "Iterum tange ut deleas", "close": "Claude", "saveN": "Serva", "keep": "Preme \"Serva\" ut mutationes serves.", "failsave": "In hoc navigatro servari non potuit.", "dragmove": "Trahe ut moveas", "openyt": "Aperi in YouTube", "opensp": "Aperi in Spotify", "badlink": "Nexus :play: legi non potuit. Pone statim post eum nexum YouTube vel Spotify integrum."}};T2.mx=Object.assign({},T2.es,{addpic:"Agregar imagen",del:"Borrar"});Object.keys(T2).forEach(function(l){Object.assign(T[l],T2[l])});
+var T3={"en": {"restart": "Back to start", "recolors": "Recommended colours"}, "ja": {"restart": "最初に戻る", "recolors": "おすすめの色"}, "hu": {"restart": "Vissza az elejére", "recolors": "Ajánlott színek"}, "zh": {"restart": "回到开头", "recolors": "推荐颜色"}, "es": {"restart": "Volver al inicio", "recolors": "Colores recomendados"}, "de": {"restart": "Zum Anfang", "recolors": "Empfohlene Farben"}, "la": {"restart": "Ad initium", "recolors": "Colores commendati"}};T3.mx=T3.es;Object.keys(T3).forEach(function(l){Object.assign(T[l],T3[l])});
+function loc(){return lang==="mx"?"es-MX":lang}
+var lang=load("lobby_lang","en");if(!T[lang]&&lang!=="mx")lang="en";
+function t(k){return(T[lang]&&T[lang][k])||T.en[k]||k}
+var MAP={bsign:"signup",blog:"login",pgo:"loginsignup",ppick:"changepic",psave:"save",plogout:"logout",aclose:"cancel",sett:"settings",scolt:"color",scolr:"reset",crt:"croptitle",crdt:"drop",crok:"apply",crhint:"hint",crcancel:"cancel",srect:"recolors",sback:"back2",ncreate:"createnote",nnt:"nameyour",nmake:"mk",ncancel:"cancel",rsbtn:"resetsize",addpic:"addpic",edel:"del",eclose:"close",esave:"saveN",nlogin:"loginsignup"};
+var LBL={em:"email",pw:"password",pw2:"confirm",pname:"name",slang:"language",nname:"name"};
+var SEL={".eyebrow":"yourspace","#sharedbtn h3":"mynotes","#sharedbtn .go":"open",".card.soon h3":"more",".card.soon p":"more2","#pout p":"loginprompt","#sub":"sub",".sbar h2":"mynotes","#nout p":"nloginmsg"};
+function applyLang(){
+  document.documentElement.lang=lang==="mx"?"es-MX":lang;
+  Object.keys(MAP).forEach(function(i){$(i).textContent=t(MAP[i])});
+  Object.keys(LBL).forEach(function(i){$(i).parentNode.firstChild.nodeValue=t(LBL[i])});
+  Object.keys(SEL).forEach(function(q){document.querySelector(q).textContent=t(SEL[q])});
+  $("pname").placeholder=t("yourname");$("nname").placeholder=t("notename");$("etext").placeholder=t("startwrite");$("fsbtn").textContent=$("ed").classList.contains("full")?t("exitfs"):t("fullscreen");updCount();
+  if($("ov").classList.contains("open"))openAuth(mode);
+  render();
 }
-function openMod(id){
-  var m=(myLore()||[]).filter(function(x){return x.id===id})[0];if(!m)return;
-  work=JSON.parse(JSON.stringify(m));work.chars=work.chars||[];
-  curChar=work.chars.length?work.chars[0].id:null;lArm=false;lnote="";
-  $("vdel").textContent="Delete module";
-  $("lv").classList.add("open");$("lv").scrollTop=0;renderMod();
+$("slang").value=lang;
+$("slang").onchange=function(){lang=this.value;try{localStorage.setItem("lobby_lang",lang)}catch(e){}applyLang()};
+$("cog").onclick=function(e){e.stopPropagation();$("pop").classList.toggle("set")};
+function hx(c){return[1,3,5].map(function(i){return parseInt(c.substr(i,2),16)})}
+function mixc(c,b,p){var a=hx(c),d=hx(b);return"#"+a.map(function(v,i){return("0"+Math.round(v*(1-p)+d[i]*p).toString(16)).slice(-2)}).join("")}
+function lumOf(h){var g=hx(h);return .299*g[0]+.587*g[1]+.114*g[2]}
+function rgbaOf(h,a){var g=hx(h);return"rgba("+g[0]+","+g[1]+","+g[2]+","+a+")"}
+function applyColor(c){
+  var r=document.documentElement.style,ks=["--hero","--hero-ink","--panel","--panel-ink","--muted","--accent","--glow1","--glow2","--scrim"];
+  if(!c){ks.forEach(function(k){r.removeProperty(k)});$("ccol").value="#2b2540";return}
+  var d=window.matchMedia("(prefers-color-scheme: dark)").matches&&document.documentElement.dataset.theme!=="light",hl=lumOf(c);
+  var panel=d?mixc(c,"#000000",.65+.2*hl/255):mixc(c,"#ffffff",.88),pd=lumOf(panel)<140;
+  var acc=pd?mixc(c,"#ffffff",.4):mixc(c,"#000000",.35);
+  r.setProperty("--hero",c);r.setProperty("--hero-ink",hl>150?"#1a1530":"#f2eefc");
+  r.setProperty("--panel",panel);r.setProperty("--panel-ink",pd?"#ebe7f7":"#1a1530");r.setProperty("--muted",pd?"#a9a3c0":"#5d5776");
+  r.setProperty("--accent",acc);r.setProperty("--glow1",rgbaOf(acc,.2));r.setProperty("--glow2",rgbaOf(acc,.14));r.setProperty("--scrim",rgbaOf(mixc(c,"#000000",.8),.4));
 }
-function renderMod(){
-  if(!work)return;
-  $("vtitle").textContent=work.name;
-  $("vmeta").textContent=(work.desc?work.desc+" \u00b7 ":"")+"Created "+fmtDate(work.created);
-  var ch=$("chips");ch.innerHTML="";
-  work.chars.forEach(function(c){
-    var b=el("button","chip"+(c.id===curChar?" on":""));b.type="button";
-    var d=el("i","dot");d.style.background=c.color;
-    b.appendChild(d);b.appendChild(document.createTextNode(c.title||"Untitled"));
-    b.onclick=function(){curChar=c.id;cArm=false;lnote="";renderMod()};
-    ch.appendChild(b);
-  });
-  var add=el("button","chip","Create+");add.type="button";
-  add.onclick=function(){
-    var c={id:"c"+Date.now(),title:"",desc:"",pfp:"",color:COLORS[work.chars.length%COLORS.length],saved:false};
-    work.chars.push(c);curChar=c.id;cArm=false;lnote="";renderMod();
-  };
-  ch.appendChild(add);
-  renderChar();
-}
-function copyBtn(get){
-  var b=el("button","cbtn","Copy");b.type="button";
-  b.onclick=function(){
-    var t=get();
-    function ok(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy"},1200)}
-    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){});
-    else{var x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();try{document.execCommand("copy");ok()}catch(e){}x.remove()}
-  };
-  return b;
-}
-function renderChar(){
-  var body=$("vbody");body.innerHTML="";
-  var c=work.chars.filter(function(x){return x.id===curChar})[0];
-  if(!c){body.appendChild(el("p","empty","Press Create+ to add a character lorebook."));return}
-  var card=el("div","lcard"),head=el("div","lhead"),av=el("button","lav");
-  av.type="button";av.setAttribute("aria-label","Set picture");
-  var msg=el("p","msg ok",lnote);msg.setAttribute("role","status");lnote="";
-  function paint(){av.innerHTML="";if(c.pfp){var im=new Image();im.alt="";im.src=c.pfp;av.appendChild(im)}else av.textContent="+"}
-  paint();
-  var pf=document.createElement("input");pf.type="file";pf.accept="image/*";pf.hidden=true;
-  av.onclick=function(){pf.click()};
-  pf.onchange=function(){
-    var f=pf.files[0];if(!f)return;
-    var img=new Image(),u=URL.createObjectURL(f);
-    img.onload=function(){
-      var cv=document.createElement("canvas"),n=120,s=Math.min(img.width,img.height);
-      cv.width=cv.height=n;
-      cv.getContext("2d").drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,n,n);
-      c.pfp=cv.toDataURL("image/jpeg",.85);URL.revokeObjectURL(u);paint();msg.textContent="Press Save to keep changes.";
-    };
-    img.onerror=function(){msg.textContent="That file isn't an image."};
-    img.src=u;
-  };
-  var cr=el("div","swatches");
-  COLORS.forEach(function(k){
-    var s=el("button","sw"+(k===c.color?" on":""));s.type="button";s.style.background=k;
-    s.setAttribute("aria-label","Color "+k);
-    s.onclick=function(){c.color=k;lnote="Press Save to keep changes.";renderMod()};
-    cr.appendChild(s);
-  });
-  var ci=document.createElement("input");ci.type="color";ci.className="swc";ci.value=c.color;
-  ci.setAttribute("aria-label","Custom color");
-  ci.onchange=function(){c.color=ci.value;lnote="Press Save to keep changes.";renderMod()};
-  cr.appendChild(ci);
-  head.appendChild(av);head.appendChild(cr);head.appendChild(pf);card.appendChild(head);
-  function field(label,key,multi){
-    var w=el("div"),row=el("div","lrow"),i=document.createElement(multi?"textarea":"input");
-    w.appendChild(el("div","lcap",label));
-    i.className="linp";i.value=c[key];i.setAttribute("aria-label",label);
-    if(multi)i.rows=6;else i.maxLength=60;
-    i.oninput=function(){c[key]=i.value;msg.textContent=""};
-    row.appendChild(i);
-    if(c.saved)row.appendChild(copyBtn(function(){return c[key]}));
-    w.appendChild(row);return w;
-  }
-  card.appendChild(field("Lorebook title","title",false));
-  card.appendChild(field("Description","desc",true));
-  var sv=el("button","btn dark","Save");sv.type="button";
-  sv.onclick=function(){
-    c.title=c.title.trim();c.saved=true;
-    lnote=saveWork()?"Saved.":"Couldn't save. The picture may be too big.";
-    renderMod();
-  };
-  var dl=el("button","link",cArm?"Tap again to delete":"Delete character");dl.type="button";
-  dl.onclick=function(){
-    if(!cArm){cArm=true;dl.textContent="Tap again to delete";return}
-    work.chars=work.chars.filter(function(x){return x.id!==c.id});
-    curChar=work.chars.length?work.chars[0].id:null;cArm=false;saveWork();renderMod();
-  };
-  var row=el("div","erow");row.appendChild(dl);row.appendChild(sv);
-  card.appendChild(msg);card.appendChild(row);
-  body.appendChild(card);
-}
-function closeLore(){
-  $("lv").classList.remove("open");$("lm").classList.remove("open");$("lp").classList.remove("open");
-  document.body.style.overflow="";work=null;
-}
-$("lorebtn").onclick=function(){buildLore();$("lp").classList.add("open");$("lp").scrollTop=0;document.body.style.overflow="hidden"};
-$("lback").onclick=closeLore;
-$("vback").onclick=function(){$("lv").classList.remove("open");work=null;buildLore()};
-$("llogin").onclick=function(){openAuth("login")};
-$("lmake").onclick=function(){$("lmn").value="";$("lmd").value="";$("lmm").textContent="";$("lm").classList.add("open");$("lmn").focus()};
-$("lmcancel").onclick=function(){$("lm").classList.remove("open")};
-$("lmsave").onclick=function(){
-  var name=$("lmn").value.trim();
-  if(!name){$("lmm").textContent="Give your module a name.";return}
-  var l=myLore();if(!l)return;
-  var m={id:"l"+Date.now(),name:name,desc:$("lmd").value.trim(),created:Date.now(),chars:[]};
-  l.push(m);
-  if(!saveLore(l)){$("lmm").textContent="Couldn't save in this browser.";return}
-  $("lm").classList.remove("open");buildLore();openMod(m.id);
-};
-$("vdel").onclick=function(){
-  if(!lArm){lArm=true;this.textContent="Tap again to delete";return}
-  var l=(myLore()||[]).filter(function(m){return m.id!==work.id});
-  saveLore(l);$("lv").classList.remove("open");work=null;buildLore();
-};
-document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;
-  if($("lm").classList.contains("open"))$("lm").classList.remove("open");
-  else if($("lv").classList.contains("open")){$("lv").classList.remove("open");work=null;buildLore()}
-  else if($("lp").classList.contains("open")&&!$("ov").classList.contains("open"))closeLore();
-});
-render();
+var savedCol=load("lobby_color",null);if(savedCol){applyColor(savedCol);$("ccol").value=savedCol}
+$("ccol").oninput=function(){applyColor(this.value);try{localStorage.setItem("lobby_color",JSON.stringify(this.value))}catch(e){}};
+var PRE=[["#2b2540","Midnight"],["#000000","Black"],["#ffffff","White"],["#7a1f2b","Crimson"],["#c2571a","Sunset"],["#c9a227","Gold"],["#1f5e45","Forest"],["#1b6f73","Teal"],["#1f4e79","Ocean"],["#c2547a","Rose"]];
+function setCol(c){applyColor(c);$("ccol").value=c;try{localStorage.setItem("lobby_color",JSON.stringify(c))}catch(e){}}
+PRE.forEach(function(p){var b=el("button","sw");b.type="button";b.title=p[1];b.setAttribute("aria-label",p[1]);b.style.background=p[0];b.onclick=function(){setCol(p[0])};$("sw").appendChild(b)});
+$("scolr").onclick=function(){applyColor(null);try{localStorage.removeItem("lobby_color")}catch(e){}};
+applyLang();
 requestAnimationFrame(function(){setTimeout(function(){document.body.classList.add("loaded")},250)});
 })();
 </script>
