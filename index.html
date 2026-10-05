@@ -89,7 +89,11 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .zoom output{min-width:3.2em;text-align:center;color:var(--panel-ink)}
 .erow{display:flex;justify-content:space-between;align-items:center;gap:1rem}
 .erow .btn{width:auto}
-.editor{position:relative}
+.editor{position:relative;max-width:calc(100vw - 1rem);min-width:min(360px,100%);min-height:min(520px,100%)}
+.edgrip{position:absolute;bottom:6px;width:20px;height:20px;z-index:3;touch-action:none;opacity:.75}
+.edgrip.r{right:6px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,var(--muted) 50%);border-bottom-right-radius:12px}
+.edgrip.l{left:6px;cursor:nesw-resize;background:linear-gradient(225deg,transparent 50%,var(--muted) 50%);border-bottom-left-radius:12px}
+.overlay.full .edgrip{display:none}
 .overlay.full{padding:0}
 .overlay.full .editor{width:100vw;height:100vh;height:100dvh;max-height:none;border-radius:0;padding:1.4rem}
 .fsbtn{position:absolute;top:1rem;right:1rem;padding:.35rem .8rem;font-size:.85rem}
@@ -170,6 +174,7 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 </div></div>
 <div class="overlay" id="ed"><div class="modal-card editor" role="dialog" aria-label="Note editor">
   <button class="back fsbtn" id="fsbtn" type="button">Fullscreen</button>
+  <div class="edgrip l" id="edgl" title="Resize"></div><div class="edgrip r" id="edgr" title="Resize"></div>
   <h2 class="ntitle" id="etitle"></h2>
   <div class="page"><textarea class="ntext" id="etext" aria-label="Note text" placeholder="Start writing... Type :play:yt: followed by a YouTube link to add a video"></textarea><div class="mir" id="mir" aria-hidden="true"></div><div class="layer" id="layer"></div><div class="layer" id="vlayer"></div></div>
   <div class="vids" id="vids"></div>
@@ -370,11 +375,11 @@ $("ed").addEventListener("drop",function(e){e.preventDefault();if(e.dataTransfer
 $("ed").addEventListener("pointerdown",function(e){if(!e.target.closest(".pimg"))selectImg(null)});
 document.addEventListener("keydown",function(e){if((e.key==="Delete")&&selId&&$("ed").classList.contains("open")&&document.activeElement!==$("etext"))removeImg(selId)});
 function setFull(on){
-  $("ed").classList.toggle("full",on);$("fsbtn").textContent=on?"Exit fullscreen":"Fullscreen";
+  $("ed").classList.toggle("full",on);$("fsbtn").textContent=on?"Exit fullscreen":"Fullscreen";applyEdSize();
   try{if(on){var p=$("ed").requestFullscreen&&$("ed").requestFullscreen();if(p&&p.catch)p.catch(function(){})}else if(document.fullscreenElement){document.exitFullscreen()}}catch(e){}
 }
 $("fsbtn").onclick=function(){setFull(!$("ed").classList.contains("full"))};
-document.addEventListener("fullscreenchange",function(){if(!document.fullscreenElement&&$("ed").classList.contains("full")){$("ed").classList.remove("full");$("fsbtn").textContent="Fullscreen"}});
+document.addEventListener("fullscreenchange",function(){if(!document.fullscreenElement&&$("ed").classList.contains("full")){$("ed").classList.remove("full");$("fsbtn").textContent="Fullscreen";applyEdSize()}});
 var vt=null,vpos={},vkeys=[],vnodes={},vlinks=[];
 function ytParse(raw){
   try{
@@ -489,6 +494,29 @@ function buildVids(){
 function vposSave(){var o={};vkeys.forEach(function(k){if(vpos[k])o[k]=vpos[k]});return o}
 $("etext").addEventListener("input",function(){renderMirror();clearTimeout(vt);vt=setTimeout(buildVids,500)});
 $("etext").addEventListener("scroll",function(){$("mir").scrollTop=$("etext").scrollTop});
+function edCard(){return $("ed").firstElementChild}
+var edSize=null;
+try{var es=JSON.parse(localStorage.getItem("lobby_edsize"));if(es&&es.w&&es.h)edSize=es}catch(e){}
+function applyEdSize(){
+  var c=edCard();
+  if(edSize&&!$("ed").classList.contains("full")){c.style.width=edSize.w+"px";c.style.height=edSize.h+"px"}
+  else{c.style.width="";c.style.height=""}
+}
+[["edgr",1],["edgl",-1]].forEach(function(g){
+  var h=$(g[0]),dir=g[1],st=null;
+  h.addEventListener("pointerdown",function(e){
+    e.preventDefault();e.stopPropagation();
+    var c=edCard();st={sx:e.clientX,sy:e.clientY,w:c.offsetWidth,h:c.offsetHeight};h.setPointerCapture(e.pointerId);
+  });
+  h.addEventListener("pointermove",function(e){
+    if(!st)return;
+    var w=Math.round(Math.min(window.innerWidth-16,Math.max(360,st.w+2*dir*(e.clientX-st.sx))));
+    var ht=Math.round(Math.min(window.innerHeight-16,Math.max(520,st.h+2*(e.clientY-st.sy))));
+    edSize={w:w,h:ht};applyEdSize();
+  });
+  function end(){if(st){st=null;try{localStorage.setItem("lobby_edsize",JSON.stringify(edSize))}catch(e){}}}
+  h.addEventListener("pointerup",end);h.addEventListener("pointercancel",end);
+});
 var curNote=null,delArm=false;
 function myNotes(){var u=current&&users()[current];if(!u)return null;if(!u.notes)u.notes=[];return u.notes}
 function saveNotes(notes){var all=users();if(!current||!all[current])return false;all[current].notes=notes;return save(USERS,all)}
@@ -511,7 +539,7 @@ function openEditor(id){
   var n=myNotes()||[],it=n.filter(function(x){return x.id===id})[0];if(!it)return;
   curNote=id;delArm=false;$("edel").textContent="Delete";
   $("etitle").textContent=it.name;$("etext").value=it.text||"";$("emsg").textContent="";updCount();vpos=JSON.parse(JSON.stringify(it.vpos||{}));vlinks=(it.vlinks||[]).slice();buildVids();imgs=JSON.parse(JSON.stringify(it.images||[]));selId=null;renderImgs();
-  $("ed").classList.add("open");$("etext").focus();
+  $("ed").classList.add("open");applyEdSize();$("etext").focus();
 }
 function closeEditor(){setFull(false);$("vids").textContent="";$("vids").classList.remove("has");$("vlayer").innerHTML="";vnodes={};vkeys=[];vpos={};vlinks=[];$("mir").textContent="";$("ed").classList.remove("open");curNote=null;imgs=[];selId=null}
 $("sharedbtn").onclick=function(){buildNotes();$("sp").classList.add("open");$("sp").scrollTop=0;document.body.style.overflow="hidden"};
