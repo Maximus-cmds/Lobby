@@ -146,11 +146,38 @@ button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
 .social a:focus-visible{outline:3px solid var(--muted);outline-offset:3px}
 .social svg{width:20px;height:20px;fill:currentColor}
 @media (prefers-reduced-motion:reduce){.auth-actions{transition:none}.hero h1{transition:none;opacity:1;transform:none}html{scroll-behavior:auto}.social a{transition:none}}
+
+.cog{position:absolute;top:.7rem;right:.7rem;width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;padding:0}
+.cog svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s ease}
+.pop.set .cog svg{transform:rotate(90deg)}
+.cog:focus-visible,.drop:focus-visible,.field select:focus-visible{outline:3px solid #9d8cff;outline-offset:2px}
+.pop.set #pav,.pop.set #pout,.pop.set #pin{display:none!important}
+.pop:not(.set) #pset{display:none}
+#pset{display:flex;flex-direction:column;gap:.9rem;padding-top:.3rem}
+#pset h3{font-size:1.3rem;letter-spacing:-.02em}
+.field select{font:inherit;padding:.65rem .8rem;border-radius:10px;border:1.5px solid var(--muted);background:var(--panel);color:inherit}
+.crow{display:flex;gap:.6rem;align-items:center}
+.crow input[type=color]{width:48px;height:38px;padding:0;border:1.5px solid var(--muted);border-radius:10px;background:transparent;cursor:pointer}
+.avatar{cursor:pointer}
+.drop{font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:.7rem;padding:2rem 1rem;text-align:center;border:2px dashed var(--muted);border-radius:16px;background:rgba(127,127,127,.08);cursor:pointer}
+.drop.over{border-color:#9d8cff;background:rgba(157,140,255,.18)}
+.drop svg{width:34px;height:34px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.crst{display:flex;flex-direction:column;align-items:center;gap:.7rem}
+#crc{width:100%;max-width:280px;aspect-ratio:1;border-radius:14px;background:#000;cursor:grab;touch-action:none}
+#crz{width:100%;max-width:280px;accent-color:#9d8cff}
+.hint{font-size:.8rem;color:var(--muted)}
+.vbox.sp{aspect-ratio:auto;height:152px}
+.vbox.sp.tall{height:352px}
 </style>
 </head>
 <body>
 <button class="pbtn" id="pbtn" aria-label="Profile"><svg viewBox="0 0 24 24" id="pico"><path d="M12 12a4.500 4.500 0 1 0 0-9 4.500 4.500 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg></button>
 <div class="pop" id="pop" role="dialog" aria-label="Profile">
+  <button class="cog" id="cog" type="button" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  <div id="pset"><h3 id="sett">Settings</h3>
+    <label class="field">Language<select id="slang"><option value="en">English</option><option value="ja">日本語</option><option value="hu">Magyar</option><option value="zh">中文</option><option value="es">Español</option><option value="mx">Español (México)</option><option value="de">Deutsch</option><option value="la">Latina</option></select></label>
+    <div class="field"><span id="scolt">Site colour</span><div class="crow"><input type="color" id="ccol" value="#2b2540" aria-label="Site colour"><button class="btn dark" id="scolr" type="button">Reset colour</button></div></div>
+  </div>
   <div class="avatar" id="pav"><svg viewBox="0 0 24 24"><path d="M12 12a4.500 4.500 0 1 0 0-9 4.500 4.500 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg></div>
   <div id="pout" class="hidden" style="text-align:center">
     <p style="margin-bottom:.8rem">Log in to set your name and picture.</p>
@@ -177,6 +204,15 @@ button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
     <button class="link" id="aclose" type="button">Cancel</button>
   </div>
 </div>
+<div class="overlay" id="cr"><div class="modal-card" role="dialog" aria-labelledby="crt">
+  <h2 id="crt">Profile picture</h2>
+  <input type="file" id="crfile" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden>
+  <button class="drop" id="crdrop" type="button"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><span id="crdt">Insert picture .jpg, .png, .webp here</span></button>
+  <div class="crst hidden" id="crst"><canvas id="crc" width="280" height="280"></canvas><input type="range" id="crz" min="1" max="4" step="0.01" value="1" aria-label="Zoom"><p class="hint" id="crhint">Drag to move, slide to zoom.</p></div>
+  <p class="msg" id="crm" role="alert"></p>
+  <button class="btn dark full hidden" id="crok" type="button">Apply</button>
+  <button class="link" id="crcancel" type="button">Cancel</button>
+</div></div>
 <div class="shared-page" id="sp" role="dialog" aria-label="My Notes">
   <div class="shared-inner">
     <div class="sbar"><button class="back" id="sback" type="button">Back</button><h2>My Notes</h2></div>
@@ -195,7 +231,7 @@ button.card:focus-visible{outline:3px solid #9d8cff;outline-offset:3px}
   <button class="back fsbtn rsbtn" id="rsbtn" type="button">Reset size</button><button class="back fsbtn" id="fsbtn" type="button">Fullscreen</button>
   <div class="edgrip l" id="edgl" title="Resize"></div><div class="edgrip r" id="edgr" title="Resize"></div>
   <h2 class="ntitle" id="etitle"></h2>
-  <div class="page"><textarea class="ntext" id="etext" aria-label="Note text" placeholder="Start writing... Type :play:yt: followed by a YouTube link to add a video"></textarea><div class="mir" id="mir" aria-hidden="true"></div><div class="layer" id="layer"></div><div class="layer" id="vlayer"></div></div>
+  <div class="page"><textarea class="ntext" id="etext" aria-label="Note text" placeholder="Start writing... Type :play:yt: + YouTube link for a video, or :play:sp: + Spotify link for a song"></textarea><div class="mir" id="mir" aria-hidden="true"></div><div class="layer" id="layer"></div><div class="layer" id="vlayer"></div></div>
   <div class="vids" id="vids"></div>
   <div class="srow"><span id="ecount">0 characters</span><button class="link" id="addpic" type="button">Add picture</button><input type="file" id="picfile" accept="image/*" multiple hidden><div class="zoom" aria-label="Text size"><button type="button" id="zout" aria-label="Smaller text">&minus;</button><output id="zval">100%</output><button type="button" id="zin" aria-label="Larger text">+</button></div></div>
   <p class="msg ok" id="emsg" role="status"></p>
@@ -257,7 +293,7 @@ function render(){
   if(!u){current=null}
   $("acts").classList.toggle("hidden",!!u);
   $("wel").classList.toggle("hidden",!u);
-  if(u)$("wel").textContent="Welcome, "+(u.name||current);
+  if(u)$("wel").textContent=t("welcome_u")+(u.name||current);
   var pic=u&&u.pfp;
   var ph='<svg viewBox="0 0 24 24"><path d="M12 12a4.500 4.500 0 1 0 0-9 4.500 4.500 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg>';
   $("pbtn").innerHTML=pic?'<img alt="" src="'+pic+'">':ph;
@@ -265,14 +301,14 @@ function render(){
   $("pout").classList.toggle("hidden",!!u);
   $("pin").classList.toggle("hidden",!u);
   if(u)$("pname").value=u.name||"";
-  $("greet").textContent=u?"Welcome back, "+(u.name||current.split("@")[0]):"Welcome to the Lobby";
+  $("greet").textContent=u?t("back")+(u.name||current.split("@")[0]):t("welcome");
   if(typeof buildNotes==="function"&&$("nlist"))buildNotes();
 }
 function openAuth(m){
   mode=m;
-  $("mt").textContent=m==="signup"?"Sign up":"Log in";
-  $("asubmit").textContent=m==="signup"?"Create account":"Log in";
-  $("aswap").textContent=m==="signup"?"I already have an account":"I need an account";
+  $("mt").textContent=m==="signup"?t("signup"):t("login");
+  $("asubmit").textContent=m==="signup"?t("create"):t("login");
+  $("aswap").textContent=m==="signup"?t("haveacc"):t("needacc");
   $("pw2row").classList.toggle("hidden",m!=="signup");
   $("pw").autocomplete=m==="signup"?"new-password":"current-password";
   $("amsg").textContent="";$("pw").value="";$("pw2").value="";
@@ -310,20 +346,61 @@ $("asubmit").onclick=async function(){
 };
 $("plogout").onclick=function(){current=null;try{localStorage.removeItem(SESS)}catch(e){}$("pop").classList.remove("open");render()};
 var pendingPic=null;
-$("ppick").onclick=function(){$("pfile").click()};
-$("pfile").onchange=function(){
-  var f=this.files[0];if(!f)return;
-  var img=new Image(),url=URL.createObjectURL(f);
-  img.onload=function(){
-    var c=document.createElement("canvas"),n=160;c.width=c.height=n;
-    var s=Math.min(img.width,img.height),x=(img.width-s)/2,y=(img.height-s)/2;
-    c.getContext("2d").drawImage(img,x,y,s,s,0,0,n,n);
-    pendingPic=c.toDataURL("image/jpeg",.85);URL.revokeObjectURL(url);
-    $("pav").innerHTML='<img alt="" src="'+pendingPic+'">';
-    $("pmsg").textContent="Picture ready. Press Save profile.";
+var cr={img:null,min:1,s:1,x:0,y:0,d:null};
+function crReset(){cr.img=null;$("crst").classList.add("hidden");$("crdrop").classList.remove("hidden");$("crok").classList.add("hidden");$("crm").textContent="";$("crfile").value=""}
+function openCrop(){crReset();$("cr").classList.add("open");$("pop").classList.remove("open")}
+function closeCrop(){$("cr").classList.remove("open")}
+function crDraw(){
+  if(!cr.img)return;
+  var c=$("crc"),g=c.getContext("2d"),w=cr.img.width*cr.s,h=cr.img.height*cr.s;
+  cr.x=Math.min(20,Math.max(260-w,cr.x));cr.y=Math.min(20,Math.max(260-h,cr.y));
+  g.clearRect(0,0,280,280);g.drawImage(cr.img,cr.x,cr.y,w,h);
+  g.fillStyle="rgba(10,6,25,.65)";g.beginPath();g.rect(0,0,280,280);g.arc(140,140,120,0,Math.PI*2,true);g.fill("evenodd");
+  g.strokeStyle="#fff";g.lineWidth=3;g.beginPath();g.arc(140,140,120,0,Math.PI*2);g.stroke();
+}
+function crZoom(z){
+  z=Math.min(4,Math.max(1,z));var px=(140-cr.x)/cr.s,py=(140-cr.y)/cr.s;
+  cr.s=cr.min*z;cr.x=140-px*cr.s;cr.y=140-py*cr.s;$("crz").value=z;crDraw();
+}
+function crLoad(f){
+  if(!f)return;
+  if(!/^image\/(jpeg|png|webp)$/.test(f.type)){$("crm").textContent=t("badtype");return}
+  var im=new Image(),u=URL.createObjectURL(f);
+  im.onload=function(){
+    URL.revokeObjectURL(u);cr.img=im;cr.min=240/Math.min(im.width,im.height);cr.s=cr.min;
+    cr.x=140-im.width*cr.s/2;cr.y=140-im.height*cr.s/2;$("crz").value=1;$("crm").textContent="";
+    $("crdrop").classList.add("hidden");$("crst").classList.remove("hidden");$("crok").classList.remove("hidden");crDraw();
   };
-  img.onerror=function(){$("pmsg").textContent="That file isn't an image."};
-  img.src=url;
+  im.onerror=function(){$("crm").textContent=t("badtype")};
+  im.src=u;
+}
+$("ppick").onclick=openCrop;
+$("pav").onclick=function(){if(current)openCrop()};
+$("crdrop").onclick=function(){$("crfile").click()};
+$("crfile").onchange=function(){crLoad(this.files[0])};
+["dragenter","dragover"].forEach(function(n){$("cr").addEventListener(n,function(e){e.preventDefault();$("crdrop").classList.add("over")})});
+$("cr").addEventListener("dragleave",function(){$("crdrop").classList.remove("over")});
+$("cr").addEventListener("drop",function(e){e.preventDefault();$("crdrop").classList.remove("over");if(e.dataTransfer.files[0])crLoad(e.dataTransfer.files[0])});
+$("crz").oninput=function(){crZoom(parseFloat(this.value))};
+$("crc").addEventListener("wheel",function(e){e.preventDefault();crZoom(parseFloat($("crz").value)*(e.deltaY<0?1.08:.93))},{passive:false});
+$("crc").addEventListener("pointerdown",function(e){e.preventDefault();cr.d={x:e.clientX,y:e.clientY};this.setPointerCapture(e.pointerId)});
+$("crc").addEventListener("pointermove",function(e){
+  if(!cr.d)return;var f=280/this.getBoundingClientRect().width;
+  cr.x+=(e.clientX-cr.d.x)*f;cr.y+=(e.clientY-cr.d.y)*f;cr.d={x:e.clientX,y:e.clientY};crDraw();
+});
+$("crc").addEventListener("pointerup",function(){cr.d=null});
+$("crc").addEventListener("pointercancel",function(){cr.d=null});
+$("crcancel").onclick=closeCrop;
+$("cr").addEventListener("click",function(e){if(e.target===$("cr"))closeCrop()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeCrop()});
+$("crok").onclick=function(e){
+  e.stopPropagation();
+  if(!cr.img||!current)return;
+  var o=document.createElement("canvas");o.width=o.height=256;
+  var k=1/cr.s;o.getContext("2d").drawImage(cr.img,(20-cr.x)*k,(20-cr.y)*k,240*k,240*k,0,0,256,256);
+  var all=users();all[current].pfp=o.toDataURL("image/jpeg",.9);
+  save(USERS,all);closeCrop();render();
+  $("pop").classList.add("open");$("pmsg").textContent=t("saved");
 };
 $("psave").onclick=function(){
   var all=users();if(!current||!all[current])return;
@@ -428,19 +505,21 @@ function ytParse(raw){
     }
     if(!/^[\w-]{11}$/.test(id))return null;
     var t=u.searchParams.get("t")||u.searchParams.get("start")||"";
-    return {id:id,start:/^\d+s?$/.test(t)?parseInt(t,10):0};
+    return {type:"yt",id:id,start:/^\d+s?$/.test(t)?parseInt(t,10):0};
   }catch(e){return null}
 }
+function spParse(raw){try{var u=new URL(raw.trim());if(u.hostname!=="open.spotify.com")return null;var p=u.pathname.split("/").filter(Boolean);if(/^intl-/.test(p[0]))p.shift();if(!/^(track|album|playlist|episode|show|artist)$/.test(p[0])||!/^[A-Za-z0-9]{22}$/.test(p[1]||""))return null;return {type:"sp",kind:p[0],id:p[1]}}catch(e){return null}}
+function mediaParse(r){return ytParse(r)||spParse(r)}
 function placeV(k){var b=vnodes[k],p=vpos[k];if(b&&p){b.style.left=p.x+"px";b.style.top=p.y+"px";b.style.width=Math.max(240,p.w||320)+"px"}}
 function makeVbox(f){
   var k=f.key,box=el("div","vbox"),bar=el("div","vbar");
   bar.appendChild(el("span","","Drag to move"));
-  var a=el("a","","Open on YouTube");a.href="https://www.youtube.com/watch?v="+f.id+(f.start?"&t="+f.start+"s":"");a.target="_blank";a.rel="noopener";
+  var sp=f.type==="sp";var a=el("a","",sp?"Open on Spotify":"Open on YouTube");a.href=sp?"https://open.spotify.com/"+f.kind+"/"+f.id:"https://www.youtube.com/watch?v="+f.id+(f.start?"&t="+f.start+"s":"");a.target="_blank";a.rel="noopener";
   bar.appendChild(a);
   var fr=document.createElement("iframe");
-  fr.src="https://www.youtube-nocookie.com/embed/"+f.id+"?rel=0"+(f.start?"&start="+f.start:"");
-  fr.title="YouTube video";
-  fr.allow="accelerometer; encrypted-media; picture-in-picture; fullscreen";
+  fr.src=sp?"https://open.spotify.com/embed/"+f.kind+"/"+f.id:"https://www.youtube-nocookie.com/embed/"+f.id+"?rel=0"+(f.start?"&start="+f.start:"");
+  fr.title=sp?"Spotify player":"YouTube video";if(sp){box.classList.add("sp");if(!/^(track|episode)$/.test(f.kind))box.classList.add("tall")}
+  fr.allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; fullscreen";
   fr.setAttribute("allowfullscreen","");fr.referrerPolicy="strict-origin-when-cross-origin";
   var grip=el("div","vgrip");grip.title="Resize";
   box.appendChild(fr);box.appendChild(bar);box.appendChild(grip);
@@ -499,9 +578,9 @@ function renderMirror(){
 }
 function buildVids(){
   var ta=$("etext"),text=ta.value,caret=ta.selectionStart,newCaret=caret,removedTotal=0,bad=false,counts={};
-  var re=/:play:yt:(?:\(([^)]*)\)|(\S+))/g;
+  var re=/:play:(?:yt|sp):(?:\(([^)]*)\)|(\S+))/g;
   var out=text.replace(re,function(full,p1,p2,offset){
-    var raw=(p1!==undefined?p1:p2).trim(),clean=raw.replace(/[.,;!?]+$/,""),tail=raw.slice(clean.length),f=ytParse(clean);
+    var raw=(p1!==undefined?p1:p2).trim(),clean=raw.replace(/[.,;!?]+$/,""),tail=raw.slice(clean.length),f=mediaParse(clean);
     if(!f){bad=true;return full}
     var ok=f.id+"@"+f.start;counts[ok]=(counts[ok]||0)+1;
     var oldKey=ok+"#"+(counts[ok]-1);
@@ -516,8 +595,8 @@ function buildVids(){
   if(out!==text){ta.value=out;try{ta.setSelectionRange(newCaret,newCaret)}catch(e){}updCount()}
   vlinks=vlinks.filter(function(u){return out.indexOf(u)>=0});
   var vids=[];
-  vlinks.forEach(function(u){var f=ytParse(u);if(f){f.key=u;vids.push(f)}});
-  $("vids").textContent=bad?"A :play:yt: link couldn't be read. Paste the full YouTube link right after it.":"";
+  vlinks.forEach(function(u){var f=mediaParse(u);if(f){f.key=u;vids.push(f)}});
+  $("vids").textContent=bad?"A :play: link couldn't be read. Paste the full YouTube or Spotify link right after it.":"";
   $("vids").classList.toggle("has",bad);
   vkeys=vids.map(function(f){return f.key});
   Object.keys(vnodes).forEach(function(k){if(vkeys.indexOf(k)<0){vnodes[k].remove();delete vnodes[k]}});
@@ -560,7 +639,7 @@ function myNotes(){var u=current&&users()[current];if(!u)return null;if(!u.notes
 function saveNotes(notes){var all=users();if(!current||!all[current])return false;all[current].notes=notes;return save(USERS,all)}
 function buildNotes(){
   var n=myNotes();
-  $("ncount").textContent=n?(n.length===1?"1 note":n.length+" notes"):"Log in to start writing.";
+  $("ncount").textContent=n?(n.length===1?t("note1"):t("notesN").replace("{n}",n.length)):t("startw");
   $("nout").classList.toggle("hidden",!!n);
   $("nin").classList.toggle("hidden",!n);
   var list=$("nlist");list.innerHTML="";
@@ -614,7 +693,38 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"){
   if($("ed").classList.contains("open")){if($("ed").classList.contains("full")&&!document.fullscreenElement)setFull(false);else closeEditor()}
   else if($("nn").classList.contains("open"))$("nn").classList.remove("open");
   else if($("sp").classList.contains("open")&&!$("ov").classList.contains("open"))closeNotes();}});
-render();
+var T={"en": {"signup": "Sign up", "login": "Log in", "loginsignup": "Log in / Sign up", "loginprompt": "Log in to set your name and picture.", "changepic": "Change picture", "name": "Name", "yourname": "Your name", "save": "Save profile", "logout": "Log out", "settings": "Settings", "language": "Language", "color": "Site colour", "reset": "Reset colour", "email": "Email", "password": "Password", "confirm": "Confirm password", "create": "Create account", "haveacc": "I already have an account", "needacc": "I need an account", "cancel": "Cancel", "yourspace": "Your space", "welcome": "Welcome to the Lobby", "back": "Welcome back, ", "welcome_u": "Welcome, ", "sub": "Write things down, keep them safe, and come back to them anytime.", "mynotes": "My Notes", "open": "Open →", "more": "More coming soon", "more2": "New things will show up here.", "startw": "Log in to start writing.", "note1": "1 note", "notesN": "{n} notes", "croptitle": "Profile picture", "drop": "Insert picture .jpg, .png, .webp here", "apply": "Apply", "hint": "Drag to move, slide to zoom.", "badtype": "Use a .jpg, .png or .webp picture.", "saved": "Saved."}, "ja": {"signup": "新規登録", "login": "ログイン", "loginsignup": "ログイン / 新規登録", "loginprompt": "ログインして名前と画像を設定しましょう。", "changepic": "画像を変更", "name": "名前", "yourname": "あなたの名前", "save": "プロフィールを保存", "logout": "ログアウト", "settings": "設定", "language": "言語", "color": "サイトの色", "reset": "色をリセット", "email": "メールアドレス", "password": "パスワード", "confirm": "パスワード（確認）", "create": "アカウント作成", "haveacc": "アカウントをお持ちの方", "needacc": "アカウントが必要です", "cancel": "キャンセル", "yourspace": "あなたのスペース", "welcome": "ロビーへようこそ", "back": "おかえりなさい、", "welcome_u": "ようこそ、", "sub": "書き留めて、安全に保管して、いつでも戻ってこられます。", "mynotes": "マイノート", "open": "開く →", "more": "近日公開", "more2": "新しいものがここに表示されます。", "startw": "ログインして書き始めましょう。", "note1": "ノート1件", "notesN": "ノート{n}件", "croptitle": "プロフィール画像", "drop": ".jpg、.png、.webp の画像をここに挿入", "apply": "適用", "hint": "ドラッグで移動、スライダーで拡大縮小。", "badtype": ".jpg、.png、.webp の画像を使用してください。", "saved": "保存しました。"}, "hu": {"signup": "Regisztráció", "login": "Belépés", "loginsignup": "Belépés / Regisztráció", "loginprompt": "Lépj be a neved és képed beállításához.", "changepic": "Kép módosítása", "name": "Név", "yourname": "A neved", "save": "Profil mentése", "logout": "Kilépés", "settings": "Beállítások", "language": "Nyelv", "color": "Az oldal színe", "reset": "Szín visszaállítása", "email": "E-mail", "password": "Jelszó", "confirm": "Jelszó megerősítése", "create": "Fiók létrehozása", "haveacc": "Már van fiókom", "needacc": "Fiókra van szükségem", "cancel": "Mégse", "yourspace": "A te helyed", "welcome": "Üdv a Lobbyban", "back": "Üdv újra, ", "welcome_u": "Üdv, ", "sub": "Írj le dolgokat, őrizd meg őket, és térj vissza hozzájuk bármikor.", "mynotes": "Jegyzeteim", "open": "Megnyitás →", "more": "Hamarosan még több", "more2": "Itt új dolgok jelennek meg.", "startw": "Lépj be az íráshoz.", "note1": "1 jegyzet", "notesN": "{n} jegyzet", "croptitle": "Profilkép", "drop": "Húzd ide a .jpg, .png, .webp képet", "apply": "Alkalmaz", "hint": "Húzással mozgasd, csúszkával nagyítsd.", "badtype": "Használj .jpg, .png vagy .webp képet.", "saved": "Mentve."}, "zh": {"signup": "注册", "login": "登录", "loginsignup": "登录 / 注册", "loginprompt": "登录后设置你的名字和头像。", "changepic": "更换头像", "name": "名字", "yourname": "你的名字", "save": "保存资料", "logout": "退出登录", "settings": "设置", "language": "语言", "color": "网站颜色", "reset": "重置颜色", "email": "电子邮箱", "password": "密码", "confirm": "确认密码", "create": "创建账号", "haveacc": "我已有账号", "needacc": "我需要账号", "cancel": "取消", "yourspace": "你的空间", "welcome": "欢迎来到大厅", "back": "欢迎回来，", "welcome_u": "欢迎，", "sub": "写下来，妥善保存，随时回来查看。", "mynotes": "我的笔记", "open": "打开 →", "more": "敬请期待", "more2": "新内容将显示在这里。", "startw": "登录后开始书写。", "note1": "1 条笔记", "notesN": "{n} 条笔记", "croptitle": "头像", "drop": "在此插入 .jpg、.png、.webp 图片", "apply": "应用", "hint": "拖动移动，滑动缩放。", "badtype": "请使用 .jpg、.png 或 .webp 图片。", "saved": "已保存。"}, "es": {"signup": "Registrarse", "login": "Iniciar sesión", "loginsignup": "Iniciar sesión / Registrarse", "loginprompt": "Inicia sesión para poner tu nombre e imagen.", "changepic": "Cambiar imagen", "name": "Nombre", "yourname": "Tu nombre", "save": "Guardar perfil", "logout": "Cerrar sesión", "settings": "Ajustes", "language": "Idioma", "color": "Color del sitio", "reset": "Restablecer color", "email": "Correo electrónico", "password": "Contraseña", "confirm": "Confirmar contraseña", "create": "Crear cuenta", "haveacc": "Ya tengo una cuenta", "needacc": "Necesito una cuenta", "cancel": "Cancelar", "yourspace": "Tu espacio", "welcome": "Bienvenido al Lobby", "back": "Bienvenido de nuevo, ", "welcome_u": "Bienvenido, ", "sub": "Escribe tus cosas, guárdalas y vuelve a ellas cuando quieras.", "mynotes": "Mis notas", "open": "Abrir →", "more": "Pronto habrá más", "more2": "Aquí aparecerán cosas nuevas.", "startw": "Inicia sesión para empezar a escribir.", "note1": "1 nota", "notesN": "{n} notas", "croptitle": "Imagen de perfil", "drop": "Inserta aquí una imagen .jpg, .png, .webp", "apply": "Aplicar", "hint": "Arrastra para mover, desliza para hacer zoom.", "badtype": "Usa una imagen .jpg, .png o .webp.", "saved": "Guardado."}, "de": {"signup": "Registrieren", "login": "Anmelden", "loginsignup": "Anmelden / Registrieren", "loginprompt": "Melde dich an, um Namen und Bild festzulegen.", "changepic": "Bild ändern", "name": "Name", "yourname": "Dein Name", "save": "Profil speichern", "logout": "Abmelden", "settings": "Einstellungen", "language": "Sprache", "color": "Farbe der Seite", "reset": "Farbe zurücksetzen", "email": "E-Mail", "password": "Passwort", "confirm": "Passwort bestätigen", "create": "Konto erstellen", "haveacc": "Ich habe schon ein Konto", "needacc": "Ich brauche ein Konto", "cancel": "Abbrechen", "yourspace": "Dein Bereich", "welcome": "Willkommen in der Lobby", "back": "Willkommen zurück, ", "welcome_u": "Willkommen, ", "sub": "Schreib Dinge auf, bewahre sie sicher auf und komm jederzeit zurück.", "mynotes": "Meine Notizen", "open": "Öffnen →", "more": "Bald mehr", "more2": "Hier erscheinen neue Dinge.", "startw": "Melde dich an, um zu schreiben.", "note1": "1 Notiz", "notesN": "{n} Notizen", "croptitle": "Profilbild", "drop": "Bild .jpg, .png, .webp hier einfügen", "apply": "Übernehmen", "hint": "Zum Verschieben ziehen, zum Zoomen schieben.", "badtype": "Nutze ein .jpg-, .png- oder .webp-Bild.", "saved": "Gespeichert."}, "la": {"signup": "Inscribere", "login": "Intrare", "loginsignup": "Intrare / Inscribere", "loginprompt": "Intra ut nomen et imaginem ponas.", "changepic": "Imaginem muta", "name": "Nomen", "yourname": "Nomen tuum", "save": "Profilum serva", "logout": "Exire", "settings": "Optiones", "language": "Lingua", "color": "Color paginae", "reset": "Colorem restitue", "email": "Epistula electronica", "password": "Tessera", "confirm": "Tesseram confirma", "create": "Rationem crea", "haveacc": "Rationem iam habeo", "needacc": "Rationem desidero", "cancel": "Omitte", "yourspace": "Locus tuus", "welcome": "Salve in Atrio", "back": "Salve iterum, ", "welcome_u": "Salve, ", "sub": "Scribe, serva, et semper revertere.", "mynotes": "Notae meae", "open": "Aperi →", "more": "Plura mox", "more2": "Nova hic apparebunt.", "startw": "Intra ut scribere incipias.", "note1": "1 nota", "notesN": "{n} notae", "croptitle": "Imago profili", "drop": "Pone imaginem .jpg, .png, .webp hic", "apply": "Applica", "hint": "Trahe ut moveas, labere ut amplifices.", "badtype": "Utere imagine .jpg, .png vel .webp.", "saved": "Servatum."}};T.mx=Object.assign({},T.es,{"changepic": "Cambiar foto", "yourname": "Tu nombre", "croptitle": "Foto de perfil", "drop": "Inserta tu foto .jpg, .png, .webp aquí", "badtype": "Usa una foto .jpg, .png o .webp."});
+var lang=load("lobby_lang","en");if(!T[lang]&&lang!=="mx")lang="en";
+function t(k){return(T[lang]&&T[lang][k])||T.en[k]||k}
+var MAP={bsign:"signup",blog:"login",pgo:"loginsignup",ppick:"changepic",psave:"save",plogout:"logout",aclose:"cancel",sett:"settings",scolt:"color",scolr:"reset",crt:"croptitle",crdt:"drop",crok:"apply",crhint:"hint",crcancel:"cancel"};
+var LBL={em:"email",pw:"password",pw2:"confirm",pname:"name",slang:"language"};
+var SEL={".eyebrow":"yourspace","#sharedbtn h3":"mynotes","#sharedbtn .go":"open",".card.soon h3":"more",".card.soon p":"more2","#pout p":"loginprompt","#sub":"sub"};
+function applyLang(){
+  document.documentElement.lang=lang==="mx"?"es-MX":lang;
+  Object.keys(MAP).forEach(function(i){$(i).textContent=t(MAP[i])});
+  Object.keys(LBL).forEach(function(i){$(i).parentNode.firstChild.nodeValue=t(LBL[i])});
+  Object.keys(SEL).forEach(function(q){document.querySelector(q).textContent=t(SEL[q])});
+  $("pname").placeholder=t("yourname");
+  if($("ov").classList.contains("open"))openAuth(mode);
+  render();
+}
+$("slang").value=lang;
+$("slang").onchange=function(){lang=this.value;try{localStorage.setItem("lobby_lang",lang)}catch(e){}applyLang()};
+$("cog").onclick=function(e){e.stopPropagation();$("pop").classList.toggle("set")};
+function hx(c){return[1,3,5].map(function(i){return parseInt(c.substr(i,2),16)})}
+function mixc(c,b,p){var a=hx(c),d=hx(b);return"#"+a.map(function(v,i){return("0"+Math.round(v*(1-p)+d[i]*p).toString(16)).slice(-2)}).join("")}
+function applyColor(c){
+  var r=document.documentElement.style,ks=["--hero","--hero-ink","--panel","--panel-ink","--muted"];
+  if(!c){ks.forEach(function(k){r.removeProperty(k)});$("ccol").value="#2b2540";return}
+  var d=window.matchMedia("(prefers-color-scheme: dark)").matches&&document.documentElement.dataset.theme!=="light",g=hx(c),lum=.299*g[0]+.587*g[1]+.114*g[2];
+  r.setProperty("--hero",c);r.setProperty("--hero-ink",lum>150?"#1a1530":"#f2eefc");
+  r.setProperty("--panel",d?mixc(c,"#000000",.65):mixc(c,"#ffffff",.88));
+  r.setProperty("--panel-ink",d?"#ebe7f7":"#1a1530");r.setProperty("--muted",d?"#a9a3c0":"#5d5776");
+}
+var savedCol=load("lobby_color",null);if(savedCol){applyColor(savedCol);$("ccol").value=savedCol}
+$("ccol").oninput=function(){applyColor(this.value);try{localStorage.setItem("lobby_color",JSON.stringify(this.value))}catch(e){}};
+$("scolr").onclick=function(){applyColor(null);try{localStorage.removeItem("lobby_color")}catch(e){}};
+applyLang();
 requestAnimationFrame(function(){setTimeout(function(){document.body.classList.add("loaded")},250)});
 })();
 </script>
