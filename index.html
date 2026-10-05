@@ -121,7 +121,6 @@ body{background:var(--hero);font-family:"Bricolage Grotesque",system-ui,sans-ser
 .vbox.drag .vbar{cursor:grabbing}
 .vgrip{position:absolute;right:-10px;bottom:-10px;z-index:2;width:18px;height:18px;border-radius:50%;background:var(--accent);border:2px solid #fff;cursor:nwse-resize;touch-action:none}
 .vghost{position:absolute;border:2px dashed var(--accent);border-radius:10px;background:color-mix(in srgb,var(--accent) 18%,transparent);pointer-events:none}
-.panel::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(620px 420px at 12% 18%,var(--glow1),transparent 70%),radial-gradient(520px 380px at 88% 70%,var(--glow2),transparent 70%)}
 .panel>*{position:relative}
 .home{flex:1;display:flex;flex-direction:column;justify-content:center;gap:2.2rem;width:min(1000px,100%);margin:0 auto;padding:10vh 6vw}
 .eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
@@ -166,8 +165,18 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 #crc{width:100%;max-width:280px;aspect-ratio:1;border-radius:14px;background:#000;cursor:grab;touch-action:none}
 #crz{width:100%;max-width:280px;accent-color:var(--accent)}
 .hint{font-size:.8rem;color:var(--muted)}
-.vbox.sp{aspect-ratio:auto;height:152px}
-.vbox.sp.tall{height:352px}
+.vbox.sp{aspect-ratio:auto;height:auto}
+.sphost{position:relative;height:152px;border-radius:8px 8px 0 0;overflow:hidden}
+.vbox.sp.tall .sphost{height:352px}
+.spctl{display:flex;align-items:center;gap:.5rem;padding:.35rem .6rem;background:#121212;color:#fff;font-size:.75rem;border-radius:0 0 8px 8px}
+.spctl input{flex:1;min-width:0;accent-color:var(--accent)}
+.spbtn{font:inherit;background:transparent;border:1.5px solid #fff;color:#fff;border-radius:999px;padding:.1rem .55rem;cursor:pointer}
+.spbtn:focus-visible{outline:3px solid var(--accent)}
+.sptm{white-space:nowrap;min-width:6.5em;text-align:right}
+.swatches{display:flex;flex-wrap:wrap;gap:.5rem}
+.sw{width:30px;height:30px;border-radius:50%;border:2px solid var(--muted);cursor:pointer;padding:0}
+.sw:hover{transform:scale(1.12)}
+.sw:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -177,6 +186,7 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
   <div id="pset"><h3 id="sett">Settings</h3>
     <label class="field">Language<select id="slang"><option value="en">English</option><option value="ja">日本語</option><option value="hu">Magyar</option><option value="zh">中文</option><option value="es">Español</option><option value="mx">Español (México)</option><option value="de">Deutsch</option><option value="la">Latina</option></select></label>
     <div class="field"><span id="scolt">Site colour</span><div class="crow"><input type="color" id="ccol" value="#2b2540" aria-label="Site colour"><button class="btn dark" id="scolr" type="button">Reset colour</button></div></div>
+    <div class="field"><span id="srect">Recommended colours</span><div class="swatches" id="sw"></div></div>
   </div>
   <div class="avatar" id="pav"><svg viewBox="0 0 24 24"><path d="M12 12a4.500 4.500 0 1 0 0-9 4.500 4.500 0 0 0 0 9Zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5Z"/></svg></div>
   <div id="pout" class="hidden" style="text-align:center">
@@ -407,21 +417,21 @@ $("psave").onclick=function(){
   all[current].name=$("pname").value.trim();
   if(pendingPic)all[current].pfp=pendingPic;
   pendingPic=null;
-  $("pmsg").textContent=save(USERS,all)?"Saved.":"Couldn't save in this browser.";
+  $("pmsg").textContent=save(USERS,all)?t("saved"):t("failsave");
   render();
 };
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 var zoom=100;
 try{var zs=parseInt(localStorage.getItem("lobby_zoom"),10);if(zs>=50&&zs<=200)zoom=zs}catch(e){}
 function applyZoom(){$("etext").parentNode.style.setProperty("--fs",zoom/100);$("zval").textContent=zoom+"%";try{localStorage.setItem("lobby_zoom",zoom)}catch(e){}}
-function updCount(){var t=$("etext").value,w=t.trim()?t.trim().split(/\s+/).length:0;$("ecount").textContent=t.length+" characters, "+w+" words"}
+function updCount(){var x=$("etext").value,w=x.trim()?x.trim().split(/\s+/).length:0;$("ecount").textContent=t("chars").replace("{c}",x.length).replace("{w}",w)}
 $("zin").onclick=function(){zoom=Math.min(200,zoom+10);applyZoom()};
 $("zout").onclick=function(){zoom=Math.max(50,zoom-10);applyZoom()};
 $("etext").addEventListener("input",updCount);
 applyZoom();
 var imgs=[],selId=null;
 function selectImg(id){selId=id;Array.prototype.forEach.call(document.querySelectorAll(".pimg"),function(x){x.classList.toggle("sel",x.dataset.id===id)})}
-function removeImg(id){imgs=imgs.filter(function(m){return m.id!==id});if(selId===id)selId=null;renderImgs();$("emsg").textContent="Press Save to keep your changes."}
+function removeImg(id){imgs=imgs.filter(function(m){return m.id!==id});if(selId===id)selId=null;renderImgs();$("emsg").textContent=t("keep")}
 function renderImgs(){
   var L=$("layer");L.innerHTML="";
   imgs.forEach(function(m){
@@ -442,7 +452,7 @@ function renderImgs(){
     d.addEventListener("pointerdown",function(e){
       if(e.target===hs.dl){removeImg(m.id);return}
       e.preventDefault();selectImg(m.id);
-      if(e.target===hs.rz){m.w=m.w0||m.w;m.h=m.h0||m.h;place();$("emsg").textContent="Press Save to keep your changes.";return}
+      if(e.target===hs.rz){m.w=m.w0||m.w;m.h=m.h0||m.h;place();$("emsg").textContent=t("keep");return}
       var k=Object.keys(hs).filter(function(n){return hs[n]===e.target})[0]||"mv";
       var r=d.getBoundingClientRect();
       st={mode:k,sx:e.clientX,sy:e.clientY,x:m.x,y:m.y,w:m.w,h:m.h,cx:r.left+r.width/2,cy:r.top+r.height/2};
@@ -458,7 +468,7 @@ function renderImgs(){
       else if(st.mode==="ro"){m.rot=Math.round(Math.atan2(e.clientY-st.cy,e.clientX-st.cx)*180/Math.PI+90)}
       place();
     });
-    function end(){if(st){st=null;$("emsg").textContent="Press Save to keep your changes."}}
+    function end(){if(st){st=null;$("emsg").textContent=t("keep")}}
     d.addEventListener("pointerup",end);d.addEventListener("pointercancel",end);
     L.appendChild(d);
   });
@@ -475,7 +485,7 @@ function addFiles(files){
       var m={id:"i"+Date.now()+i,src:c.toDataURL(png?"image/png":"image/jpeg",.85),x:30+(imgs.length%6)*24,y:30+(imgs.length%6)*24,w:Math.min(240,c.width),rot:0};
       m.h=m.w*c.height/c.width;m.w0=m.w;m.h0=m.h;
       URL.revokeObjectURL(url);imgs.push(m);selId=m.id;renderImgs();
-      $("emsg").textContent="Press Save to keep your pictures.";
+      $("emsg").textContent=t("keep");
     };
     img.onerror=function(){URL.revokeObjectURL(url);$("emsg").textContent="That file couldn't be read as a picture."};
     img.src=url;
@@ -489,11 +499,11 @@ $("ed").addEventListener("drop",function(e){e.preventDefault();if(e.dataTransfer
 $("ed").addEventListener("pointerdown",function(e){if(!e.target.closest(".pimg"))selectImg(null)});
 document.addEventListener("keydown",function(e){if((e.key==="Delete")&&selId&&$("ed").classList.contains("open")&&document.activeElement!==$("etext"))removeImg(selId)});
 function setFull(on){
-  $("ed").classList.toggle("full",on);$("fsbtn").textContent=on?"Exit fullscreen":"Fullscreen";applyEdSize();
+  $("ed").classList.toggle("full",on);$("fsbtn").textContent=on?t("exitfs"):t("fullscreen");applyEdSize();
   try{if(on){var p=$("ed").requestFullscreen&&$("ed").requestFullscreen();if(p&&p.catch)p.catch(function(){})}else if(document.fullscreenElement){document.exitFullscreen()}}catch(e){}
 }
 $("fsbtn").onclick=function(){setFull(!$("ed").classList.contains("full"))};
-document.addEventListener("fullscreenchange",function(){if(!document.fullscreenElement&&$("ed").classList.contains("full")){$("ed").classList.remove("full");$("fsbtn").textContent="Fullscreen";applyEdSize()}});
+document.addEventListener("fullscreenchange",function(){if(!document.fullscreenElement&&$("ed").classList.contains("full")){$("ed").classList.remove("full");$("fsbtn").textContent=t("fullscreen");applyEdSize()}});
 var vt=null,vpos={},vkeys=[],vnodes={},vlinks=[];
 function ytParse(raw){
   try{
@@ -511,18 +521,50 @@ function ytParse(raw){
 function spParse(raw){try{var u=new URL(raw.trim());if(u.hostname!=="open.spotify.com")return null;var p=u.pathname.split("/").filter(Boolean);if(/^intl-/.test(p[0]))p.shift();if(!/^(track|album|playlist|episode|show|artist)$/.test(p[0])||!/^[A-Za-z0-9]{22}$/.test(p[1]||""))return null;return {type:"sp",kind:p[0],id:p[1]}}catch(e){return null}}
 function mediaParse(r){return ytParse(r)||spParse(r)}
 function placeV(k){var b=vnodes[k],p=vpos[k];if(b&&p){b.style.left=p.x+"px";b.style.top=p.y+"px";b.style.width=Math.max(240,p.w||320)+"px"}}
+var spApi=null,spQ=[],spLoading=false;
+function withSp(cb){
+  if(spApi)return cb(spApi);
+  spQ.push(cb);if(spLoading)return;spLoading=true;
+  window.onSpotifyIframeApiReady=function(a){spApi=a;spQ.splice(0).forEach(function(f){f(a)})};
+  var sc=document.createElement("script");sc.src="https://open.spotify.com/embed/iframe-api/v1";sc.async=true;document.head.appendChild(sc);
+}
+function spTall(f,p){return !/^(track|episode)$/.test(f.kind)||!!(p&&p.w>=460)}
+function mountSp(box,fr,f){
+  var host=el("div","sphost"),ctl=el("div","spctl hidden"),rb=el("button","spbtn","\u23EE"),rg=document.createElement("input"),tm=el("span","sptm","0:00");
+  rb.type="button";rb.title=t("restart");rg.type="range";rg.min=0;rg.max=1;rg.step=1;rg.value=0;rg.setAttribute("aria-label",t("restart"));
+  ctl.appendChild(rb);ctl.appendChild(rg);ctl.appendChild(tm);box.appendChild(host);box.appendChild(ctl);
+  var c=null,fb=false,drag=false;
+  function fmt(ms){var q=Math.floor(ms/1000);return Math.floor(q/60)+":"+("0"+q%60).slice(-2)}
+  var timer=setTimeout(function(){if(c)return;fb=true;host.textContent="";host.appendChild(fr)},5000);
+  withSp(function(api){
+    if(fb)return;
+    var d=document.createElement("div");host.appendChild(d);
+    api.createController(d,{uri:"spotify:"+f.kind+":"+f.id,width:"100%",height:"100%"},function(ctrl){
+      c=ctrl;clearTimeout(timer);
+      ctrl.addListener("playback_update",function(e){
+        var x=e.data;if(!x||!x.duration)return;
+        rg.max=x.duration;ctl.classList.remove("hidden");
+        if(!drag)rg.value=x.position;
+        tm.textContent=fmt(drag?+rg.value:x.position)+" / "+fmt(x.duration);
+      });
+    });
+  });
+  rg.addEventListener("input",function(){drag=true;tm.textContent=fmt(+rg.value)+" / "+fmt(+rg.max)});
+  rg.addEventListener("change",function(){if(c)c.seek(+rg.value/1000);drag=false});
+  rb.onclick=function(){if(c){c.seek(0);c.resume()}};
+}
 function makeVbox(f){
   var k=f.key,box=el("div","vbox"),bar=el("div","vbar");
-  bar.appendChild(el("span","","Drag to move"));
-  var sp=f.type==="sp";var a=el("a","",sp?"Open on Spotify":"Open on YouTube");a.href=sp?"https://open.spotify.com/"+f.kind+"/"+f.id:"https://www.youtube.com/watch?v="+f.id+(f.start?"&t="+f.start+"s":"");a.target="_blank";a.rel="noopener";
+  bar.appendChild(el("span","",t("dragmove")));
+  var sp=f.type==="sp";var a=el("a","",sp?t("opensp"):t("openyt"));a.href=sp?"https://open.spotify.com/"+f.kind+"/"+f.id:"https://www.youtube.com/watch?v="+f.id+(f.start?"&t="+f.start+"s":"");a.target="_blank";a.rel="noopener";
   bar.appendChild(a);
   var fr=document.createElement("iframe");
   fr.src=sp?"https://open.spotify.com/embed/"+f.kind+"/"+f.id:"https://www.youtube-nocookie.com/embed/"+f.id+"?rel=0"+(f.start?"&start="+f.start:"");
-  fr.title=sp?"Spotify player":"YouTube video";if(sp){box.classList.add("sp");if(!/^(track|episode)$/.test(f.kind))box.classList.add("tall")}
+  fr.title=sp?"Spotify player":"YouTube video";if(sp){box.classList.add("sp");if(spTall(f,vpos[k]))box.classList.add("tall")}
   fr.allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; fullscreen";
   fr.setAttribute("allowfullscreen","");fr.referrerPolicy="strict-origin-when-cross-origin";
   var grip=el("div","vgrip");grip.title="Resize";
-  box.appendChild(fr);box.appendChild(bar);box.appendChild(grip);
+  if(sp)mountSp(box,fr,f);else box.appendChild(fr);box.appendChild(bar);box.appendChild(grip);
   var st=null,ghost=null,rs=null;
   function snap(v,max){return Math.min(max,Math.max(0,Math.round(v/10)*10))}
   function placeGhost(x,y){ghost.style.left=x+"px";ghost.style.top=y+"px"}
@@ -546,7 +588,7 @@ function makeVbox(f){
     vpos[k]={x:st.gx,y:st.gy,w:vpos[k].w||320};placeV(k);
     if(ghost){ghost.remove();ghost=null}
     box.classList.remove("drag");st=null;
-    $("emsg").textContent="Press Save to keep your changes.";
+    $("emsg").textContent=t("keep");
   }
   bar.addEventListener("pointerup",end);bar.addEventListener("pointercancel",end);
   grip.addEventListener("pointerdown",function(e){
@@ -556,9 +598,9 @@ function makeVbox(f){
   grip.addEventListener("pointermove",function(e){
     if(!rs)return;
     var w=Math.min(900,Math.max(240,rs.w+e.clientX-rs.sx));
-    vpos[k].w=Math.round(w);box.style.width=vpos[k].w+"px";
+    vpos[k].w=Math.round(w);box.style.width=vpos[k].w+"px";if(sp)box.classList.toggle("tall",spTall(f,{w:w}));
   });
-  function rend(){if(rs){rs=null;$("emsg").textContent="Press Save to keep your changes."}}
+  function rend(){if(rs){rs=null;$("emsg").textContent=t("keep")}}
   grip.addEventListener("pointerup",rend);grip.addEventListener("pointercancel",rend);
   return box;
 }
@@ -596,7 +638,7 @@ function buildVids(){
   vlinks=vlinks.filter(function(u){return out.indexOf(u)>=0});
   var vids=[];
   vlinks.forEach(function(u){var f=mediaParse(u);if(f){f.key=u;vids.push(f)}});
-  $("vids").textContent=bad?"A :play: link couldn't be read. Paste the full YouTube or Spotify link right after it.":"";
+  $("vids").textContent=bad?t("badlink"):"";
   $("vids").classList.toggle("has",bad);
   vkeys=vids.map(function(f){return f.key});
   Object.keys(vnodes).forEach(function(k){if(vkeys.indexOf(k)<0){vnodes[k].remove();delete vnodes[k]}});
@@ -644,18 +686,18 @@ function buildNotes(){
   $("nin").classList.toggle("hidden",!n);
   var list=$("nlist");list.innerHTML="";
   if(!n)return;
-  if(!n.length){list.appendChild(el("p","empty","No notes yet. Press Create note to start."));return}
+  if(!n.length){list.appendChild(el("p","empty",t("nonotes")));return}
   n.slice().sort(function(x,y){return y.updated-x.updated}).forEach(function(it){
     var b=el("button","nbox");b.type="button";
     b.appendChild(el("b","",it.name));
-    b.appendChild(el("span","","Edited "+new Date(it.updated).toLocaleDateString()));
+    b.appendChild(el("span","",t("edited")+new Date(it.updated).toLocaleDateString(loc())));
     b.onclick=function(){openEditor(it.id)};
     list.appendChild(b);
   });
 }
 function openEditor(id){
   var n=myNotes()||[],it=n.filter(function(x){return x.id===id})[0];if(!it)return;
-  curNote=id;delArm=false;$("edel").textContent="Delete";
+  curNote=id;delArm=false;$("edel").textContent=t("del");
   $("etitle").textContent=it.name;$("etext").value=it.text||"";$("emsg").textContent="";updCount();vpos=JSON.parse(JSON.stringify(it.vpos||{}));vlinks=(it.vlinks||[]).slice();buildVids();imgs=JSON.parse(JSON.stringify(it.images||[]));selId=null;renderImgs();
   $("ed").classList.add("open");applyEdSize();$("etext").focus();
 }
@@ -668,11 +710,11 @@ $("ncreate").onclick=function(){$("nname").value="";$("nnm").textContent="";$("n
 $("ncancel").onclick=function(){$("nn").classList.remove("open")};
 function makeNote(){
   var name=$("nname").value.trim();
-  if(!name){$("nnm").textContent="Give your note a name.";return}
+  if(!name){$("nnm").textContent=t("giveName");return}
   var n=myNotes();if(!n)return;
   var it={id:"n"+Date.now(),name:name,text:"",updated:Date.now()};
   n.push(it);
-  if(!saveNotes(n)){$("nnm").textContent="Couldn't save in this browser.";return}
+  if(!saveNotes(n)){$("nnm").textContent=t("failsave");return}
   $("nn").classList.remove("open");buildNotes();openEditor(it.id);
 }
 $("nmake").onclick=makeNote;
@@ -680,12 +722,12 @@ $("nname").addEventListener("keydown",function(e){if(e.key==="Enter")makeNote()}
 $("esave").onclick=function(){
   var n=myNotes()||[],it=n.filter(function(x){return x.id===curNote})[0];if(!it)return;
   it.text=$("etext").value;it.images=JSON.parse(JSON.stringify(imgs));it.vpos=vposSave();it.vlinks=vlinks.slice();it.updated=Date.now();
-  $("emsg").textContent=saveNotes(n)?"Saved.":"Couldn't save. The pictures may be too big for this browser.";
+  $("emsg").textContent=saveNotes(n)?t("saved"):t("failsave");
   buildNotes();
 };
 $("eclose").onclick=closeEditor;
 $("edel").onclick=function(){
-  if(!delArm){delArm=true;this.textContent="Tap again to delete";return}
+  if(!delArm){delArm=true;this.textContent=t("delconfirm");return}
   var n=(myNotes()||[]).filter(function(x){return x.id!==curNote});
   saveNotes(n);closeEditor();buildNotes();
 };
@@ -694,17 +736,20 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"){
   else if($("nn").classList.contains("open"))$("nn").classList.remove("open");
   else if($("sp").classList.contains("open")&&!$("ov").classList.contains("open"))closeNotes();}});
 var T={"en": {"signup": "Sign up", "login": "Log in", "loginsignup": "Log in / Sign up", "loginprompt": "Log in to set your name and picture.", "changepic": "Change picture", "name": "Name", "yourname": "Your name", "save": "Save profile", "logout": "Log out", "settings": "Settings", "language": "Language", "color": "Site colour", "reset": "Reset colour", "email": "Email", "password": "Password", "confirm": "Confirm password", "create": "Create account", "haveacc": "I already have an account", "needacc": "I need an account", "cancel": "Cancel", "yourspace": "Your space", "welcome": "Welcome to the Lobby", "back": "Welcome back, ", "welcome_u": "Welcome, ", "sub": "Write things down, keep them safe, and come back to them anytime.", "mynotes": "My Notes", "open": "Open →", "more": "More coming soon", "more2": "New things will show up here.", "startw": "Log in to start writing.", "note1": "1 note", "notesN": "{n} notes", "croptitle": "Profile picture", "drop": "Insert picture .jpg, .png, .webp here", "apply": "Apply", "hint": "Drag to move, slide to zoom.", "badtype": "Use a .jpg, .png or .webp picture.", "saved": "Saved."}, "ja": {"signup": "新規登録", "login": "ログイン", "loginsignup": "ログイン / 新規登録", "loginprompt": "ログインして名前と画像を設定しましょう。", "changepic": "画像を変更", "name": "名前", "yourname": "あなたの名前", "save": "プロフィールを保存", "logout": "ログアウト", "settings": "設定", "language": "言語", "color": "サイトの色", "reset": "色をリセット", "email": "メールアドレス", "password": "パスワード", "confirm": "パスワード（確認）", "create": "アカウント作成", "haveacc": "アカウントをお持ちの方", "needacc": "アカウントが必要です", "cancel": "キャンセル", "yourspace": "あなたのスペース", "welcome": "ロビーへようこそ", "back": "おかえりなさい、", "welcome_u": "ようこそ、", "sub": "書き留めて、安全に保管して、いつでも戻ってこられます。", "mynotes": "マイノート", "open": "開く →", "more": "近日公開", "more2": "新しいものがここに表示されます。", "startw": "ログインして書き始めましょう。", "note1": "ノート1件", "notesN": "ノート{n}件", "croptitle": "プロフィール画像", "drop": ".jpg、.png、.webp の画像をここに挿入", "apply": "適用", "hint": "ドラッグで移動、スライダーで拡大縮小。", "badtype": ".jpg、.png、.webp の画像を使用してください。", "saved": "保存しました。"}, "hu": {"signup": "Regisztráció", "login": "Belépés", "loginsignup": "Belépés / Regisztráció", "loginprompt": "Lépj be a neved és képed beállításához.", "changepic": "Kép módosítása", "name": "Név", "yourname": "A neved", "save": "Profil mentése", "logout": "Kilépés", "settings": "Beállítások", "language": "Nyelv", "color": "Az oldal színe", "reset": "Szín visszaállítása", "email": "E-mail", "password": "Jelszó", "confirm": "Jelszó megerősítése", "create": "Fiók létrehozása", "haveacc": "Már van fiókom", "needacc": "Fiókra van szükségem", "cancel": "Mégse", "yourspace": "A te helyed", "welcome": "Üdv a Lobbyban", "back": "Üdv újra, ", "welcome_u": "Üdv, ", "sub": "Írj le dolgokat, őrizd meg őket, és térj vissza hozzájuk bármikor.", "mynotes": "Jegyzeteim", "open": "Megnyitás →", "more": "Hamarosan még több", "more2": "Itt új dolgok jelennek meg.", "startw": "Lépj be az íráshoz.", "note1": "1 jegyzet", "notesN": "{n} jegyzet", "croptitle": "Profilkép", "drop": "Húzd ide a .jpg, .png, .webp képet", "apply": "Alkalmaz", "hint": "Húzással mozgasd, csúszkával nagyítsd.", "badtype": "Használj .jpg, .png vagy .webp képet.", "saved": "Mentve."}, "zh": {"signup": "注册", "login": "登录", "loginsignup": "登录 / 注册", "loginprompt": "登录后设置你的名字和头像。", "changepic": "更换头像", "name": "名字", "yourname": "你的名字", "save": "保存资料", "logout": "退出登录", "settings": "设置", "language": "语言", "color": "网站颜色", "reset": "重置颜色", "email": "电子邮箱", "password": "密码", "confirm": "确认密码", "create": "创建账号", "haveacc": "我已有账号", "needacc": "我需要账号", "cancel": "取消", "yourspace": "你的空间", "welcome": "欢迎来到大厅", "back": "欢迎回来，", "welcome_u": "欢迎，", "sub": "写下来，妥善保存，随时回来查看。", "mynotes": "我的笔记", "open": "打开 →", "more": "敬请期待", "more2": "新内容将显示在这里。", "startw": "登录后开始书写。", "note1": "1 条笔记", "notesN": "{n} 条笔记", "croptitle": "头像", "drop": "在此插入 .jpg、.png、.webp 图片", "apply": "应用", "hint": "拖动移动，滑动缩放。", "badtype": "请使用 .jpg、.png 或 .webp 图片。", "saved": "已保存。"}, "es": {"signup": "Registrarse", "login": "Iniciar sesión", "loginsignup": "Iniciar sesión / Registrarse", "loginprompt": "Inicia sesión para poner tu nombre e imagen.", "changepic": "Cambiar imagen", "name": "Nombre", "yourname": "Tu nombre", "save": "Guardar perfil", "logout": "Cerrar sesión", "settings": "Ajustes", "language": "Idioma", "color": "Color del sitio", "reset": "Restablecer color", "email": "Correo electrónico", "password": "Contraseña", "confirm": "Confirmar contraseña", "create": "Crear cuenta", "haveacc": "Ya tengo una cuenta", "needacc": "Necesito una cuenta", "cancel": "Cancelar", "yourspace": "Tu espacio", "welcome": "Bienvenido al Lobby", "back": "Bienvenido de nuevo, ", "welcome_u": "Bienvenido, ", "sub": "Escribe tus cosas, guárdalas y vuelve a ellas cuando quieras.", "mynotes": "Mis notas", "open": "Abrir →", "more": "Pronto habrá más", "more2": "Aquí aparecerán cosas nuevas.", "startw": "Inicia sesión para empezar a escribir.", "note1": "1 nota", "notesN": "{n} notas", "croptitle": "Imagen de perfil", "drop": "Inserta aquí una imagen .jpg, .png, .webp", "apply": "Aplicar", "hint": "Arrastra para mover, desliza para hacer zoom.", "badtype": "Usa una imagen .jpg, .png o .webp.", "saved": "Guardado."}, "de": {"signup": "Registrieren", "login": "Anmelden", "loginsignup": "Anmelden / Registrieren", "loginprompt": "Melde dich an, um Namen und Bild festzulegen.", "changepic": "Bild ändern", "name": "Name", "yourname": "Dein Name", "save": "Profil speichern", "logout": "Abmelden", "settings": "Einstellungen", "language": "Sprache", "color": "Farbe der Seite", "reset": "Farbe zurücksetzen", "email": "E-Mail", "password": "Passwort", "confirm": "Passwort bestätigen", "create": "Konto erstellen", "haveacc": "Ich habe schon ein Konto", "needacc": "Ich brauche ein Konto", "cancel": "Abbrechen", "yourspace": "Dein Bereich", "welcome": "Willkommen in der Lobby", "back": "Willkommen zurück, ", "welcome_u": "Willkommen, ", "sub": "Schreib Dinge auf, bewahre sie sicher auf und komm jederzeit zurück.", "mynotes": "Meine Notizen", "open": "Öffnen →", "more": "Bald mehr", "more2": "Hier erscheinen neue Dinge.", "startw": "Melde dich an, um zu schreiben.", "note1": "1 Notiz", "notesN": "{n} Notizen", "croptitle": "Profilbild", "drop": "Bild .jpg, .png, .webp hier einfügen", "apply": "Übernehmen", "hint": "Zum Verschieben ziehen, zum Zoomen schieben.", "badtype": "Nutze ein .jpg-, .png- oder .webp-Bild.", "saved": "Gespeichert."}, "la": {"signup": "Inscribere", "login": "Intrare", "loginsignup": "Intrare / Inscribere", "loginprompt": "Intra ut nomen et imaginem ponas.", "changepic": "Imaginem muta", "name": "Nomen", "yourname": "Nomen tuum", "save": "Profilum serva", "logout": "Exire", "settings": "Optiones", "language": "Lingua", "color": "Color paginae", "reset": "Colorem restitue", "email": "Epistula electronica", "password": "Tessera", "confirm": "Tesseram confirma", "create": "Rationem crea", "haveacc": "Rationem iam habeo", "needacc": "Rationem desidero", "cancel": "Omitte", "yourspace": "Locus tuus", "welcome": "Salve in Atrio", "back": "Salve iterum, ", "welcome_u": "Salve, ", "sub": "Scribe, serva, et semper revertere.", "mynotes": "Notae meae", "open": "Aperi →", "more": "Plura mox", "more2": "Nova hic apparebunt.", "startw": "Intra ut scribere incipias.", "note1": "1 nota", "notesN": "{n} notae", "croptitle": "Imago profili", "drop": "Pone imaginem .jpg, .png, .webp hic", "apply": "Applica", "hint": "Trahe ut moveas, labere ut amplifices.", "badtype": "Utere imagine .jpg, .png vel .webp.", "saved": "Servatum."}};T.mx=Object.assign({},T.es,{"changepic": "Cambiar foto", "yourname": "Tu nombre", "croptitle": "Foto de perfil", "drop": "Inserta tu foto .jpg, .png, .webp aquí", "badtype": "Usa una foto .jpg, .png o .webp."});
+var T2={"en": {"back2": "Back", "createnote": "Create note", "nonotes": "No notes yet. Press Create note to start.", "nloginmsg": "Log in to see and write your notes. Only you can see them.", "edited": "Edited ", "nameyour": "Name your note", "notename": "My first note", "mk": "Create", "giveName": "Give your note a name.", "resetsize": "Reset size", "fullscreen": "Fullscreen", "exitfs": "Exit fullscreen", "startwrite": "Start writing... Type :play:yt: + YouTube link for a video, or :play:sp: + Spotify link for a song", "chars": "{c} characters, {w} words", "addpic": "Add picture", "del": "Delete", "delconfirm": "Tap again to delete", "close": "Close", "saveN": "Save", "keep": t("keep"), "failsave": "Couldn't save in this browser.", "dragmove": "Drag to move", "openyt": "Open on YouTube", "opensp": "Open on Spotify", "badlink": "A :play: link couldn't be read. Paste the full YouTube or Spotify link right after it."}, "ja": {"back2": "戻る", "createnote": "ノートを作成", "nonotes": "ノートはまだありません。「ノートを作成」を押して始めましょう。", "nloginmsg": "ログインしてノートを見たり書いたりできます。あなただけが見られます。", "edited": "編集日 ", "nameyour": "ノートに名前を付ける", "notename": "最初のノート", "mk": "作成", "giveName": "ノートに名前を付けてください。", "resetsize": "サイズをリセット", "fullscreen": "全画面", "exitfs": "全画面を終了", "startwrite": "書き始めましょう... :play:yt: + YouTubeリンクで動画、:play:sp: + Spotifyリンクで曲を追加", "chars": "{c}文字、{w}語", "addpic": "画像を追加", "del": "削除", "delconfirm": "もう一度押すと削除", "close": "閉じる", "saveN": "保存", "keep": "変更を残すには保存を押してください。", "failsave": "このブラウザでは保存できませんでした。", "dragmove": "ドラッグで移動", "openyt": "YouTubeで開く", "opensp": "Spotifyで開く", "badlink": ":play: のリンクを読み取れませんでした。直後にYouTubeまたはSpotifyの完全なリンクを貼ってください。"}, "hu": {"back2": "Vissza", "createnote": "Jegyzet létrehozása", "nonotes": "Még nincs jegyzet. Nyomd meg a Jegyzet létrehozása gombot.", "nloginmsg": "Lépj be a jegyzeteid megtekintéséhez és írásához. Csak te látod őket.", "edited": "Szerkesztve: ", "nameyour": "Nevezd el a jegyzetet", "notename": "Az első jegyzetem", "mk": "Létrehozás", "giveName": "Adj nevet a jegyzetnek.", "resetsize": "Méret visszaállítása", "fullscreen": "Teljes képernyő", "exitfs": "Kilépés a teljes képernyőből", "startwrite": "Kezdj írni... :play:yt: + YouTube-link videóhoz, :play:sp: + Spotify-link zenéhez", "chars": "{c} karakter, {w} szó", "addpic": "Kép hozzáadása", "del": "Törlés", "delconfirm": "Koppints újra a törléshez", "close": "Bezárás", "saveN": "Mentés", "keep": "Nyomd meg a Mentést a módosítások megtartásához.", "failsave": "Ebben a böngészőben nem sikerült menteni.", "dragmove": "Húzd a mozgatáshoz", "openyt": "Megnyitás YouTube-on", "opensp": "Megnyitás Spotify-on", "badlink": "A :play: link nem olvasható. Illeszd be közvetlenül utána a teljes YouTube- vagy Spotify-linket."}, "zh": {"back2": "返回", "createnote": "创建笔记", "nonotes": "还没有笔记。点击“创建笔记”开始。", "nloginmsg": "登录后即可查看和书写你的笔记。只有你能看到。", "edited": "编辑于 ", "nameyour": "为笔记命名", "notename": "我的第一条笔记", "mk": "创建", "giveName": "请给笔记起个名字。", "resetsize": "重置大小", "fullscreen": "全屏", "exitfs": "退出全屏", "startwrite": "开始书写... 输入 :play:yt: + YouTube 链接添加视频，或 :play:sp: + Spotify 链接添加歌曲", "chars": "{c} 个字符，{w} 个词", "addpic": "添加图片", "del": "删除", "delconfirm": "再点一次以删除", "close": "关闭", "saveN": "保存", "keep": "按“保存”以保留更改。", "failsave": "无法在此浏览器中保存。", "dragmove": "拖动移动", "openyt": "在 YouTube 打开", "opensp": "在 Spotify 打开", "badlink": "无法读取 :play: 链接。请在其后粘贴完整的 YouTube 或 Spotify 链接。"}, "es": {"back2": "Atrás", "createnote": "Crear nota", "nonotes": "Aún no hay notas. Pulsa Crear nota para empezar.", "nloginmsg": "Inicia sesión para ver y escribir tus notas. Solo tú puedes verlas.", "edited": "Editado ", "nameyour": "Ponle nombre a tu nota", "notename": "Mi primera nota", "mk": "Crear", "giveName": "Ponle un nombre a tu nota.", "resetsize": "Restablecer tamaño", "fullscreen": "Pantalla completa", "exitfs": "Salir de pantalla completa", "startwrite": "Empieza a escribir... Escribe :play:yt: + enlace de YouTube para un video, o :play:sp: + enlace de Spotify para una canción", "chars": "{c} caracteres, {w} palabras", "addpic": "Añadir imagen", "del": "Eliminar", "delconfirm": "Toca otra vez para eliminar", "close": "Cerrar", "saveN": "Guardar", "keep": "Pulsa Guardar para conservar tus cambios.", "failsave": "No se pudo guardar en este navegador.", "dragmove": "Arrastra para mover", "openyt": "Abrir en YouTube", "opensp": "Abrir en Spotify", "badlink": "No se pudo leer el enlace :play:. Pega el enlace completo de YouTube o Spotify justo después."}, "de": {"back2": "Zurück", "createnote": "Notiz erstellen", "nonotes": "Noch keine Notizen. Tippe auf Notiz erstellen, um zu beginnen.", "nloginmsg": "Melde dich an, um deine Notizen zu sehen und zu schreiben. Nur du kannst sie sehen.", "edited": "Bearbeitet am ", "nameyour": "Gib deiner Notiz einen Namen", "notename": "Meine erste Notiz", "mk": "Erstellen", "giveName": "Gib deiner Notiz einen Namen.", "resetsize": "Größe zurücksetzen", "fullscreen": "Vollbild", "exitfs": "Vollbild beenden", "startwrite": "Schreib los... Tippe :play:yt: + YouTube-Link für ein Video oder :play:sp: + Spotify-Link für einen Song", "chars": "{c} Zeichen, {w} Wörter", "addpic": "Bild hinzufügen", "del": "Löschen", "delconfirm": "Zum Löschen erneut tippen", "close": "Schließen", "saveN": "Speichern", "keep": "Drücke Speichern, um deine Änderungen zu behalten.", "failsave": "In diesem Browser konnte nicht gespeichert werden.", "dragmove": "Zum Verschieben ziehen", "openyt": "Auf YouTube öffnen", "opensp": "Auf Spotify öffnen", "badlink": "Der :play:-Link konnte nicht gelesen werden. Füge direkt danach den vollständigen YouTube- oder Spotify-Link ein."}, "la": {"back2": "Redi", "createnote": "Notam crea", "nonotes": "Nullae notae adhuc. Preme \"Notam crea\" ut incipias.", "nloginmsg": "Intra ut notas tuas videas et scribas. Solus tu eas vides.", "edited": "Mutata ", "nameyour": "Notae nomen da", "notename": "Prima nota mea", "mk": "Crea", "giveName": "Notae nomen da.", "resetsize": "Magnitudinem restitue", "fullscreen": "Tota scaena", "exitfs": "Exi e tota scaena", "startwrite": "Incipe scribere... Scribe :play:yt: + nexum YouTube pro video, vel :play:sp: + nexum Spotify pro cantu", "chars": "{c} litterae, {w} verba", "addpic": "Imaginem adde", "del": "Dele", "delconfirm": "Iterum tange ut deleas", "close": "Claude", "saveN": "Serva", "keep": "Preme \"Serva\" ut mutationes serves.", "failsave": "In hoc navigatro servari non potuit.", "dragmove": "Trahe ut moveas", "openyt": "Aperi in YouTube", "opensp": "Aperi in Spotify", "badlink": "Nexus :play: legi non potuit. Pone statim post eum nexum YouTube vel Spotify integrum."}};T2.mx=Object.assign({},T2.es,{addpic:"Agregar imagen",del:"Borrar"});Object.keys(T2).forEach(function(l){Object.assign(T[l],T2[l])});
+var T3={"en": {"restart": "Back to start", "recolors": "Recommended colours"}, "ja": {"restart": "最初に戻る", "recolors": "おすすめの色"}, "hu": {"restart": "Vissza az elejére", "recolors": "Ajánlott színek"}, "zh": {"restart": "回到开头", "recolors": "推荐颜色"}, "es": {"restart": "Volver al inicio", "recolors": "Colores recomendados"}, "de": {"restart": "Zum Anfang", "recolors": "Empfohlene Farben"}, "la": {"restart": "Ad initium", "recolors": "Colores commendati"}};T3.mx=T3.es;Object.keys(T3).forEach(function(l){Object.assign(T[l],T3[l])});
+function loc(){return lang==="mx"?"es-MX":lang}
 var lang=load("lobby_lang","en");if(!T[lang]&&lang!=="mx")lang="en";
 function t(k){return(T[lang]&&T[lang][k])||T.en[k]||k}
-var MAP={bsign:"signup",blog:"login",pgo:"loginsignup",ppick:"changepic",psave:"save",plogout:"logout",aclose:"cancel",sett:"settings",scolt:"color",scolr:"reset",crt:"croptitle",crdt:"drop",crok:"apply",crhint:"hint",crcancel:"cancel"};
-var LBL={em:"email",pw:"password",pw2:"confirm",pname:"name",slang:"language"};
-var SEL={".eyebrow":"yourspace","#sharedbtn h3":"mynotes","#sharedbtn .go":"open",".card.soon h3":"more",".card.soon p":"more2","#pout p":"loginprompt","#sub":"sub"};
+var MAP={bsign:"signup",blog:"login",pgo:"loginsignup",ppick:"changepic",psave:"save",plogout:"logout",aclose:"cancel",sett:"settings",scolt:"color",scolr:"reset",crt:"croptitle",crdt:"drop",crok:"apply",crhint:"hint",crcancel:"cancel",srect:"recolors",sback:"back2",ncreate:"createnote",nnt:"nameyour",nmake:"mk",ncancel:"cancel",rsbtn:"resetsize",addpic:"addpic",edel:"del",eclose:"close",esave:"saveN",nlogin:"loginsignup"};
+var LBL={em:"email",pw:"password",pw2:"confirm",pname:"name",slang:"language",nname:"name"};
+var SEL={".eyebrow":"yourspace","#sharedbtn h3":"mynotes","#sharedbtn .go":"open",".card.soon h3":"more",".card.soon p":"more2","#pout p":"loginprompt","#sub":"sub",".sbar h2":"mynotes","#nout p":"nloginmsg"};
 function applyLang(){
   document.documentElement.lang=lang==="mx"?"es-MX":lang;
   Object.keys(MAP).forEach(function(i){$(i).textContent=t(MAP[i])});
   Object.keys(LBL).forEach(function(i){$(i).parentNode.firstChild.nodeValue=t(LBL[i])});
   Object.keys(SEL).forEach(function(q){document.querySelector(q).textContent=t(SEL[q])});
-  $("pname").placeholder=t("yourname");
+  $("pname").placeholder=t("yourname");$("nname").placeholder=t("notename");$("etext").placeholder=t("startwrite");$("fsbtn").textContent=$("ed").classList.contains("full")?t("exitfs"):t("fullscreen");updCount();
   if($("ov").classList.contains("open"))openAuth(mode);
   render();
 }
@@ -727,6 +772,9 @@ function applyColor(c){
 }
 var savedCol=load("lobby_color",null);if(savedCol){applyColor(savedCol);$("ccol").value=savedCol}
 $("ccol").oninput=function(){applyColor(this.value);try{localStorage.setItem("lobby_color",JSON.stringify(this.value))}catch(e){}};
+var PRE=[["#2b2540","Midnight"],["#000000","Black"],["#ffffff","White"],["#7a1f2b","Crimson"],["#c2571a","Sunset"],["#c9a227","Gold"],["#1f5e45","Forest"],["#1b6f73","Teal"],["#1f4e79","Ocean"],["#c2547a","Rose"]];
+function setCol(c){applyColor(c);$("ccol").value=c;try{localStorage.setItem("lobby_color",JSON.stringify(c))}catch(e){}}
+PRE.forEach(function(p){var b=el("button","sw");b.type="button";b.title=p[1];b.setAttribute("aria-label",p[1]);b.style.background=p[0];b.onclick=function(){setCol(p[0])};$("sw").appendChild(b)});
 $("scolr").onclick=function(){applyColor(null);try{localStorage.removeItem("lobby_color")}catch(e){}};
 applyLang();
 requestAnimationFrame(function(){setTimeout(function(){document.body.classList.add("loaded")},250)});
