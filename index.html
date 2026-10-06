@@ -177,6 +177,54 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .sw{width:30px;height:30px;border-radius:50%;border:2px solid var(--muted);cursor:pointer;padding:0}
 .sw:hover{transform:scale(1.12)}
 .sw:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.shared-inner{max-width:1180px;padding-left:clamp(1.2rem,4vw,3rem);padding-right:clamp(1.2rem,4vw,3rem)}
+.nlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.editor{width:min(1100px,100%)}
+.home{width:min(1280px,100%)}
+.cards{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.lbeye{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.lbchips{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0 1.4rem}
+.lbchip{font:inherit;font-size:.9rem;display:flex;align-items:center;gap:.5rem;padding:.45rem .9rem;border-radius:999px;border:1.5px solid var(--muted);background:transparent;color:var(--panel-ink);cursor:pointer}
+.lbchip.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.lbchip i{width:9px;height:9px;border-radius:50%}
+.lbchip:focus-visible,.lbav:focus-visible,.lbsw:focus-visible,.lbinp:focus-visible,.lbcopy:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.lbcard,.lbent{border:1.5px solid rgba(127,127,127,.35);border-radius:16px;padding:1.2rem;display:flex;flex-direction:column;gap:1rem;background:rgba(127,127,127,.08)}
+.lbhead{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.lbav{width:72px;height:72px;border-radius:50%;border:2px solid var(--muted);background:var(--hero);color:var(--hero-ink);font-size:1.6rem;cursor:pointer;overflow:hidden;padding:0;flex:none}
+.lbav img{width:100%;height:100%;object-fit:cover}
+.lbsws{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.lbsw{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+.lbsw.on{border-color:var(--panel-ink)}
+.lbcol{width:30px;height:30px;border:0;padding:0;background:none;cursor:pointer}
+.lbcap{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.lbrow{display:flex;gap:.6rem;align-items:flex-start}
+.lbinp{flex:1;min-width:0;font:inherit;padding:.65rem .8rem;border-radius:10px;border:1.5px solid var(--muted);background:transparent;color:inherit;resize:vertical}
+.lbcopy{font:inherit;font-size:.85rem;padding:.4rem .8rem;border-radius:8px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer}
+.lbtop{display:flex;align-items:center;gap:.6rem}
+.lbtop i{width:9px;height:9px;border-radius:50%}
+.lbbadge{font-size:.8rem;font-weight:800;padding:.1rem .5rem;border-radius:6px;background:rgba(127,127,127,.2)}
+.lbtop .link{margin-left:auto}
+.lbtwo{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;margin-top:1.4rem}
+@media (min-width:900px){.lbtwo{grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:start}.lbcard{position:sticky;top:1rem}}
+.lbents{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:1rem;align-items:start}
+@media (max-width:480px){.lbents{grid-template-columns:minmax(0,1fr)}}
+.lbtoast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));z-index:50;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--hero);color:var(--hero-ink);border:1.5px solid var(--accent);border-radius:999px;padding:.7rem 1.3rem;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:opacity .25s,transform .25s}
+.lbtoast.show{opacity:1;transform:translate(-50%,0)}
+.dash{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:1.6rem;align-items:start}
+@media (max-width:760px){.dash{grid-template-columns:minmax(0,1fr)}}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+.stat{padding:1.1rem 1.2rem;border-radius:18px;border:1.5px solid rgba(127,127,127,.3);background:rgba(127,127,127,.06)}
+.stat:first-child{grid-column:span 2}
+.stat b{display:block;font-size:2.4rem;letter-spacing:-.03em;line-height:1}
+.stat span{font-size:.8rem;color:var(--muted)}
+.recent{display:flex;flex-direction:column;gap:.5rem;margin-top:.6rem}
+.rec{font:inherit;text-align:left;color:inherit;display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;border-radius:14px;border:1.5px solid rgba(127,127,127,.3);background:transparent;cursor:pointer}
+.rec:hover{border-color:var(--accent)}
+.rec:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rec i{width:10px;height:10px;border-radius:50%;flex:none}
+.rec b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec span{font-size:.8rem;color:var(--muted);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -237,6 +285,27 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
   <button class="btn dark full" id="nmake" type="button">Create</button>
   <button class="link" id="ncancel" type="button">Cancel</button>
 </div></div>
+<div class="lbtoast" id="lbtoast" role="status" aria-live="polite"></div>
+<div class="shared-page" id="lp" role="dialog" aria-label="Lorebooks"><div class="shared-inner">
+  <div class="sbar"><button class="back" id="lback" type="button">Back</button><h2>Lorebooks</h2></div>
+  <div id="lout" class="hidden"><p>Log in to make lorebooks. Only you can see them.</p><p style="margin-top:1rem"><button class="btn dark" id="llogin" type="button">Log in / Sign up</button></p></div>
+  <div id="lin" class="hidden"><button class="btn dark" id="lmake" type="button">Create module</button><div class="nlist" id="llist"></div></div>
+</div></div>
+<div class="overlay" id="lm"><div class="modal-card" role="dialog" aria-labelledby="lmt">
+  <h2 id="lmt">New module</h2>
+  <label class="field">Name<input id="lmn" maxlength="60" placeholder="My first lorebook"></label>
+  <label class="field">Description<input id="lmd" maxlength="140"></label>
+  <p class="msg" id="lmm" role="alert"></p>
+  <button class="btn dark full" id="lmsave" type="button">Save</button>
+  <button class="link" id="lmcancel" type="button">Cancel</button>
+</div></div>
+<div class="shared-page" id="lv" role="dialog" aria-label="Lorebook module"><div class="shared-inner">
+  <div class="sbar"><button class="back" id="vback" type="button">Back</button><h2 id="vtitle"></h2></div>
+  <p class="lbeye" id="vmeta"></p>
+  <div class="lbchips" id="chips"></div>
+  <div id="vbody"></div>
+  <p style="margin-top:2rem;text-align:center"><button class="link" id="vdel" type="button">Delete module</button></p>
+</div></div>
 <div class="overlay" id="ed"><div class="modal-card editor" role="dialog" aria-label="Note editor">
   <button class="back fsbtn rsbtn" id="rsbtn" type="button">Reset size</button><button class="back fsbtn" id="fsbtn" type="button">Fullscreen</button>
   <div class="edgrip l" id="edgl" title="Resize"></div><div class="edgrip r" id="edgr" title="Resize"></div>
@@ -265,11 +334,18 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
         <p id="ncount">Log in to start writing.</p>
         <span class="go">Open &rarr;</span>
       </button>
+      <button class="card" id="lorebtn" type="button">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 8h6"/></svg></span>
+        <h3>Lorebooks</h3>
+        <p id="lcount">Log in to start.</p>
+        <span class="go">Open &rarr;</span>
+      </button>
       <div class="card soon">
         <h3>More coming soon</h3>
         <p>New things will show up here.</p>
       </div>
     </div>
+    <div class="dash" id="dash"><div class="stats" id="stats"></div><div><p class="lbeye" id="rect">Jump back in</p><div class="recent" id="recent"></div></div></div>
   </div>
   <footer>
     <div><p class="tiny">Lobby is a notebook for keeping information and socials in one place. Write things down, they save automatically, and you can post them when you want to share.</p><p class="tiny" style="margin-top:.7rem">Version I</p></div>
@@ -313,6 +389,7 @@ function render(){
   if(u)$("pname").value=u.name||"";
   $("greet").textContent=u?t("back")+(u.name||current.split("@")[0]):t("welcome");
   if(typeof buildNotes==="function"&&$("nlist"))buildNotes();
+  if(typeof buildLore==="function"&&$("llist"))buildLore();
 }
 function openAuth(m){
   mode=m;
@@ -738,6 +815,203 @@ document.addEventListener("keydown",function(e){if(e.key==="Escape"){
 var T={"en": {"signup": "Sign up", "login": "Log in", "loginsignup": "Log in / Sign up", "loginprompt": "Log in to set your name and picture.", "changepic": "Change picture", "name": "Name", "yourname": "Your name", "save": "Save profile", "logout": "Log out", "settings": "Settings", "language": "Language", "color": "Site colour", "reset": "Reset colour", "email": "Email", "password": "Password", "confirm": "Confirm password", "create": "Create account", "haveacc": "I already have an account", "needacc": "I need an account", "cancel": "Cancel", "yourspace": "Your space", "welcome": "Welcome to the Lobby", "back": "Welcome back, ", "welcome_u": "Welcome, ", "sub": "Write things down, keep them safe, and come back to them anytime.", "mynotes": "My Notes", "open": "Open →", "more": "More coming soon", "more2": "New things will show up here.", "startw": "Log in to start writing.", "note1": "1 note", "notesN": "{n} notes", "croptitle": "Profile picture", "drop": "Insert picture .jpg, .png, .webp here", "apply": "Apply", "hint": "Drag to move, slide to zoom.", "badtype": "Use a .jpg, .png or .webp picture.", "saved": "Saved."}, "ja": {"signup": "新規登録", "login": "ログイン", "loginsignup": "ログイン / 新規登録", "loginprompt": "ログインして名前と画像を設定しましょう。", "changepic": "画像を変更", "name": "名前", "yourname": "あなたの名前", "save": "プロフィールを保存", "logout": "ログアウト", "settings": "設定", "language": "言語", "color": "サイトの色", "reset": "色をリセット", "email": "メールアドレス", "password": "パスワード", "confirm": "パスワード（確認）", "create": "アカウント作成", "haveacc": "アカウントをお持ちの方", "needacc": "アカウントが必要です", "cancel": "キャンセル", "yourspace": "あなたのスペース", "welcome": "ロビーへようこそ", "back": "おかえりなさい、", "welcome_u": "ようこそ、", "sub": "書き留めて、安全に保管して、いつでも戻ってこられます。", "mynotes": "マイノート", "open": "開く →", "more": "近日公開", "more2": "新しいものがここに表示されます。", "startw": "ログインして書き始めましょう。", "note1": "ノート1件", "notesN": "ノート{n}件", "croptitle": "プロフィール画像", "drop": ".jpg、.png、.webp の画像をここに挿入", "apply": "適用", "hint": "ドラッグで移動、スライダーで拡大縮小。", "badtype": ".jpg、.png、.webp の画像を使用してください。", "saved": "保存しました。"}, "hu": {"signup": "Regisztráció", "login": "Belépés", "loginsignup": "Belépés / Regisztráció", "loginprompt": "Lépj be a neved és képed beállításához.", "changepic": "Kép módosítása", "name": "Név", "yourname": "A neved", "save": "Profil mentése", "logout": "Kilépés", "settings": "Beállítások", "language": "Nyelv", "color": "Az oldal színe", "reset": "Szín visszaállítása", "email": "E-mail", "password": "Jelszó", "confirm": "Jelszó megerősítése", "create": "Fiók létrehozása", "haveacc": "Már van fiókom", "needacc": "Fiókra van szükségem", "cancel": "Mégse", "yourspace": "A te helyed", "welcome": "Üdv a Lobbyban", "back": "Üdv újra, ", "welcome_u": "Üdv, ", "sub": "Írj le dolgokat, őrizd meg őket, és térj vissza hozzájuk bármikor.", "mynotes": "Jegyzeteim", "open": "Megnyitás →", "more": "Hamarosan még több", "more2": "Itt új dolgok jelennek meg.", "startw": "Lépj be az íráshoz.", "note1": "1 jegyzet", "notesN": "{n} jegyzet", "croptitle": "Profilkép", "drop": "Húzd ide a .jpg, .png, .webp képet", "apply": "Alkalmaz", "hint": "Húzással mozgasd, csúszkával nagyítsd.", "badtype": "Használj .jpg, .png vagy .webp képet.", "saved": "Mentve."}, "zh": {"signup": "注册", "login": "登录", "loginsignup": "登录 / 注册", "loginprompt": "登录后设置你的名字和头像。", "changepic": "更换头像", "name": "名字", "yourname": "你的名字", "save": "保存资料", "logout": "退出登录", "settings": "设置", "language": "语言", "color": "网站颜色", "reset": "重置颜色", "email": "电子邮箱", "password": "密码", "confirm": "确认密码", "create": "创建账号", "haveacc": "我已有账号", "needacc": "我需要账号", "cancel": "取消", "yourspace": "你的空间", "welcome": "欢迎来到大厅", "back": "欢迎回来，", "welcome_u": "欢迎，", "sub": "写下来，妥善保存，随时回来查看。", "mynotes": "我的笔记", "open": "打开 →", "more": "敬请期待", "more2": "新内容将显示在这里。", "startw": "登录后开始书写。", "note1": "1 条笔记", "notesN": "{n} 条笔记", "croptitle": "头像", "drop": "在此插入 .jpg、.png、.webp 图片", "apply": "应用", "hint": "拖动移动，滑动缩放。", "badtype": "请使用 .jpg、.png 或 .webp 图片。", "saved": "已保存。"}, "es": {"signup": "Registrarse", "login": "Iniciar sesión", "loginsignup": "Iniciar sesión / Registrarse", "loginprompt": "Inicia sesión para poner tu nombre e imagen.", "changepic": "Cambiar imagen", "name": "Nombre", "yourname": "Tu nombre", "save": "Guardar perfil", "logout": "Cerrar sesión", "settings": "Ajustes", "language": "Idioma", "color": "Color del sitio", "reset": "Restablecer color", "email": "Correo electrónico", "password": "Contraseña", "confirm": "Confirmar contraseña", "create": "Crear cuenta", "haveacc": "Ya tengo una cuenta", "needacc": "Necesito una cuenta", "cancel": "Cancelar", "yourspace": "Tu espacio", "welcome": "Bienvenido al Lobby", "back": "Bienvenido de nuevo, ", "welcome_u": "Bienvenido, ", "sub": "Escribe tus cosas, guárdalas y vuelve a ellas cuando quieras.", "mynotes": "Mis notas", "open": "Abrir →", "more": "Pronto habrá más", "more2": "Aquí aparecerán cosas nuevas.", "startw": "Inicia sesión para empezar a escribir.", "note1": "1 nota", "notesN": "{n} notas", "croptitle": "Imagen de perfil", "drop": "Inserta aquí una imagen .jpg, .png, .webp", "apply": "Aplicar", "hint": "Arrastra para mover, desliza para hacer zoom.", "badtype": "Usa una imagen .jpg, .png o .webp.", "saved": "Guardado."}, "de": {"signup": "Registrieren", "login": "Anmelden", "loginsignup": "Anmelden / Registrieren", "loginprompt": "Melde dich an, um Namen und Bild festzulegen.", "changepic": "Bild ändern", "name": "Name", "yourname": "Dein Name", "save": "Profil speichern", "logout": "Abmelden", "settings": "Einstellungen", "language": "Sprache", "color": "Farbe der Seite", "reset": "Farbe zurücksetzen", "email": "E-Mail", "password": "Passwort", "confirm": "Passwort bestätigen", "create": "Konto erstellen", "haveacc": "Ich habe schon ein Konto", "needacc": "Ich brauche ein Konto", "cancel": "Abbrechen", "yourspace": "Dein Bereich", "welcome": "Willkommen in der Lobby", "back": "Willkommen zurück, ", "welcome_u": "Willkommen, ", "sub": "Schreib Dinge auf, bewahre sie sicher auf und komm jederzeit zurück.", "mynotes": "Meine Notizen", "open": "Öffnen →", "more": "Bald mehr", "more2": "Hier erscheinen neue Dinge.", "startw": "Melde dich an, um zu schreiben.", "note1": "1 Notiz", "notesN": "{n} Notizen", "croptitle": "Profilbild", "drop": "Bild .jpg, .png, .webp hier einfügen", "apply": "Übernehmen", "hint": "Zum Verschieben ziehen, zum Zoomen schieben.", "badtype": "Nutze ein .jpg-, .png- oder .webp-Bild.", "saved": "Gespeichert."}, "la": {"signup": "Inscribere", "login": "Intrare", "loginsignup": "Intrare / Inscribere", "loginprompt": "Intra ut nomen et imaginem ponas.", "changepic": "Imaginem muta", "name": "Nomen", "yourname": "Nomen tuum", "save": "Profilum serva", "logout": "Exire", "settings": "Optiones", "language": "Lingua", "color": "Color paginae", "reset": "Colorem restitue", "email": "Epistula electronica", "password": "Tessera", "confirm": "Tesseram confirma", "create": "Rationem crea", "haveacc": "Rationem iam habeo", "needacc": "Rationem desidero", "cancel": "Omitte", "yourspace": "Locus tuus", "welcome": "Salve in Atrio", "back": "Salve iterum, ", "welcome_u": "Salve, ", "sub": "Scribe, serva, et semper revertere.", "mynotes": "Notae meae", "open": "Aperi →", "more": "Plura mox", "more2": "Nova hic apparebunt.", "startw": "Intra ut scribere incipias.", "note1": "1 nota", "notesN": "{n} notae", "croptitle": "Imago profili", "drop": "Pone imaginem .jpg, .png, .webp hic", "apply": "Applica", "hint": "Trahe ut moveas, labere ut amplifices.", "badtype": "Utere imagine .jpg, .png vel .webp.", "saved": "Servatum."}};T.mx=Object.assign({},T.es,{"changepic": "Cambiar foto", "yourname": "Tu nombre", "croptitle": "Foto de perfil", "drop": "Inserta tu foto .jpg, .png, .webp aquí", "badtype": "Usa una foto .jpg, .png o .webp."});
 var T2={"en": {"back2": "Back", "createnote": "Create note", "nonotes": "No notes yet. Press Create note to start.", "nloginmsg": "Log in to see and write your notes. Only you can see them.", "edited": "Edited ", "nameyour": "Name your note", "notename": "My first note", "mk": "Create", "giveName": "Give your note a name.", "resetsize": "Reset size", "fullscreen": "Fullscreen", "exitfs": "Exit fullscreen", "startwrite": "Start writing... Type :play:yt: + YouTube link for a video, or :play:sp: + Spotify link for a song", "chars": "{c} characters, {w} words", "addpic": "Add picture", "del": "Delete", "delconfirm": "Tap again to delete", "close": "Close", "saveN": "Save", "keep": t("keep"), "failsave": "Couldn't save in this browser.", "dragmove": "Drag to move", "openyt": "Open on YouTube", "opensp": "Open on Spotify", "badlink": "A :play: link couldn't be read. Paste the full YouTube or Spotify link right after it."}, "ja": {"back2": "戻る", "createnote": "ノートを作成", "nonotes": "ノートはまだありません。「ノートを作成」を押して始めましょう。", "nloginmsg": "ログインしてノートを見たり書いたりできます。あなただけが見られます。", "edited": "編集日 ", "nameyour": "ノートに名前を付ける", "notename": "最初のノート", "mk": "作成", "giveName": "ノートに名前を付けてください。", "resetsize": "サイズをリセット", "fullscreen": "全画面", "exitfs": "全画面を終了", "startwrite": "書き始めましょう... :play:yt: + YouTubeリンクで動画、:play:sp: + Spotifyリンクで曲を追加", "chars": "{c}文字、{w}語", "addpic": "画像を追加", "del": "削除", "delconfirm": "もう一度押すと削除", "close": "閉じる", "saveN": "保存", "keep": "変更を残すには保存を押してください。", "failsave": "このブラウザでは保存できませんでした。", "dragmove": "ドラッグで移動", "openyt": "YouTubeで開く", "opensp": "Spotifyで開く", "badlink": ":play: のリンクを読み取れませんでした。直後にYouTubeまたはSpotifyの完全なリンクを貼ってください。"}, "hu": {"back2": "Vissza", "createnote": "Jegyzet létrehozása", "nonotes": "Még nincs jegyzet. Nyomd meg a Jegyzet létrehozása gombot.", "nloginmsg": "Lépj be a jegyzeteid megtekintéséhez és írásához. Csak te látod őket.", "edited": "Szerkesztve: ", "nameyour": "Nevezd el a jegyzetet", "notename": "Az első jegyzetem", "mk": "Létrehozás", "giveName": "Adj nevet a jegyzetnek.", "resetsize": "Méret visszaállítása", "fullscreen": "Teljes képernyő", "exitfs": "Kilépés a teljes képernyőből", "startwrite": "Kezdj írni... :play:yt: + YouTube-link videóhoz, :play:sp: + Spotify-link zenéhez", "chars": "{c} karakter, {w} szó", "addpic": "Kép hozzáadása", "del": "Törlés", "delconfirm": "Koppints újra a törléshez", "close": "Bezárás", "saveN": "Mentés", "keep": "Nyomd meg a Mentést a módosítások megtartásához.", "failsave": "Ebben a böngészőben nem sikerült menteni.", "dragmove": "Húzd a mozgatáshoz", "openyt": "Megnyitás YouTube-on", "opensp": "Megnyitás Spotify-on", "badlink": "A :play: link nem olvasható. Illeszd be közvetlenül utána a teljes YouTube- vagy Spotify-linket."}, "zh": {"back2": "返回", "createnote": "创建笔记", "nonotes": "还没有笔记。点击“创建笔记”开始。", "nloginmsg": "登录后即可查看和书写你的笔记。只有你能看到。", "edited": "编辑于 ", "nameyour": "为笔记命名", "notename": "我的第一条笔记", "mk": "创建", "giveName": "请给笔记起个名字。", "resetsize": "重置大小", "fullscreen": "全屏", "exitfs": "退出全屏", "startwrite": "开始书写... 输入 :play:yt: + YouTube 链接添加视频，或 :play:sp: + Spotify 链接添加歌曲", "chars": "{c} 个字符，{w} 个词", "addpic": "添加图片", "del": "删除", "delconfirm": "再点一次以删除", "close": "关闭", "saveN": "保存", "keep": "按“保存”以保留更改。", "failsave": "无法在此浏览器中保存。", "dragmove": "拖动移动", "openyt": "在 YouTube 打开", "opensp": "在 Spotify 打开", "badlink": "无法读取 :play: 链接。请在其后粘贴完整的 YouTube 或 Spotify 链接。"}, "es": {"back2": "Atrás", "createnote": "Crear nota", "nonotes": "Aún no hay notas. Pulsa Crear nota para empezar.", "nloginmsg": "Inicia sesión para ver y escribir tus notas. Solo tú puedes verlas.", "edited": "Editado ", "nameyour": "Ponle nombre a tu nota", "notename": "Mi primera nota", "mk": "Crear", "giveName": "Ponle un nombre a tu nota.", "resetsize": "Restablecer tamaño", "fullscreen": "Pantalla completa", "exitfs": "Salir de pantalla completa", "startwrite": "Empieza a escribir... Escribe :play:yt: + enlace de YouTube para un video, o :play:sp: + enlace de Spotify para una canción", "chars": "{c} caracteres, {w} palabras", "addpic": "Añadir imagen", "del": "Eliminar", "delconfirm": "Toca otra vez para eliminar", "close": "Cerrar", "saveN": "Guardar", "keep": "Pulsa Guardar para conservar tus cambios.", "failsave": "No se pudo guardar en este navegador.", "dragmove": "Arrastra para mover", "openyt": "Abrir en YouTube", "opensp": "Abrir en Spotify", "badlink": "No se pudo leer el enlace :play:. Pega el enlace completo de YouTube o Spotify justo después."}, "de": {"back2": "Zurück", "createnote": "Notiz erstellen", "nonotes": "Noch keine Notizen. Tippe auf Notiz erstellen, um zu beginnen.", "nloginmsg": "Melde dich an, um deine Notizen zu sehen und zu schreiben. Nur du kannst sie sehen.", "edited": "Bearbeitet am ", "nameyour": "Gib deiner Notiz einen Namen", "notename": "Meine erste Notiz", "mk": "Erstellen", "giveName": "Gib deiner Notiz einen Namen.", "resetsize": "Größe zurücksetzen", "fullscreen": "Vollbild", "exitfs": "Vollbild beenden", "startwrite": "Schreib los... Tippe :play:yt: + YouTube-Link für ein Video oder :play:sp: + Spotify-Link für einen Song", "chars": "{c} Zeichen, {w} Wörter", "addpic": "Bild hinzufügen", "del": "Löschen", "delconfirm": "Zum Löschen erneut tippen", "close": "Schließen", "saveN": "Speichern", "keep": "Drücke Speichern, um deine Änderungen zu behalten.", "failsave": "In diesem Browser konnte nicht gespeichert werden.", "dragmove": "Zum Verschieben ziehen", "openyt": "Auf YouTube öffnen", "opensp": "Auf Spotify öffnen", "badlink": "Der :play:-Link konnte nicht gelesen werden. Füge direkt danach den vollständigen YouTube- oder Spotify-Link ein."}, "la": {"back2": "Redi", "createnote": "Notam crea", "nonotes": "Nullae notae adhuc. Preme \"Notam crea\" ut incipias.", "nloginmsg": "Intra ut notas tuas videas et scribas. Solus tu eas vides.", "edited": "Mutata ", "nameyour": "Notae nomen da", "notename": "Prima nota mea", "mk": "Crea", "giveName": "Notae nomen da.", "resetsize": "Magnitudinem restitue", "fullscreen": "Tota scaena", "exitfs": "Exi e tota scaena", "startwrite": "Incipe scribere... Scribe :play:yt: + nexum YouTube pro video, vel :play:sp: + nexum Spotify pro cantu", "chars": "{c} litterae, {w} verba", "addpic": "Imaginem adde", "del": "Dele", "delconfirm": "Iterum tange ut deleas", "close": "Claude", "saveN": "Serva", "keep": "Preme \"Serva\" ut mutationes serves.", "failsave": "In hoc navigatro servari non potuit.", "dragmove": "Trahe ut moveas", "openyt": "Aperi in YouTube", "opensp": "Aperi in Spotify", "badlink": "Nexus :play: legi non potuit. Pone statim post eum nexum YouTube vel Spotify integrum."}};T2.mx=Object.assign({},T2.es,{addpic:"Agregar imagen",del:"Borrar"});Object.keys(T2).forEach(function(l){Object.assign(T[l],T2[l])});
 var T3={"en": {"restart": "Back to start", "recolors": "Recommended colours"}, "ja": {"restart": "最初に戻る", "recolors": "おすすめの色"}, "hu": {"restart": "Vissza az elejére", "recolors": "Ajánlott színek"}, "zh": {"restart": "回到开头", "recolors": "推荐颜色"}, "es": {"restart": "Volver al inicio", "recolors": "Colores recomendados"}, "de": {"restart": "Zum Anfang", "recolors": "Empfohlene Farben"}, "la": {"restart": "Ad initium", "recolors": "Colores commendati"}};T3.mx=T3.es;Object.keys(T3).forEach(function(l){Object.assign(T[l],T3[l])});
+var T4={en:{lb:"Lorebooks",lbstart:"Log in to start.",lb1:"1 module",lbN:"{n} modules",lbcreate:"Create module",lbnone:"No modules yet. Press Create module to start.",lbloginmsg:"Log in to make lorebooks. Only you can see them.",lbnew:"New module",lbph:"My first lorebook",lbdesc:"Description",lbsave:"Save",lbneed:"Give your module a name.",lbcreated:"Created ",lbadd:"Create+",lbempty:"Press Create+ to add a character lorebook.",lbtitle:"Lorebook title",lbkeys:"Keys",lbcont:"Content",lbetitle:"Title",lbaddent:"Add module",lbdelmod:"Delete module",lbdelchar:"Delete character",lbmade:"Module created. Fill in your first character below.",lbsaved:"Saved. Copy buttons are ready.",lbcopy:"Copy",lbcopied:"Copied",lbpic:"Set picture",stn:"Notes",stl:"Lorebooks",stc:"Characters",ste:"Modules",recent:"Jump back in",norecent:"Nothing yet. Create a note or a lorebook and it shows up here.",dashout:"Log in to see your activity here.",lbnote:"Note",lbbook:"Lorebook"},es:{lb:"Libros de lore",lbstart:"Inicia sesión para empezar.",lb1:"1 módulo",lbN:"{n} módulos",lbcreate:"Crear módulo"},de:{lb:"Lorebooks",lbstart:"Melde dich an, um zu starten.",lb1:"1 Modul",lbN:"{n} Module",lbcreate:"Modul erstellen"},ja:{lb:"ロアブック",lbstart:"ログインして始めましょう。",lb1:"1 モジュール",lbN:"{n} モジュール",lbcreate:"モジュールを作成"},hu:{lb:"Lorebookok",lbstart:"Jelentkezz be a kezdéshez.",lb1:"1 modul",lbN:"{n} modul",lbcreate:"Modul létrehozása"},zh:{lb:"设定集",lbstart:"登录后开始。",lb1:"1 个模块",lbN:"{n} 个模块",lbcreate:"创建模块"}};
+T4.mx=T4.es;Object.keys(T4).forEach(function(l){Object.assign(T[l],T4[l])});
+var work=null,curChar=null,lnote="",lArm=false,cArm=false,eArm=null,tmr=null;
+var LC=["#c0392b","#d98a3d","#d9b84a","#2e8b57","#4a90b8","#5b4aa6","#b05aa8","#8a8a8a"];
+function myLore(){var u=current&&users()[current];if(!u)return null;if(!u.lore)u.lore=[];return u.lore}
+function saveLore(l){var all=users();if(!current||!all[current])return false;all[current].lore=l;return save(USERS,all)}
+function persist(){var l=myLore();if(!l||!work)return false;work.updated=Date.now();l=l.map(function(m){return m.id===work.id?JSON.parse(JSON.stringify(work)):m});return saveLore(l)}
+function fmtDate(x){return new Date(x).toLocaleString(loc(),{dateStyle:"medium",timeStyle:"short"})}
+function toast(m){var b=$("lbtoast");b.textContent=m;b.classList.add("show");clearTimeout(tmr);tmr=setTimeout(function(){b.classList.remove("show")},2400)}
+function sx(q,k){var e=document.querySelector(q);if(e)e.textContent=t(k)}
+function lbStatic(){
+  sx("#lorebtn h3","lb");sx("#lorebtn .go","open");sx("#lp h2","lb");sx("#lback","back2");sx("#vback","back2");
+  sx("#lmake","lbcreate");sx("#llogin","loginsignup");sx("#lout > p:first-child","lbloginmsg");
+  sx("#lmt","lbnew");sx("#lmsave","lbsave");sx("#lmcancel","cancel");sx("#rect","recent");
+  $("lmn").parentNode.firstChild.nodeValue=t("name");$("lmd").parentNode.firstChild.nodeValue=t("lbdesc");$("lmn").placeholder=t("lbph");
+}
+function newChar(){var c={id:"c"+Date.now(),title:"",desc:"",pfp:"",color:LC[work.chars.length%LC.length],saved:false,entries:[]};work.chars.push(c);curChar=c.id}
+function buildLore(){
+  lbStatic();
+  var l=myLore();
+  $("lcount").textContent=l?(l.length===1?t("lb1"):t("lbN").replace("{n}",l.length)):t("lbstart");
+  $("lout").classList.toggle("hidden",!!l);$("lin").classList.toggle("hidden",!l);
+  var list=$("llist");list.innerHTML="";
+  if(l){
+    if(!l.length)list.appendChild(el("p","empty",t("lbnone")));
+    l.slice().sort(function(a,b){return b.created-a.created}).forEach(function(m){
+      var b=el("button","nbox");b.type="button";
+      b.appendChild(el("b","",m.name));
+      if(m.desc)b.appendChild(el("span","",m.desc));
+      b.appendChild(el("span","",t("lbcreated")+fmtDate(m.created)));
+      b.onclick=function(){openMod(m.id)};
+      list.appendChild(b);
+    });
+  }
+  buildDash();
+}
+function buildDash(){
+  var d=$("dash");if(!d)return;
+  var n=myNotes(),l=myLore(),st=$("stats"),rc=$("recent");st.innerHTML="";rc.innerHTML="";
+  if(!n||!l){st.classList.add("hidden");rc.appendChild(el("p","hint",t("dashout")));return}
+  st.classList.remove("hidden");
+  var ch=0,en=0;l.forEach(function(m){(m.chars||[]).forEach(function(c){ch++;en+=(c.entries||[]).length})});
+  [[n.length,"stn"],[l.length,"stl"],[ch,"stc"],[en,"ste"]].forEach(function(r){var b=el("div","stat");b.appendChild(el("b","",r[0]));b.appendChild(el("span","",t(r[1])));st.appendChild(b)});
+  var all=n.map(function(x){return{k:"n",id:x.id,name:x.name,at:x.updated,c:""}}).concat(l.map(function(x){return{k:"l",id:x.id,name:x.name,at:x.updated||x.created,c:(x.chars&&x.chars[0]&&x.chars[0].color)||""}}));
+  all.sort(function(a,b){return b.at-a.at});
+  if(!all.length){rc.appendChild(el("p","hint",t("norecent")));return}
+  all.slice(0,5).forEach(function(r){
+    var b=el("button","rec");b.type="button";var i=el("i");i.style.background=r.c||"var(--accent)";
+    b.appendChild(i);b.appendChild(el("b","",r.name));b.appendChild(el("span","",(r.k==="n"?t("lbnote"):t("lbbook"))+" · "+new Date(r.at).toLocaleDateString(loc())));
+    b.onclick=function(){if(r.k==="n"){$("sharedbtn").onclick();openEditor(r.id)}else{$("lorebtn").onclick();openMod(r.id)}};
+    rc.appendChild(b);
+  });
+}
+var _bn=buildNotes;buildNotes=function(){_bn();buildDash()};
+function openMod(id){
+  var m=(myLore()||[]).filter(function(x){return x.id===id})[0];if(!m)return;
+  work=JSON.parse(JSON.stringify(m));work.chars=work.chars||[];
+  curChar=work.chars.length?work.chars[0].id:null;lArm=false;lnote="";
+  $("vdel").textContent=t("lbdelmod");
+  $("lv").classList.add("open");$("lv").scrollTop=0;renderMod();
+}
+function renderMod(){
+  if(!work)return;
+  $("vtitle").textContent=work.name;
+  $("vmeta").textContent=(work.desc?work.desc+" · ":"")+t("lbcreated")+fmtDate(work.created);
+  var ch=$("chips");ch.innerHTML="";
+  work.chars.forEach(function(c){
+    var b=el("button","lbchip"+(c.id===curChar?" on":""));b.type="button";
+    var d=el("i");d.style.background=c.color;
+    b.appendChild(d);b.appendChild(document.createTextNode(c.title||"…"));
+    b.onclick=function(){persist();curChar=c.id;cArm=false;eArm=null;lnote="";renderMod()};
+    ch.appendChild(b);
+  });
+  var add=el("button","lbchip",t("lbadd"));add.type="button";
+  add.onclick=function(){persist();newChar();cArm=false;eArm=null;lnote="";renderMod()};
+  ch.appendChild(add);
+  renderChar();
+}
+function copyBtn(get){
+  var b=el("button","lbcopy",t("lbcopy"));b.type="button";
+  b.onclick=function(){
+    var x=get();
+    function ok(){b.textContent=t("lbcopied");setTimeout(function(){b.textContent=t("lbcopy")},1200)}
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(x).then(ok,function(){});
+    else{var a=document.createElement("textarea");a.value=x;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){}a.remove()}
+  };
+  return b;
+}
+function fld(o,k,label,multi,rows,max){
+  var w=el("div"),row=el("div","lbrow"),i=document.createElement(multi?"textarea":"input");
+  w.appendChild(el("div","lbcap",label));
+  i.className="lbinp";i.value=o[k]||"";i.setAttribute("aria-label",label);
+  if(multi)i.rows=rows||5;else i.maxLength=max||80;
+  i.oninput=function(){o[k]=i.value};
+  row.appendChild(i);
+  if(o.saved)row.appendChild(copyBtn(function(){return o[k]||""}));
+  w.appendChild(row);return w;
+}
+function renderChar(){
+  var body=$("vbody");body.innerHTML="";
+  var c=work.chars.filter(function(x){return x.id===curChar})[0];
+  if(!c){body.appendChild(el("p","empty",t("lbempty")));return}
+  c.entries=c.entries||[];
+  var card=el("div","lbcard"),head=el("div","lbhead"),av=el("button","lbav");
+  av.type="button";av.setAttribute("aria-label",t("lbpic"));
+  var msg=el("p","msg ok",lnote);msg.setAttribute("role","status");lnote="";
+  function paint(){av.innerHTML="";if(c.pfp){var im=new Image();im.alt="";im.src=c.pfp;av.appendChild(im)}else av.textContent="+"}
+  paint();
+  var pf=document.createElement("input");pf.type="file";pf.accept="image/*";pf.hidden=true;
+  av.onclick=function(){pf.click()};
+  pf.onchange=function(){
+    var f=pf.files[0];if(!f)return;
+    var img=new Image(),u=URL.createObjectURL(f);
+    img.onload=function(){
+      var cv=document.createElement("canvas"),n=160,q=Math.min(img.width,img.height);
+      cv.width=cv.height=n;
+      cv.getContext("2d").drawImage(img,(img.width-q)/2,(img.height-q)/2,q,q,0,0,n,n);
+      c.pfp=cv.toDataURL("image/jpeg",.85);URL.revokeObjectURL(u);paint();msg.textContent=t("keep");
+    };
+    img.onerror=function(){msg.textContent=t("badtype")};
+    img.src=u;
+  };
+  var cr=el("div","lbsws");
+  LC.forEach(function(k){
+    var b=el("button","lbsw"+(k===c.color?" on":""));b.type="button";b.style.background=k;
+    b.setAttribute("aria-label",k);
+    b.onclick=function(){c.color=k;lnote=t("keep");renderMod()};
+    cr.appendChild(b);
+  });
+  var ci=document.createElement("input");ci.type="color";ci.className="lbcol";ci.value=c.color;
+  ci.onchange=function(){c.color=ci.value;lnote=t("keep");renderMod()};
+  cr.appendChild(ci);
+  head.appendChild(av);head.appendChild(cr);head.appendChild(pf);card.appendChild(head);
+  card.appendChild(fld(c,"title",t("lbtitle"),false));
+  card.appendChild(fld(c,"desc",t("lbdesc"),true,6));
+  var sv=el("button","btn dark",t("lbsave"));sv.type="button";
+  sv.onclick=function(){
+    c.title=c.title.trim();c.saved=true;c.entries.forEach(function(e){e.saved=true});
+    var ok=persist();toast(ok?t("lbsaved"):t("failsave"));renderMod();
+  };
+  var dl=el("button","link",cArm?t("delconfirm"):t("lbdelchar"));dl.type="button";
+  dl.onclick=function(){
+    if(!cArm){cArm=true;dl.textContent=t("delconfirm");return}
+    work.chars=work.chars.filter(function(x){return x.id!==c.id});
+    curChar=work.chars.length?work.chars[0].id:null;cArm=false;persist();renderMod();
+  };
+  var row=el("div","erow");row.appendChild(dl);row.appendChild(sv);
+  card.appendChild(msg);card.appendChild(row);
+  var side=el("div"),grid=el("div","lbents");
+  c.entries.forEach(function(e,i){
+    var bx=el("div","lbent"),top=el("div","lbtop"),dot=el("i");dot.style.background=c.color;
+    top.appendChild(dot);top.appendChild(el("span","lbbadge",(i+1)+"/"+c.entries.length));
+    var de=el("button","link",eArm===e.id?t("delconfirm"):t("del"));de.type="button";
+    de.onclick=function(){
+      if(eArm!==e.id){eArm=e.id;de.textContent=t("delconfirm");return}
+      c.entries=c.entries.filter(function(x){return x.id!==e.id});eArm=null;persist();renderChar();
+    };
+    top.appendChild(de);bx.appendChild(top);
+    bx.appendChild(fld(e,"title",t("lbetitle"),false));
+    bx.appendChild(fld(e,"keys",t("lbkeys"),false,0,300));
+    bx.appendChild(fld(e,"content",t("lbcont"),true,8));
+    grid.appendChild(bx);
+  });
+  var ae=el("button","btn dark",t("lbaddent"));ae.type="button";ae.style.marginTop="1rem";
+  ae.onclick=function(){c.entries.push({id:"e"+Date.now(),title:"",keys:"",content:"",saved:false});persist();renderChar();var k=$("vbody").querySelectorAll(".lbent");if(k.length)k[k.length-1].scrollIntoView({block:"center",behavior:"smooth"})};
+  side.appendChild(grid);side.appendChild(ae);
+  var two=el("div","lbtwo");two.appendChild(card);two.appendChild(side);body.appendChild(two);
+}
+function closeLore(){
+  persist();$("lv").classList.remove("open");$("lm").classList.remove("open");$("lp").classList.remove("open");
+  document.body.style.overflow="";work=null;buildLore();
+}
+$("lorebtn").onclick=function(){buildLore();$("lp").classList.add("open");$("lp").scrollTop=0;document.body.style.overflow="hidden"};
+$("lback").onclick=closeLore;
+$("vback").onclick=function(){persist();$("lv").classList.remove("open");work=null;buildLore()};
+$("llogin").onclick=function(){openAuth("login")};
+$("lmake").onclick=function(){$("lmn").value="";$("lmd").value="";$("lmm").textContent="";$("lm").classList.add("open");$("lmn").focus()};
+$("lmcancel").onclick=function(){$("lm").classList.remove("open")};
+$("lmsave").onclick=function(){
+  var name=$("lmn").value.trim();
+  if(!name){$("lmm").textContent=t("lbneed");return}
+  var l=myLore();if(!l)return;
+  var m={id:"l"+Date.now(),name:name,desc:$("lmd").value.trim(),created:Date.now(),updated:Date.now(),chars:[]};
+  l.push(m);
+  if(!saveLore(l)){$("lmm").textContent=t("failsave");return}
+  $("lm").classList.remove("open");buildLore();openMod(m.id);newChar();persist();renderMod();toast(t("lbmade"));
+};
+$("vdel").onclick=function(){
+  if(!lArm){lArm=true;this.textContent=t("delconfirm");return}
+  var l=(myLore()||[]).filter(function(m){return m.id!==work.id});
+  saveLore(l);$("lv").classList.remove("open");work=null;buildLore();
+};
+document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;
+  if($("lm").classList.contains("open"))$("lm").classList.remove("open");
+  else if($("lv").classList.contains("open")){persist();$("lv").classList.remove("open");work=null;buildLore()}
+  else if($("lp").classList.contains("open")&&!$("ov").classList.contains("open"))closeLore();
+});
 function loc(){return lang==="mx"?"es-MX":lang}
 var lang=load("lobby_lang","en");if(!T[lang]&&lang!=="mx")lang="en";
 function t(k){return(T[lang]&&T[lang][k])||T.en[k]||k}
