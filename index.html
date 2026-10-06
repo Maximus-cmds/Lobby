@@ -225,6 +225,57 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .rec i{width:10px;height:10px;border-radius:50%;flex:none}
 .rec b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rec span{font-size:.8rem;color:var(--muted);white-space:nowrap}
+
+/* ===== Videos ===== */
+.vfolds{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.2rem;margin-top:1.8rem;align-items:start}
+.vfold{font:inherit;color:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:.3rem;padding:1.4rem;border-radius:22px;border:1.5px solid rgba(127,127,127,.35);background:rgba(127,127,127,.08);transition:transform .2s,border-color .2s}
+.vfold:nth-child(3n+2){margin-top:1.6rem}
+.vfold:hover{transform:translateY(-4px) rotate(-.6deg);border-color:var(--accent)}
+.vfold:focus-visible,.vsub:focus-visible,.vcard:focus-visible,.vplus:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.vfold svg,.vnew svg,.vbig svg,.vsub svg,.vhi svg{fill:color-mix(in srgb,var(--accent) 30%,transparent);stroke:var(--accent);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round}
+.vfold svg{width:72px;height:72px;margin-bottom:.6rem}
+.vfold h3{font-size:1.25rem;letter-spacing:-.02em;overflow-wrap:anywhere}
+.vfold p{color:var(--muted);font-size:.85rem}
+.vnew{display:flex;align-items:center;gap:.8rem;padding:.8rem;border:1.5px dashed var(--accent);border-radius:16px}
+.vnew svg{width:40px;height:40px;flex:none}
+.vlay{display:grid;grid-template-columns:240px minmax(0,1fr);gap:2.4rem;margin-top:1.5rem;align-items:start}
+.vside{position:sticky;top:1rem;display:flex;flex-direction:column;gap:.9rem}
+.vbigrow{display:flex;align-items:flex-end;gap:.8rem}
+.vbig svg{width:150px;height:150px;filter:drop-shadow(0 14px 24px color-mix(in srgb,var(--accent) 35%,transparent))}
+.vplus{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font:inherit;font-size:1.6rem;line-height:1;cursor:pointer;flex:none;display:grid;place-items:center;padding:0}
+.vplus:hover{background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.vbigname{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;overflow-wrap:anywhere}
+.vsubs{display:flex;flex-direction:column;gap:.4rem;padding-left:1.1rem;border-left:2px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.vsubs:empty{display:none}
+.vsub{font:inherit;color:inherit;text-align:left;display:flex;align-items:center;gap:.6rem;padding:.4rem .5rem;border:0;border-radius:10px;background:transparent;cursor:pointer}
+.vsub:hover{background:rgba(127,127,127,.12)}
+.vsub svg{width:28px;height:28px;flex:none}
+.vsub span{overflow-wrap:anywhere}
+.vhead{display:flex;align-items:center;gap:.8rem;min-height:44px}
+.vhi svg{width:34px;height:34px;flex:none}
+.vhead h3{font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:-.03em;overflow-wrap:anywhere}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:1.4rem}
+.vcard{font:inherit;color:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:.15rem;padding:.6rem .6rem .8rem;border-radius:18px;border:1.5px solid rgba(127,127,127,.3);background:rgba(127,127,127,.06);transition:border-color .2s,transform .2s}
+.vcard:hover{border-color:var(--accent);transform:translateY(-3px)}
+.vcard .vth{margin-bottom:.5rem}
+.vcard b{padding:0 .3rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vcard span{padding:0 .3rem;font-size:.8rem;color:var(--muted)}
+.vth{aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.vth video{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
+@media(min-width:900px){.vgrid .vcard:first-child{grid-column:span 2}}
+@media(max-width:800px){.vlay{grid-template-columns:minmax(0,1fr)}.vside{position:static}.vbig svg{width:96px;height:96px}}
+.vedit{width:min(1000px,100%);max-height:calc(100vh - 2rem);max-height:calc(100dvh - 2rem);overflow:auto;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:1.4rem}
+.vstage{background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/9;align-self:start;position:sticky;top:0}
+.vstage video{width:100%;height:100%;object-fit:contain;display:block}
+@media(max-width:800px){.vedit{grid-template-columns:minmax(0,1fr)}.vstage{position:static}}
+.vctl{display:flex;flex-direction:column;gap:.7rem}
+.vrng{display:grid;grid-template-columns:1fr auto;gap:.15rem;font-size:.85rem;color:var(--muted)}
+.vrng input{grid-column:1/-1;accent-color:var(--accent)}
+.vrng output{color:var(--panel-ink)}
+.vbtns{display:flex;flex-wrap:wrap;gap:.5rem}
+.vbtns .back{font-size:.85rem;padding:.35rem .8rem}
+.vctl .erow{flex-wrap:wrap}
+.vnote{font-size:.78rem;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -316,6 +367,19 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
   <p class="msg ok" id="emsg" role="status"></p>
   <div class="erow"><button class="link" id="edel" type="button">Delete</button><button class="link" id="eclose" type="button">Close</button><button class="btn dark" id="esave" type="button">Save</button></div>
 </div></div>
+<div class="shared-page" id="vp" role="dialog" aria-label="Videos"><div class="shared-inner">
+  <div class="sbar"><button class="back" id="vpback" type="button">Back</button><h2>Videos</h2></div>
+  <div id="vpout" class="hidden"><p id="vpoutp"></p><p style="margin-top:1rem"><button class="btn dark" id="vplogin" type="button"></button></p></div>
+  <div id="vpin" class="hidden"></div>
+</div></div>
+<div class="overlay" id="vup"><div class="modal-card" role="dialog" aria-labelledby="vupt">
+  <h2 id="vupt">Add a video</h2>
+  <input type="file" id="vupf" accept="video/*,.mkv,.mov,.m4v" multiple hidden>
+  <button class="drop" id="vupd" type="button"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><span id="vupdt"></span></button>
+  <p class="msg" id="vupm" role="alert"></p>
+  <button class="link" id="vupc" type="button">Cancel</button>
+</div></div>
+<div class="overlay" id="ved"><div class="modal-card vedit" role="dialog" aria-label="Video editor"><div class="vstage"><video id="vev" controls playsinline></video></div><div class="vctl" id="vctl"></div></div></div>
 <header class="hero"><h1>Lobby</h1>
   <div class="auth-actions" id="acts"><button class="btn fill" id="bsign">Sign up</button><button class="btn" id="blog">Log in</button></div>
   <p class="welcome hidden" id="wel"></p>
@@ -338,6 +402,12 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
         <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 8h6"/></svg></span>
         <h3>Lorebooks</h3>
         <p id="lcount">Log in to start.</p>
+        <span class="go">Open &rarr;</span>
+      </button>
+      <button class="card" id="vidbtn" type="button">
+        <span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10.5 9.500v5l4-2.500z"/></svg></span>
+        <h3>Videos</h3>
+        <p id="vidcount">Log in to start.</p>
         <span class="go">Open &rarr;</span>
       </button>
       <div class="card soon">
@@ -1062,6 +1132,207 @@ var PRE=[["#2b2540","Midnight"],["#000000","Black"],["#ffffff","White"],["#7a1f2
 function setCol(c){applyColor(c);$("ccol").value=c;saveColor(c)}
 PRE.forEach(function(p){var b=el("button","sw");b.type="button";b.title=p[1];b.setAttribute("aria-label",p[1]);b.style.background=p[0];b.onclick=function(){setCol(p[0])};$("sw").appendChild(b)});
 $("scolr").onclick=function(){applyColor(null);clearColor()};
+
+/* ===== Videos ===== */
+var V=null,vUser=null,vcur=null,vArm=null,vurls=[],vedit=null,vedurl=null,vdb=null;
+var FSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+var VFX={br:100,co:100,sa:100,rot:0,flip:0,vol:100,sp:1,a:0,z:0};
+Object.assign(T.en,{vd:"Videos",vdstart:"Log in to start.",vdN:"{f} folders \u00b7 {v} videos",vdnew:"New folder",vdloginmsg:"Log in to store your videos. Only you can see them.",vdempty:"No folders yet. Press New folder to start.",vdnov:"Nothing in here yet. Press + to add a video.",vdname:"Folder name",vdsub:"New folder inside",vdadd:"Add a video",vdaddt:"Add a video",vddrop:"Drag a video here, or click to choose one",vdbad:"That doesn't look like a video file.",vdsaving:"Saving\u2026",vddel:"Delete folder",vdvol:"Volume",vdspeed:"Speed",vdta:"Trim start",vdtz:"Trim end",vdbr:"Brightness",vdco:"Contrast",vdsa:"Saturation",vdrot:"Rotate",vdflip:"Flip",vdreset:"Reset edits",vddl:"Download original",vdsave:"Save",vdclose:"Close",vdsaved:"Saved.",vdvdel:"Delete video",vdnote:"Edits play back live. Your original file is never changed."});
+function vOpenDb(){return vdb||(vdb=new Promise(function(res,rej){var r=indexedDB.open("lobby_videos",1);r.onupgradeneeded=function(){r.result.createObjectStore("meta");r.result.createObjectStore("blob")};r.onsuccess=function(){res(r.result)};r.onerror=function(){rej(r.error)}}))}
+function vTx(store,mode,fn){return vOpenDb().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,mode),rq=fn(tx.objectStore(store));tx.oncomplete=function(){res(rq&&rq.result)};tx.onerror=tx.onabort=function(){rej(tx.error)}})})}
+function vSave(){return vTx("meta","readwrite",function(s){return s.put(V,current)})}
+function vCard(){$("vidcount").textContent=V?t("vdN").replace("{f}",V.folders.length).replace("{v}",V.videos.length):t("vdstart")}
+function vLoad(){
+  var u=current;if(!u){V=null;vCard();return}
+  vTx("meta","readonly",function(s){return s.get(u)}).catch(function(){return null}).then(function(r){
+    if(u!==current)return;V=r||{folders:[],videos:[]};vCard();if($("vp").classList.contains("open"))vRender();
+  });
+}
+function vStatic(){sx("#vidbtn h3","vd");sx("#vidbtn .go","open");sx("#vp h2","vd");sx("#vpback","back2");sx("#vpoutp","vdloginmsg");sx("#vplogin","loginsignup");sx("#vupt","vdaddt");sx("#vupdt","vddrop");sx("#vupc","cancel")}
+function vSync(){if(vUser!==current){vUser=current;V=null;vLoad()}vStatic();vCard();if($("vp").classList.contains("open"))vRender()}
+var _rr=render;render=function(){_rr();vSync()};
+function pc(x){return Math.round(x)+"%"}
+function ft(s){s=+s||0;return Math.floor(s/60)+":"+("0"+Math.floor(s%60)).slice(-2)}
+function fsz(n){return n>1e9?(n/1e9).toFixed(1)+" GB":n>1e6?(n/1e6).toFixed(1)+" MB":Math.max(1,Math.round(n/1e3))+" KB"}
+function vFx(n,x){var s=(x.rot/90)%2?.5625:1;n.style.filter="brightness("+x.br+"%) contrast("+x.co+"%) saturate("+x.sa+"%)";n.style.transform="rotate("+x.rot+"deg) scale("+(x.flip?-s:s)+","+s+")"}
+function vKids(id){var r=[id];V.folders.filter(function(f){return f.parent===id}).forEach(function(f){r=r.concat(vKids(f.id))});return r}
+function vGo(id){vcur=id;vArm=null;vRender();$("vp").scrollTop=0}
+function vCount(id){var ks=vKids(id);return t("vdN").replace("{f}",ks.length-1).replace("{v}",V.videos.filter(function(v){return ks.indexOf(v.folder)>=0}).length)}
+function vRender(){
+  vurls.forEach(function(u){URL.revokeObjectURL(u)});vurls=[];
+  $("vpout").classList.toggle("hidden",!!current);$("vpin").classList.toggle("hidden",!current);
+  if(!current||!V)return;
+  var b=$("vpin");b.innerHTML="";
+  var cur=vcur&&V.folders.filter(function(f){return f.id===vcur})[0];if(vcur&&!cur)vcur=null;
+  if(cur)vInside(b,cur);else vRoot(b);
+  vCard();
+}
+function vRoot(b){
+  var mk=el("button","btn dark",t("vdnew")),g=el("div","vfolds");mk.type="button";
+  mk.onclick=function(){vNew(null,g)};b.appendChild(mk);
+  var rs=V.folders.filter(function(f){return !f.parent});
+  if(!rs.length)b.appendChild(el("p","empty",t("vdempty")));
+  rs.forEach(function(f){
+    var c=el("button","vfold");c.type="button";c.innerHTML=FSVG;
+    c.appendChild(el("h3","",f.name));c.appendChild(el("p","",vCount(f.id)));
+    c.onclick=function(){vGo(f.id)};g.appendChild(c);
+  });
+  b.appendChild(g);
+}
+function vNew(parent,host){
+  var old=host.querySelector(".vnew");if(old){old.querySelector("input").focus();return}
+  var w=el("div","vnew"),i=document.createElement("input"),done=false;
+  i.className="lbinp";i.maxLength=40;i.placeholder=t("vdname");i.setAttribute("aria-label",t("vdname"));
+  w.innerHTML=FSVG;w.appendChild(i);host.insertBefore(w,host.firstChild);i.focus();
+  function fin(ok){
+    if(done)return;done=true;var n=i.value.trim();
+    if(ok&&n){V.folders.push({id:"f"+Date.now(),name:n,parent:parent,created:Date.now()});vSave().then(vRender,function(){V.folders.pop();vRender();toast(t("failsave"))})}
+    else vRender();
+  }
+  i.onkeydown=function(e){if(e.key==="Enter")fin(true);if(e.key==="Escape"){e.stopPropagation();fin(false)}};
+  i.onblur=function(){fin(true)};
+}
+function vInside(b,cur){
+  var lay=el("div","vlay"),side=el("aside","vside"),main=el("div");
+  var row=el("div","vbigrow"),big=el("div","vbig"),p1=el("button","vplus","+");
+  big.innerHTML=FSVG;p1.type="button";p1.setAttribute("aria-label",t("vdsub"));p1.title=t("vdsub");
+  row.appendChild(big);row.appendChild(p1);side.appendChild(row);side.appendChild(el("div","vbigname",cur.name));
+  var subs=el("div","vsubs");side.appendChild(subs);
+  V.folders.filter(function(f){return f.parent===cur.id}).forEach(function(f){
+    var s=el("button","vsub");s.type="button";s.innerHTML=FSVG;s.appendChild(el("span","",f.name));
+    s.onclick=function(){vGo(f.id)};subs.appendChild(s);
+  });
+  p1.onclick=function(){vNew(cur.id,subs)};
+  var dl=el("button","link",vArm===cur.id?t("delconfirm"):t("vddel"));dl.type="button";dl.style.alignSelf="flex-start";
+  dl.onclick=function(){
+    if(vArm!==cur.id){vArm=cur.id;dl.textContent=t("delconfirm");return}
+    var ks=vKids(cur.id),gone=V.videos.filter(function(v){return ks.indexOf(v.folder)>=0});
+    V.folders=V.folders.filter(function(f){return ks.indexOf(f.id)<0});V.videos=V.videos.filter(function(v){return ks.indexOf(v.folder)<0});
+    vArm=null;vcur=cur.parent||null;
+    vTx("blob","readwrite",function(s){gone.forEach(function(v){s.delete(v.id)})}).then(vSave).then(vRender);
+  };
+  side.appendChild(dl);
+  var hd=el("div","vhead"),hi=el("span","vhi"),pv=el("button","vplus","+");
+  hi.innerHTML=FSVG;pv.type="button";pv.setAttribute("aria-label",t("vdadd"));pv.title=t("vdadd");
+  pv.onclick=function(){$("vupm").textContent="";$("vup").classList.add("open")};
+  hd.appendChild(hi);hd.appendChild(el("h3","",cur.name));hd.appendChild(pv);main.appendChild(hd);
+  var vs=V.videos.filter(function(v){return v.folder===cur.id}).sort(function(a,b){return b.created-a.created});
+  if(!vs.length)main.appendChild(el("p","empty",t("vdnov")));
+  var g=el("div","vgrid");
+  vs.forEach(function(v){
+    var c=el("button","vcard"),th=el("div","vth"),vd=document.createElement("video");
+    c.type="button";vd.muted=true;vd.preload="metadata";vd.playsInline=true;vFx(vd,Object.assign({},VFX,v.fx||{}));
+    th.appendChild(vd);c.appendChild(th);c.appendChild(el("b","",v.name));
+    c.appendChild(el("span","",fsz(v.size)+" \u00b7 "+new Date(v.created).toLocaleDateString(loc())));
+    c.onclick=function(){vEdit(v.id)};g.appendChild(c);
+    vTx("blob","readonly",function(s){return s.get(v.id)}).then(function(bl){if(!bl)return;var u=URL.createObjectURL(bl);vurls.push(u);vd.src=u+"#t="+((v.fx&&v.fx.a)||.1)},function(){});
+  });
+  main.appendChild(g);lay.appendChild(side);lay.appendChild(main);b.appendChild(lay);
+}
+function vAdd(fl){
+  var vs=[].filter.call(fl,function(f){return /^video\//.test(f.type)||/\.(mp4|mov|webm|mkv|m4v|avi)$/i.test(f.name)});
+  if(!vs.length){$("vupm").textContent=t("vdbad");return}
+  $("vupm").textContent=t("vdsaving");try{navigator.storage.persist()}catch(e){}
+  var ids=[],p=Promise.resolve();
+  vs.forEach(function(f,i){p=p.then(function(){
+    var id="v"+Date.now()+i;ids.push(id);
+    V.videos.push({id:id,folder:vcur,name:f.name.replace(/\.[^.]+$/,""),size:f.size,type:f.type||"video/mp4",created:Date.now()});
+    return vTx("blob","readwrite",function(s){return s.put(f,id)});
+  })});
+  p.then(vSave).then(function(){$("vup").classList.remove("open");vRender();vEdit(ids[0])},function(){
+    V.videos=V.videos.filter(function(x){return ids.indexOf(x.id)<0});$("vupm").textContent=t("failsave");
+  });
+}
+function vR(host,key,label,min,max,step,fmt){
+  var w=el("label","vrng"),o=el("output"),i=document.createElement("input"),f=vedit.fx;
+  i.type="range";i.min=min;i.max=max;i.step=step;i.value=key==="z"?(f.z||vedit.v.dur||0):f[key];o.textContent=fmt(i.value);
+  i.oninput=function(){f[key]=+i.value;o.textContent=fmt(i.value);vLive(key)};
+  w.appendChild(el("span","",label));w.appendChild(o);w.appendChild(i);host.appendChild(w);vedit.r[key]=[i,o];
+}
+function vLive(k){
+  var f=vedit.fx,vv=$("vev"),r=vedit.r;
+  if(k==="vol")vv.volume=f.vol/100;
+  else if(k==="sp")vv.playbackRate=f.sp;
+  else if(k==="a"||k==="z"){
+    if(!f.z)return;
+    if(k==="a"&&f.a>f.z-.2)f.a=Math.max(0,f.z-.2);
+    if(k==="z"&&f.z<f.a+.2)f.z=f.a+.2;
+    r.a[0].value=f.a;r.z[0].value=f.z;r.a[1].textContent=ft(f.a);r.z[1].textContent=ft(f.z);
+    vv.currentTime=k==="a"?f.a:Math.max(f.a,f.z-.5);
+  }else vFx(vv,f);
+}
+function vEdit(id,reset,keepName){
+  var v=V.videos.filter(function(x){return x.id===id})[0];if(!v)return;
+  vedit={v:v,fx:Object.assign({},VFX,reset?{}:v.fx||{}),arm:false,r:{}};
+  var vv=$("vev"),c=$("vctl"),f=vedit.fx;c.innerHTML="";
+  var nm=el("label","field",t("name")),ni=document.createElement("input");
+  ni.maxLength=80;ni.value=keepName||v.name;nm.appendChild(ni);c.appendChild(nm);
+  vR(c,"vol",t("vdvol"),0,100,1,pc);
+  var sp=el("label","field",t("vdspeed")),ss=document.createElement("select");
+  [.5,.75,1,1.25,1.5,2].forEach(function(x){var o=el("option","",x+"\u00d7");o.value=x;ss.appendChild(o)});
+  ss.value=f.sp;ss.onchange=function(){f.sp=+ss.value;vLive("sp")};sp.appendChild(ss);c.appendChild(sp);
+  vR(c,"a",t("vdta"),0,v.dur||100,.1,ft);vR(c,"z",t("vdtz"),0,v.dur||100,.1,ft);
+  vR(c,"br",t("vdbr"),50,150,1,pc);vR(c,"co",t("vdco"),50,150,1,pc);vR(c,"sa",t("vdsa"),0,200,1,pc);
+  var bt=el("div","vbtns");
+  [["vdrot",function(){f.rot=(f.rot+90)%360;vFx(vv,f)}],["vdflip",function(){f.flip=f.flip?0:1;vFx(vv,f)}],["vdreset",function(){vEdit(id,true,ni.value)}]].forEach(function(a){
+    var b=el("button","back",t(a[0]));b.type="button";b.onclick=a[1];bt.appendChild(b);
+  });
+  c.appendChild(bt);c.appendChild(el("p","vnote",t("vdnote")));
+  var msg=el("p","msg ok");msg.setAttribute("role","status");c.appendChild(msg);
+  var row=el("div","erow"),dl=el("button","link",t("vdvdel")),dw=el("button","link",t("vddl")),cl=el("button","link",t("vdclose")),sv=el("button","btn dark",t("vdsave"));
+  [dl,dw,cl,sv].forEach(function(b){b.type="button";row.appendChild(b)});c.appendChild(row);
+  sv.onclick=function(){
+    var d=v.dur||0;v.name=ni.value.trim()||v.name;v.fx=Object.assign({},f,{z:(!d||f.z>=d-.05)?0:f.z});
+    vSave().then(function(){msg.textContent=t("vdsaved");toast(t("vdsaved"));vRender()},function(){msg.textContent=t("failsave")});
+  };
+  cl.onclick=vEdClose;
+  dw.onclick=function(){if(!vedurl)return;var a=document.createElement("a");a.href=vedurl;a.download=v.name+"."+(v.type.split("/")[1]||"mp4").replace("quicktime","mov");document.body.appendChild(a);a.click();a.remove()};
+  dl.onclick=function(){
+    if(!vedit.arm){vedit.arm=true;dl.textContent=t("delconfirm");return}
+    V.videos=V.videos.filter(function(x){return x.id!==id});vEdClose();
+    vTx("blob","readwrite",function(s){s.delete(id)}).then(vSave).then(vRender);
+  };
+  if(vedurl){URL.revokeObjectURL(vedurl);vedurl=null}
+  vv.removeAttribute("src");vFx(vv,f);
+  vTx("blob","readonly",function(s){return s.get(id)}).then(function(bl){if(!bl||!vedit||vedit.v!==v)return;vedurl=URL.createObjectURL(bl);vv.src=vedurl});
+  vv.onloadedmetadata=function(){
+    var d=vv.duration;if(!isFinite(d)||!vedit)return;v.dur=d;
+    if(!f.z||f.z>d)f.z=d;
+    ["a","z"].forEach(function(k){var r=vedit.r[k];r[0].max=d;r[0].value=f[k];r[1].textContent=ft(f[k])});
+    vv.volume=f.vol/100;vv.playbackRate=f.sp;vv.currentTime=f.a||0;
+  };
+  vv.ontimeupdate=function(){if(!vedit)return;var z=vedit.fx.z||vv.duration;if(vv.currentTime>=z-.03){vv.pause();vv.currentTime=vedit.fx.a||0}};
+  vv.onplay=function(){if(!vedit)return;var z=vedit.fx.z||vv.duration;if(vv.currentTime<vedit.fx.a||vv.currentTime>=z-.05)vv.currentTime=vedit.fx.a||0};
+  $("ved").classList.add("open");
+}
+function vEdClose(){
+  var vv=$("vev");vv.pause();vv.removeAttribute("src");vv.load();
+  if(vedurl){URL.revokeObjectURL(vedurl);vedurl=null}
+  vedit=null;$("ved").classList.remove("open");
+}
+function vBack(){
+  var c=vcur&&V&&V.folders.filter(function(f){return f.id===vcur})[0];
+  if(c){vGo(c.parent||null);return}
+  vurls.forEach(function(u){URL.revokeObjectURL(u)});vurls=[];
+  $("vp").classList.remove("open");document.body.style.overflow="";
+}
+$("vidbtn").onclick=function(){vcur=null;vArm=null;$("vp").classList.add("open");$("vp").scrollTop=0;document.body.style.overflow="hidden";if(current&&!V)vLoad();vRender()};
+$("vpback").onclick=vBack;
+$("vplogin").onclick=function(){openAuth("login")};
+var vo=$("vup");
+["dragenter","dragover"].forEach(function(n){vo.addEventListener(n,function(e){e.preventDefault();$("vupd").classList.add("over")})});
+vo.addEventListener("dragleave",function(){$("vupd").classList.remove("over")});
+vo.addEventListener("drop",function(e){e.preventDefault();$("vupd").classList.remove("over");if(e.dataTransfer.files.length)vAdd(e.dataTransfer.files)});
+vo.addEventListener("click",function(e){if(e.target===vo)vo.classList.remove("open")});
+$("vupd").onclick=function(){$("vupf").click()};
+$("vupf").onchange=function(){if(this.files.length)vAdd(this.files);this.value=""};
+$("vupc").onclick=function(){vo.classList.remove("open")};
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Escape")return;
+  if($("ved").classList.contains("open"))vEdClose();
+  else if(vo.classList.contains("open"))vo.classList.remove("open");
+  else if($("vp").classList.contains("open")&&!$("ov").classList.contains("open"))vBack();
+});
 applyLang();
 requestAnimationFrame(function(){setTimeout(function(){document.body.classList.add("loaded")},250)});
 })();
