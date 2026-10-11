@@ -39,6 +39,12 @@ async function handleChat(request, env) {
 
   if (!messages.length) return json({ error: "No messages" }, 400);
 
+  // Language the AI should speak (letters and spaces only, so it is safe to use)
+  const language =
+    typeof body.language === "string" && /^[A-Za-z ]{2,30}$/.test(body.language)
+      ? body.language
+      : "English";
+
   const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -51,12 +57,14 @@ async function handleChat(request, env) {
       // "openrouter/free" picks a free model for you. To choose one yourself,
       // add a variable called OPENROUTER_MODEL in Cloudflare.
       model: env.OPENROUTER_MODEL || "openrouter/free",
-      max_tokens: 800,
+      max_tokens: 1000,
       messages: [
         {
           role: "system",
           content:
-            "You are the AI assistant inside Lobby, a personal notes website. Be friendly and concise. Reply in the same language the user writes in.",
+            "You are the AI assistant inside Lobby, a personal notes website. Be friendly, clear and concise. Use Markdown only when it helps (lists, code blocks). Always reply in " +
+            language +
+            ", even if the user's message is short or ambiguous, unless they clearly ask you to use another language.",
         },
         ...messages,
       ],
