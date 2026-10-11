@@ -119,16 +119,22 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;m
 </main>
 <script>
 (function(){
-  var MAPS=[{"id": "kino", "name": "Kino der Toten", "desc": "Battle the undead in this theatrical installment of \"Zombies\". New twists and clues could uncover the final plan. It's show time!", "url": "https://vel.gg/bo1z/kino"}, {"id": "five", "name": "\"Five\"", "desc": "The Pentagon is under attack! Washington is going to DEFCON 1 in this installment of \"Zombies\".", "url": "https://vel.gg/bo1z/five"}, {"id": "riese", "name": "Der Riese", "desc": "The Giant is rising. Face the might of the Nazi Zombies in their heartland. This is where the master plan took shape. Is this where it all ends?", "url": "https://vel.gg/bo1z/riese"}, {"id": "nacht", "name": "Nacht der Untoten", "desc": "You drove them deep into the heart of the Reich. You thought they were dead. You were wrong.", "url": "https://vel.gg/bo1z/nacht"}, {"id": "verruckt", "name": "Verrückt", "desc": "Electroshock therapy. Chemically engineered beverages. Hordes of undead Nazis. Find the power to unite and send them back to their graves!", "url": "https://vel.gg/bo1z/verruckt"}, {"id": "shinonuma", "name": "Shi No Numa", "desc": "Maggot ridden corpses. Bug infested swamp. Hundreds of undead Imperial Army. Choose your tactic and defend for your lives!", "url": "https://vel.gg/bo1z/shinonuma"}, {"id": "ascension", "name": "Ascension", "desc": "The risen dead have overtaken a Soviet cosmodrome and all Hell has broken loose. The countdown to the zombie apocalypse has begun.", "url": "https://vel.gg/bo1z/ascension"}, {"id": "cotd", "name": "Call of the Dead", "desc": "A shipwrecked crew of fearless explorers is hopelessly stranded in an abandoned Siberian outpost. Their dream of discovering the true origins of the mysterious Element 115 unravels into a Hellish nightmare.", "url": "https://vel.gg/bo1z/cotd"}, {"id": "shangrila", "name": "Shangri-La", "desc": "A legendary shrine lost in an exotic jungle, where the undead lurk within a treacherous labyrinth of underground caverns, deadly traps and dark secrets.", "url": "https://vel.gg/bo1z/shangrila"}, {"id": "moon", "name": "Moon", "desc": "I believe that this nation should commit itself to achieving the goal, before this decade is out, of landing a man on the moon and returning him safely to the Earth. (JFK, 1961)", "url": "https://vel.gg/bo1z/moon"}];
+  var MAPS=[{"id": "kino", "name": "Kino der Toten", "desc": "Battle the undead in this theatrical installment of \"Zombies\". New twists and clues could uncover the final plan. It's show time!", "url": "https://vel.gg/bo1z/kino", "hell": "https://vel.gg/bo1z/kino"}, {"id": "five", "name": "\"Five\"", "desc": "The Pentagon is under attack! Washington is going to DEFCON 1 in this installment of \"Zombies\".", "url": "https://vel.gg/bo1z/five", "hell": "https://vel.gg/bo1z/five"}, {"id": "riese", "name": "Der Riese", "desc": "The Giant is rising. Face the might of the Nazi Zombies in their heartland. This is where the master plan took shape. Is this where it all ends?", "url": "https://vel.gg/bo1z/riese", "hell": "https://vel.gg/bo1z/riese"}, {"id": "nacht", "name": "Nacht der Untoten", "desc": "You drove them deep into the heart of the Reich. You thought they were dead. You were wrong.", "url": "https://vel.gg/bo1z/nacht", "hell": "https://vel.gg/bo1z/nacht"}, {"id": "verruckt", "name": "Verrückt", "desc": "Electroshock therapy. Chemically engineered beverages. Hordes of undead Nazis. Find the power to unite and send them back to their graves!", "url": "https://vel.gg/bo1z/verruckt", "hell": "https://vel.gg/bo1z/verruckt"}, {"id": "shinonuma", "name": "Shi No Numa", "desc": "Maggot ridden corpses. Bug infested swamp. Hundreds of undead Imperial Army. Choose your tactic and defend for your lives!", "url": "https://vel.gg/bo1z/shinonuma", "hell": "https://vel.gg/bo1z/shinonuma"}, {"id": "ascension", "name": "Ascension", "desc": "The risen dead have overtaken a Soviet cosmodrome and all Hell has broken loose. The countdown to the zombie apocalypse has begun.", "url": "https://vel.gg/bo1z/ascension", "hell": "https://vel.gg/bo1z/ascension"}, {"id": "cotd", "name": "Call of the Dead", "desc": "A shipwrecked crew of fearless explorers is hopelessly stranded in an abandoned Siberian outpost. Their dream of discovering the true origins of the mysterious Element 115 unravels into a Hellish nightmare.", "url": "https://vel.gg/bo1z/cotd", "hell": "https://vel.gg/bo1z/cotd"}, {"id": "shangrila", "name": "Shangri-La", "desc": "A legendary shrine lost in an exotic jungle, where the undead lurk within a treacherous labyrinth of underground caverns, deadly traps and dark secrets.", "url": "https://vel.gg/bo1z/shangrila", "hell": "https://vel.gg/bo1z/shangrila"}, {"id": "moon", "name": "Moon", "desc": "I believe that this nation should commit itself to achieving the goal, before this decade is out, of landing a man on the moon and returning him safely to the Earth. (JFK, 1961)", "url": "https://vel.gg/bo1z/moon", "hell": "https://vel.gg/bo1z/moon"}];
   var rows=[].slice.call(document.querySelectorAll(".row")),
       shots=[].slice.call(document.querySelectorAll(".shot")),
       pt=document.getElementById("pt"),pd=document.getElementById("pd"),pgo=document.getElementById("pgo"),
       hell=document.getElementById("hell"),cur=-1,touch=window.matchMedia("(hover:none)").matches;
+  var horde=false;
+  function link(m){return horde?m.hell+"?horde=1":m.url}
+  function relink(){
+    rows.forEach(function(r,j){r.href=link(MAPS[j])});
+    if(cur>=0)pgo.href=link(MAPS[cur]);
+  }
   function pick(i,scroll){
     if(i===cur)return;cur=i;var m=MAPS[i];
     rows.forEach(function(r,j){r.classList.toggle("sel",j===i)});
     shots.forEach(function(s,j){s.classList.toggle("on",j===i)});
-    pt.textContent=m.name;pd.textContent=m.desc;pgo.href=m.url;
+    pt.textContent=m.name;pd.textContent=m.desc;pgo.href=link(m);
     pgo.setAttribute("aria-label","Play "+m.name);
     if(scroll)pt.scrollIntoView({block:"nearest",behavior:"smooth"});
   }
@@ -144,7 +150,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;m
   });
   hell.addEventListener("click",function(){
     var on=hell.getAttribute("aria-pressed")!=="true";
-    hell.setAttribute("aria-pressed",on);hell.textContent="Hell mode: "+(on?"on":"off");
+    horde=on;hell.setAttribute("aria-pressed",on);hell.textContent="Hell mode: "+(on?"on":"off");relink();
   });
   pick(0);
 })();
