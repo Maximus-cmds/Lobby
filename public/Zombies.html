@@ -83,11 +83,32 @@ a{color:inherit}
 .mini header i::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--blood-hi);box-shadow:0 0 0 3px rgba(255,93,82,.25)}
 .map{display:block;width:100%;height:auto;background-color:#091213;background-image:linear-gradient(rgba(120,170,168,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(120,170,168,.08) 1px,transparent 1px);background-size:11px 11px}
 .map .lk{stroke:#2f6361;stroke-width:5;stroke-linecap:round}
-.map .rm{fill:rgba(8,16,17,.92);stroke:rgba(239,231,218,.5);stroke-width:1}
-.map .st{fill:rgba(163,25,30,.55);stroke:var(--blood-hi);stroke-width:1.4}
+.map .rm{fill:#081011;stroke:rgba(239,231,218,.5);stroke-width:1}
+.map .st{fill:#4a1216;stroke:var(--blood-hi);stroke-width:1.4}
 .map text{font-family:var(--cond);font-size:8.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;fill:#efe7da;text-anchor:middle;dominant-baseline:central}
 .mini small{font-size:.92rem;color:var(--mute);text-align:center}
 
+
+/* saved runs */
+.row .best{margin-left:auto;padding-left:.6rem;font-style:normal;font-size:1rem;font-weight:600;letter-spacing:.08em;color:var(--blood-hi)}
+.row.sel .best{color:var(--blood)}
+.stat{margin-top:.6rem;font-size:1.05rem;letter-spacing:.03em;color:var(--mute);min-height:1.3em}
+.stat b{color:var(--ink);font-weight:600}
+.reset{font:inherit;font-size:.95rem;color:#7f9596;background:none;border:0;text-decoration:underline;cursor:pointer;padding:0}
+.reset:hover{color:var(--ink)}
+dialog{margin:auto;width:min(420px,calc(100% - 2rem));padding:0;border:1px solid var(--blood-hi);color:var(--ink);background:#0b0405;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+dialog::backdrop{background:rgba(0,0,0,.7)}
+dialog form{display:flex;flex-direction:column;gap:1rem;padding:1.4rem}
+dialog h3{font-family:var(--wide);font-weight:400;font-size:1rem;letter-spacing:.08em;text-transform:uppercase}
+dialog p{font-size:1.1rem;color:var(--dim)}
+dialog label{display:flex;flex-direction:column;gap:.35rem;font-size:1rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+dialog input{font:inherit;font-size:1.6rem;color:var(--ink);padding:.5rem .7rem;background:#150a0b;border:1px solid var(--line);border-radius:0;width:100%}
+dialog input:focus-visible{outline:3px solid #ffd34d;outline-offset:1px}
+.acts{display:flex;gap:.7rem;justify-content:flex-end;margin-top:.2rem}
+.acts button{font:inherit;font-size:1.2rem;letter-spacing:.08em;text-transform:uppercase;padding:.55rem 1.4rem;color:var(--ink);background:transparent;border:1px solid var(--line);cursor:pointer}
+.acts button.pri{background:var(--blood);border-color:var(--blood-hi);color:#fff}
+.acts button:hover{background:var(--ink);color:#150607}
+.acts button:focus-visible{outline:3px solid #ffd34d;outline-offset:2px}
 .fine{margin-top:1.4rem;text-align:center;font-size:.95rem;color:#7f9596}
 
 @media (max-width:900px){
@@ -147,7 +168,7 @@ a{color:inherit}
       </div>
       <div class="brief">
         <div class="text">
-          <p class="desc" id="pd"></p>
+          <div><p class="desc" id="pd"></p><p class="stat" id="pst"></p></div>
           <a class="go" id="pgo" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17l15-8.500z"/></svg>Play</a>
         </div>
         <aside class="mini" aria-label="Mission layout">
@@ -158,8 +179,17 @@ a{color:inherit}
       </div>
     </section>
   </div>
-  <p class="fine">Call of Duty: Black Ops &copy; 2010 Activision Publishing, Inc.</p>
+  <p class="fine">Call of Duty: Black Ops &copy; 2010 Activision Publishing, Inc. &middot; <button class="reset" id="logrun" type="button">Log a run</button> &middot; <button class="reset" id="reset" type="button">Clear saved runs</button></p>
 </main>
+<dialog id="rep" aria-labelledby="rt">
+  <form method="dialog" id="repf">
+    <h3 id="rt">Run report</h3>
+    <p>Log how far you got so it shows up in your lobby.</p>
+    <label>Round reached<input id="rr" name="round" type="number" inputmode="numeric" min="1" max="999" required></label>
+    <label>Points (optional)<input id="rp" name="points" type="number" inputmode="numeric" min="0" max="99999999"></label>
+    <div class="acts"><button type="button" id="skip">Skip</button><button class="pri" type="submit">Save run</button></div>
+  </form>
+</dialog>
 <script>
 (function(){
   var MAPS=[{"id": "kino", "name": "Kino der Toten", "desc": "Battle the undead in this theatrical installment of \"Zombies\". New twists and clues could uncover the final plan. It's show time!", "url": "https://vel.gg/bo1z/kino", "hell": "https://vel.gg/bo1z/kino"}, {"id": "five", "name": "\"Five\"", "desc": "The Pentagon is under attack! Washington is going to DEFCON 1 in this installment of \"Zombies\".", "url": "https://vel.gg/bo1z/five", "hell": "https://vel.gg/bo1z/five"}, {"id": "riese", "name": "Der Riese", "desc": "The Giant is rising. Face the might of the Nazi Zombies in their heartland. This is where the master plan took shape. Is this where it all ends?", "url": "https://vel.gg/bo1z/riese", "hell": "https://vel.gg/bo1z/riese"}, {"id": "nacht", "name": "Nacht der Untoten", "desc": "You drove them deep into the heart of the Reich. You thought they were dead. You were wrong.", "url": "https://vel.gg/bo1z/nacht", "hell": "https://vel.gg/bo1z/nacht"}, {"id": "verruckt", "name": "Verrückt", "desc": "Electroshock therapy. Chemically engineered beverages. Hordes of undead Nazis. Find the power to unite and send them back to their graves!", "url": "https://vel.gg/bo1z/verruckt", "hell": "https://vel.gg/bo1z/verruckt"}, {"id": "shinonuma", "name": "Shi No Numa", "desc": "Maggot ridden corpses. Bug infested swamp. Hundreds of undead Imperial Army. Choose your tactic and defend for your lives!", "url": "https://vel.gg/bo1z/shinonuma", "hell": "https://vel.gg/bo1z/shinonuma"}, {"id": "ascension", "name": "Ascension", "desc": "The risen dead have overtaken a Soviet cosmodrome and all Hell has broken loose. The countdown to the zombie apocalypse has begun.", "url": "https://vel.gg/bo1z/ascension", "hell": "https://vel.gg/bo1z/ascension"}, {"id": "cotd", "name": "Call of the Dead", "desc": "A shipwrecked crew of fearless explorers is hopelessly stranded in an abandoned Siberian outpost. Their dream of discovering the true origins of the mysterious Element 115 unravels into a Hellish nightmare.", "url": "https://vel.gg/bo1z/cotd", "hell": "https://vel.gg/bo1z/cotd"}, {"id": "shangrila", "name": "Shangri-La", "desc": "A legendary shrine lost in an exotic jungle, where the undead lurk within a treacherous labyrinth of underground caverns, deadly traps and dark secrets.", "url": "https://vel.gg/bo1z/shangrila", "hell": "https://vel.gg/bo1z/shangrila"}, {"id": "moon", "name": "Moon", "desc": "I believe that this nation should commit itself to achieving the goal, before this decade is out, of landing a man on the moon and returning him safely to the Earth. (JFK, 1961)", "url": "https://vel.gg/bo1z/moon", "hell": "https://vel.gg/bo1z/moon"}];
@@ -188,14 +218,30 @@ a{color:inherit}
       pt=document.getElementById("pt"),pd=document.getElementById("pd"),pgo=document.getElementById("pgo"),
       hell=document.getElementById("hell"),hellt=document.getElementById("hellt"),cur=-1,horde=false,
       touch=window.matchMedia("(hover:none)").matches;
+  var KEY="bo1z_runs",LKEY="bo1z_launch";
+  /* The game opens in its own tab; when you come back to this tab we ask how the run went. */
   function link(m){return horde?m.hell+"?horde=1":m.url}
+  function load(){try{var a=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
+  function save(a){try{localStorage.setItem(KEY,JSON.stringify(a.slice(-500)))}catch(e){}}
+  function best(id,hell){var b=null,n=0,last=null;load().forEach(function(r){if(r.map!==id||!!r.hell!==hell)return;n++;last=r;if(!b||r.round>b.round||(r.round===b.round&&(r.points||0)>(b.points||0)))b=r});return{best:b,n:n,last:last}}
+  function fmt(x){return Number(x).toLocaleString("en-US")}
+  function paintStats(){
+    rows.forEach(function(r,j){
+      var e=r.querySelector(".best");if(!e){e=document.createElement("em");e.className="best";r.appendChild(e)}
+      var b=best(MAPS[j].id,false).best;e.textContent=b?"R"+b.round:"";
+    });
+    if(cur<0)return;var id=MAPS[cur].id,n=best(id,false),h=best(id,true),t="";
+    if(n.best)t+="Best: <b>Round "+n.best.round+"</b>"+(n.best.points?" &middot; "+fmt(n.best.points)+" pts":"")+" &middot; "+n.n+(n.n===1?" run":" runs");
+    if(h.best)t+=(t?" &nbsp;|&nbsp; ":"")+"Hell best: <b>Round "+h.best.round+"</b>";
+    document.getElementById("pst").innerHTML=t||"No runs saved yet.";
+  }
   function relink(){rows.forEach(function(r,j){r.href=link(MAPS[j])});if(cur>=0)pgo.href=link(MAPS[cur])}
   function pick(i,scroll){
     if(i===cur)return;cur=i;var m=MAPS[i];
     rows.forEach(function(r,j){r.classList.toggle("sel",j===i)});
     shots.forEach(function(s,j){s.classList.toggle("on",j===i)});
     pt.textContent=m.name;pd.textContent=m.desc;pgo.href=link(m);pgo.setAttribute("aria-label","Play "+m.name);
-    drawMap(m.id);
+    drawMap(m.id);paintStats();
     if(scroll)document.querySelector(".hero").scrollIntoView({block:"nearest",behavior:"smooth"});
   }
   rows.forEach(function(r,i){
@@ -212,7 +258,47 @@ a{color:inherit}
     horde=hell.getAttribute("aria-pressed")!=="true";
     hell.setAttribute("aria-pressed",horde);hellt.textContent="Hell mode: "+(horde?"on":"off");relink();
   });
-  pick(0);
+  pick(0);relink();paintStats();
+
+  /* run report */
+  var dlg=document.getElementById("rep"),rr=document.getElementById("rr"),rp=document.getElementById("rp"),rt=document.getElementById("rt"),rep=null;
+  function byId(id){var f=null;MAPS.forEach(function(m){if(m.id===id)f=m});return f}
+  function done(){rep=null;try{sessionStorage.removeItem(LKEY)}catch(e){}}
+  function openReport(m,hl){
+    if(!dlg||!dlg.showModal||dlg.open)return;
+    rep={m:m,hell:!!hl};pick(MAPS.indexOf(m));
+    rt.textContent="Run report: "+m.name+(hl?" (hell)":"");rr.value="";rp.value="";
+    dlg.showModal();rr.focus();
+  }
+  document.getElementById("repf").addEventListener("submit",function(){
+    var r=parseInt(rr.value,10),p=parseInt(rp.value,10);
+    if(rep&&r>0){var a=load();a.push({map:rep.m.id,round:r,points:p>0?p:0,hell:rep.hell,ts:Date.now()});save(a)}
+    done();paintStats();
+  });
+  document.getElementById("skip").addEventListener("click",function(){dlg.close();done()});
+  dlg.addEventListener("cancel",done);
+
+  /* remember which map was launched, then prompt when this tab is visible again */
+  function mark(){try{sessionStorage.setItem(LKEY,JSON.stringify({id:MAPS[cur].id,hell:horde,t:Date.now()}))}catch(e){}}
+  rows.forEach(function(r){r.target="_blank";r.rel="noopener";r.addEventListener("click",function(e){if(!e.defaultPrevented)mark()})});
+  pgo.target="_blank";pgo.rel="noopener";pgo.addEventListener("click",mark);
+  function check(){
+    if(document.hidden||dlg.open)return;var l=null;
+    try{l=JSON.parse(sessionStorage.getItem(LKEY))}catch(e){}
+    if(!l||Date.now()-l.t<20000)return;
+    var m=byId(l.id);if(m)openReport(m,l.hell);else done();
+  }
+  document.addEventListener("visibilitychange",check);window.addEventListener("focus",check);
+
+  /* a patched play.js can still send players back with ?played=<map> */
+  var q=new URLSearchParams(location.search),pl=q.get("played");
+  if(pl){var pm=byId(pl);q.delete("played");q.delete("hell");var qs=q.toString();
+    history.replaceState(null,"",location.pathname+(qs?"?"+qs:"")+location.hash);
+    if(pm)openReport(pm,false)}
+  document.getElementById("logrun").addEventListener("click",function(){openReport(MAPS[cur],horde)});
+  document.getElementById("reset").addEventListener("click",function(){
+    if(confirm("Clear all saved runs on this device?")){try{localStorage.removeItem(KEY)}catch(e){}paintStats()}
+  });
 })();
 </script>
 </body>
