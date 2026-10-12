@@ -386,6 +386,35 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
   .aibar{padding-left:.8rem;gap:.5rem}
 }
 @media (prefers-reduced-motion:reduce){.aisb,.aishell.sb .aisb{transition:none}.aidots i{animation:none;opacity:.6}}
+
+/* ---- social sign-in + chat ---- */
+.sso{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
+.ssob{display:grid;place-items:center;height:46px;border-radius:14px;border:1.5px solid rgba(127,127,127,.4);background:rgba(127,127,127,.08);color:var(--panel-ink);transition:transform .15s,border-color .15s}
+.ssob:hover{border-color:var(--accent);transform:translateY(-2px)}
+.ssob:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ssob svg{width:22px;height:22px;fill:currentColor}
+.ssob.fb svg{fill:#1877f2}
+.or{display:flex;align-items:center;gap:.7rem;color:var(--muted);font-size:.8rem}
+.or::before,.or::after{content:"";flex:1;height:1px;background:rgba(127,127,127,.3)}
+.chatpage{overflow:hidden}
+.chshell{height:100vh;height:100dvh;max-width:760px;margin:0 auto;display:flex;flex-direction:column;padding:calc(1rem + env(safe-area-inset-top,0px)) 1.2rem 0}
+.chbar{display:flex;align-items:center;gap:1rem;min-height:44px;padding-right:56px;flex:none}
+.chbar h2{font-size:1.8rem;letter-spacing:-.02em;margin-right:auto}
+.chon{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:.4rem}
+.chon::before{content:"";width:8px;height:8px;border-radius:50%;background:#2e8b57}
+.chlist{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:.55rem;padding:1.2rem 0;overscroll-behavior:contain}
+.chm{display:flex;gap:.6rem;max-width:88%;align-items:flex-end}
+.chm.me{align-self:flex-end;flex-direction:row-reverse}
+.chav{flex:none;width:30px;height:30px;border-radius:50%;background:var(--hero);color:var(--hero-ink);display:grid;place-items:center;font-size:.8rem;font-weight:800;overflow:hidden}
+.chav img{width:100%;height:100%;object-fit:cover}
+.chc{display:flex;flex-direction:column;min-width:0}
+.chm.me .chc{align-items:flex-end}
+.chn{font-size:.75rem;color:var(--muted);margin:0 .5rem .15rem}
+.chb{padding:.55rem .9rem;border-radius:18px;background:rgba(127,127,127,.14);overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.4}
+.chm.me .chb{background:color-mix(in srgb,var(--accent) 30%,transparent)}
+.chempty{margin:auto;color:var(--muted);text-align:center}
+.chfoot{flex:none;padding:.6rem 0 calc(1rem + env(safe-area-inset-bottom,0px))}
+.chfoot .msg{text-align:center;margin-top:.3rem}
 </style>
 </head>
 <body>
@@ -414,6 +443,13 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 <div class="overlay" id="ov">
   <div class="modal-card" role="dialog" aria-labelledby="mt">
     <h2 id="mt">Sign up</h2>
+    <div class="sso" id="sso">
+      <a class="ssob" href="/api/auth/oauth/google" aria-label="Google" title="Google"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M23.52 12.273c0-.851-.076-1.67-.218-2.455H12v4.64h6.456a5.52 5.52 0 0 1-2.394 3.622v3.01h3.878c2.27-2.09 3.58-5.17 3.58-8.817z"/><path fill="#34A853" d="M12 24c3.24 0 5.956-1.075 7.94-2.907l-3.878-3.01c-1.075.72-2.45 1.145-4.062 1.145-3.125 0-5.77-2.11-6.715-4.947H1.276v3.11A11.998 11.998 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.285 14.28A7.213 7.213 0 0 1 4.909 12c0-.79.136-1.558.376-2.28V6.61H1.276A11.998 11.998 0 0 0 0 12c0 1.936.464 3.77 1.276 5.39l4.009-3.11z"/><path fill="#EA4335" d="M12 4.773c1.762 0 3.344.605 4.587 1.794l3.442-3.442C17.95 1.19 15.236 0 12 0 7.31 0 3.25 2.69 1.276 6.61l4.009 3.11C6.23 6.883 8.875 4.773 12 4.773z"/></svg></a>
+      <a class="ssob" href="/api/auth/oauth/github" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+      <a class="ssob fb" href="/api/auth/oauth/facebook" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a>
+      <a class="ssob" href="/api/auth/oauth/x" aria-label="X" title="X"><svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
+    </div>
+    <p class="or" id="ort">or use email</p>
     <label class="field">Email<input id="em" type="email" autocomplete="email" placeholder="you@gmail.com"></label>
     <label class="field">Password<input id="pw" type="password" autocomplete="current-password" placeholder="At least 8 characters"></label>
     <label class="field" id="pw2row">Confirm password<input id="pw2" type="password" autocomplete="new-password"></label>
@@ -510,6 +546,15 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
     </footer>
   </section>
 </div></div>
+<div class="shared-page chatpage" id="cp" role="dialog" aria-label="Chat"><div class="chshell">
+  <div class="chbar"><button class="back" id="cpback" type="button">Back</button><h2 id="cpt">Chat</h2><span class="chon hidden" id="chon"></span></div>
+  <div class="aiout hidden" id="chout"><p id="chloginmsg">Log in to chat with other people.</p><button class="btn dark" id="chlogin" type="button">Log in / Sign up</button></div>
+  <div class="chlist hidden" id="chlist" aria-live="polite"></div>
+  <footer class="chfoot hidden" id="chfoot">
+    <div class="aicomp"><textarea id="cinput" rows="1" maxlength="500" aria-label="Message" placeholder="Message..."></textarea><button class="aisend" id="csend" type="button" aria-label="Send" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
+    <p class="msg" id="cmsg" role="status"></p>
+  </footer>
+</div></div>
 <div class="overlay" id="vup"><div class="modal-card" role="dialog" aria-labelledby="vupt">
   <h2 id="vupt">Add a video</h2>
   <input type="file" id="vupf" accept="video/*,.mkv,.mov,.m4v" multiple hidden>
@@ -558,6 +603,12 @@ button.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
         <span class="ic"><svg viewBox="0 0 24 24"><path d="M11 3l1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8z"/><path d="M18 15v5M15.500 17.500h5"/></svg></span>
         <h3>AI</h3>
         <p id="aidesc">Ask anything.</p>
+        <span class="go">Open &rarr;</span>
+      </button>
+      <button class="card" id="chatbtn" type="button">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 13h5"/></svg></span>
+        <h3>Chat</h3>
+        <p id="chatdesc">Log in to chat.</p>
         <span class="go">Open &rarr;</span>
       </button>
       <div class="card soon">
@@ -1722,6 +1773,123 @@ document.addEventListener("keydown",function(e){
   else if($("aishell").classList.contains("sb"))aSb(false);
   else aClose();
 });
+
+/* ===== server session, social sign-in, chat ===== */
+Object.assign(T.en,{chat:"Chat",chdesc:"Talk with other people.",chstart:"Log in to chat.",chloginmsg:"Log in to chat with other people.",chagain:"Log in once more to join the chat.",chph:"Message...",chnone:"No messages yet. Say hi.",chon:"{n} online",orem:"or use email",chslow:"Slow down a little.",chconn:"Connecting...",chlost:"Connection lost. Reconnecting...",chyou:"You",lnotset:"That sign-in isn't set up yet.",ldenied:"Sign-in was cancelled.",lfailed:"Sign-in didn't work. Try again."});
+Object.assign(T.hu,{chat:"Csevegés",chdesc:"Beszélgess másokkal.",chstart:"Lépj be a csevegéshez.",chloginmsg:"Lépj be, hogy másokkal csevegj.",chagain:"Lépj be még egyszer a csevegéshez.",chph:"Írj üzenetet...",chnone:"Még nincs üzenet. Köszönj be.",chon:"{n} online",orem:"vagy e-mail",chslow:"Lassíts egy kicsit.",chconn:"Csatlakozás...",chlost:"A kapcsolat megszakadt. Újracsatlakozás...",chyou:"Te",lnotset:"Ez a belépés még nincs beállítva.",ldenied:"A belépést megszakítottad.",lfailed:"A belépés nem sikerült. Próbáld újra."});
+var me=null,ws=null,wsFails=0,wsTimer=null,chatOpen=false,lastName="";
+function post(p,b){return fetch("/api/auth/"+p,{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify(b||{})}).then(function(r){return r.json().catch(function(){return{}}).then(function(j){j.ok=r.ok;return j})})}
+function adopt(u){
+  var key=(u.email||("id:"+u.id)).toLowerCase(),all=users(),pic=/^https:\/\/[^\s"'<>\\]+$/.test(u.pic||"")?u.pic:"";
+  if(!all[key])all[key]={salt:"",hash:"",name:u.name||"",pfp:pic};
+  else{if(!all[key].name&&u.name)all[key].name=u.name;if(!all[key].pfp&&pic)all[key].pfp=pic}
+  save(USERS,all);
+  if(current!==key){current=key;save(SESS,key);render()}
+}
+function refreshMe(){
+  return fetch("/api/auth/me",{credentials:"same-origin"}).then(function(r){return r.json()}).then(function(j){me=j.user||null;if(me)adopt(me);chatUI();return me}).catch(function(){chatUI();return null});
+}
+// keep the server session in step with the existing email/password form
+var _as=$("asubmit").onclick;
+$("asubmit").onclick=async function(){
+  var email=$("em").value.trim().toLowerCase(),pw=$("pw").value,m0=mode;
+  await _as.call(this);
+  if(current!==email)return;
+  try{
+    var r=await post(m0==="signup"?"signup":"login",{email:email,password:pw,name:(users()[email]||{}).name});
+    if(!r.ok)r=await post(m0==="signup"?"login":"signup",{email:email,password:pw,name:(users()[email]||{}).name});
+    me=r.ok?r.user:null;
+  }catch(e){me=null}
+  chatUI();
+};
+var _pl=$("plogout").onclick;
+$("plogout").onclick=function(){_pl.call(this);me=null;post("logout");chatClose(true);chatUI()};
+var _ps=$("psave").onclick;
+$("psave").onclick=function(){_ps.call(this);var n=$("pname").value.trim();if(me&&n)post("profile",{name:n}).then(function(r){if(r.ok)me=r.user})};
+
+function cStatic(){
+  sx("#chatbtn h3","chat");sx("#chatbtn .go","open");sx("#cpt","chat");sx("#cpback","back2");sx("#chlogin","loginsignup");sx("#ort","orem");
+  $("cinput").placeholder=t("chph");chatUI();
+}
+var _rc=render;render=function(){_rc();cStatic()};
+function chatUI(){
+  var inn=!!me;
+  $("chout").classList.toggle("hidden",inn);
+  $("chlist").classList.toggle("hidden",!inn);
+  $("chfoot").classList.toggle("hidden",!inn);
+  $("chon").classList.toggle("hidden",!inn);
+  $("chloginmsg").textContent=current?t("chagain"):t("chloginmsg");
+  $("chatdesc").textContent=current?t("chdesc"):t("chstart");
+  if(chatOpen&&inn)chatConnect();
+}
+function initial(n){return(n||"?").trim().charAt(0).toUpperCase()||"?"}
+function chatMsg(m){
+  var mine=me&&m.uid===me.id,row=el("div","chm"+(mine?" me":"")),av=el("div","chav"),c=el("div","chc");
+  if(/^https:\/\/[^\s"'<>\\]+$/.test(m.pic||"")){var im=document.createElement("img");im.alt="";im.referrerPolicy="no-referrer";im.src=m.pic;av.appendChild(im)}else av.textContent=initial(m.name);
+  var time=new Date(m.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+  c.appendChild(el("div","chn",(mine?t("chyou"):m.name)+" · "+time));c.appendChild(el("div","chb",m.text));
+  row.appendChild(av);row.appendChild(c);return row;
+}
+function chatAdd(m,stick){
+  var l=$("chlist"),e=l.querySelector(".chempty");if(e)e.remove();
+  var near=l.scrollHeight-l.scrollTop-l.clientHeight<80;
+  l.appendChild(chatMsg(m));
+  while(l.children.length>150)l.removeChild(l.firstChild);
+  if(near||stick)l.scrollTop=l.scrollHeight;
+}
+function chatConnect(){
+  if(!me||(ws&&ws.readyState<2))return;
+  clearTimeout(wsTimer);
+  var opened=false;
+  $("cmsg").textContent=t("chconn");
+  ws=new WebSocket((location.protocol==="https:"?"wss://":"ws://")+location.host+"/api/room/ws");
+  var mine=ws;
+  ws.onopen=function(){opened=true;wsFails=0;$("cmsg").textContent=""};
+  ws.onmessage=function(e){
+    var d;try{d=JSON.parse(e.data)}catch(x){return}
+    if(d.type==="history"){
+      var l=$("chlist");l.textContent="";
+      if(!d.messages.length)l.appendChild(el("p","chempty",t("chnone")));
+      d.messages.forEach(function(m){chatAdd(m,true)});l.scrollTop=l.scrollHeight;
+    }else if(d.type==="msg")chatAdd(d.message,me&&d.message.uid===me.id);
+    else if(d.type==="count"){$("chon").textContent=t("chon").replace("{n}",d.n)}
+    else if(d.type==="error"&&d.code==="slow"){$("cmsg").textContent=t("chslow");setTimeout(function(){$("cmsg").textContent=""},1500)}
+  };
+  ws.onclose=function(){
+    if(ws===mine)ws=null;
+    if(!chatOpen)return;
+    if(!opened&&++wsFails>=2){wsFails=0;refreshMe();return}   // probably logged out on the server
+    $("cmsg").textContent=t("chlost");
+    wsTimer=setTimeout(chatConnect,2000);
+  };
+}
+function chatClose(hard){
+  chatOpen=false;clearTimeout(wsTimer);
+  if(ws){var w=ws;ws=null;try{w.close()}catch(e){}}
+  if(hard)$("cp").classList.remove("open");
+  document.body.style.overflow="";
+}
+function chatSend(){
+  var i=$("cinput"),v=i.value.trim();
+  if(!v||!ws||ws.readyState!==1)return;
+  ws.send(JSON.stringify({text:v}));i.value="";i.style.height="auto";$("csend").disabled=true;
+}
+$("chatbtn").onclick=function(){chatOpen=true;$("cp").classList.add("open");document.body.style.overflow="hidden";wsFails=0;refreshMe()};
+$("cpback").onclick=function(){chatClose(true)};
+$("chlogin").onclick=function(){openAuth("login")};
+$("csend").onclick=chatSend;
+$("cinput").addEventListener("input",function(){this.style.height="auto";this.style.height=Math.min(this.scrollHeight,160)+"px";$("csend").disabled=!this.value.trim()});
+$("cinput").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();chatSend()}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&$("cp").classList.contains("open")&&!$("ov").classList.contains("open"))chatClose(true)});
+
+// coming back from Google / GitHub / Facebook / X
+(function(){
+  var q=new URLSearchParams(location.search),r=q.get("login");
+  if(r){history.replaceState(null,"",location.pathname)}
+  refreshMe().then(function(){
+    if(r==="err"){openAuth("login");var k={notset:"lnotset",denied:"ldenied"}[q.get("why")]||"lfailed";$("amsg").textContent=t(k)}
+  });
+})();
 applyLang();
 requestAnimationFrame(function(){setTimeout(function(){document.body.classList.add("loaded")},250)});
 })();
