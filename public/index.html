@@ -533,6 +533,7 @@ div.chatt{cursor:default}
     <button class="btn dark full" id="ppick" type="button">Change picture</button>
     <label class="field">Name<input id="pname" maxlength="30" autocomplete="nickname" placeholder="Your name"></label>
     <button class="btn dark full" id="psave" type="button">Save profile</button>
+    <div id="fbox" class="hidden" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="fh">Friend code</b><div class="gcode"><code id="fcv"></code></div><div class="gcode"><button class="gmb" id="fctg" type="button">Uncover</button><button class="gmb hidden" id="fccopy" type="button">Copy</button></div><label class="field"><span id="fal">Add a friend</span><input id="fci" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false"></label><button class="btn dark full" id="fcadd" type="button">Add friend</button><p class="msg" id="fcm" role="status"></p></div>
     <p class="msg ok" id="pmsg" role="status"></p>
     <button class="link" id="plogout" type="button">Log out</button>
   </div>
@@ -1963,7 +1964,7 @@ $("psave").onclick=function(){_ps.call(this);var n=$("pname").value.trim();if(me
 Object.assign(T.en,{"g_global": "Global chat", "g_new": "New group", "g_join": "Join with code", "g_chats": "Chats", "g_nogr": "No groups yet. Make one, or join with a code.", "g_members": "{m} members", "g_newt": "New group", "g_gname": "Group name", "g_gphname": "Weekend crew", "g_gpic": "Group picture", "g_gpicadd": "Add picture", "g_create": "Create group", "g_joint": "Join a group", "g_code": "Group code", "g_codeph": "Paste the code", "g_joinb": "Join", "g_settings": "Group settings", "g_save": "Save name", "g_ownername": "Only the owner can change the name or picture.", "g_code2": "Invite code", "g_uncover": "Uncover", "g_hide": "Hide", "g_copy": "Copy", "g_copied": "Code copied.", "g_regen": "New code", "g_newcode": "New code made. The old one no longer works.", "g_mem": "Members", "g_r_owner": "Owner", "g_r_admin": "Admin", "g_r_member": "Member", "g_mkadmin": "Make admin", "g_rmadmin": "Remove admin", "g_kick": "Kick", "g_sure": "Sure?", "g_leave": "Leave group", "g_del": "Delete group", "g_close": "Close", "g_remove": "Remove", "g_incall": "in the call", "g_call": "Voice call", "g_joincall": "Join call", "g_leavecall": "Leave", "g_mute": "Mute", "g_unmute": "Unmute", "g_calling": "Voice call ({n})", "g_nomic": "Couldn't use the microphone. Allow it in your browser and try again.", "g_callfull": "The call is full (6 people).", "g_attach": "Attach", "g_anote": "Note", "g_alore": "Lorebook", "g_avid": "Video", "g_pnote": "Attach a note", "g_plore": "Attach a lorebook", "g_pvid": "Attach a video", "g_pnone": "Nothing here yet.", "g_vidnote": "Only a preview of the video is shared. The video file stays on the sender's device.", "g_sjoin": "{a} joined", "g_sleave": "{a} left", "g_skick": "{a} was removed", "g_srename": "Group renamed to {a}", "g_srole": "{a} is now {b}", "g_blocked": "Message blocked: {r}.", "g_muted": "You're muted for a few minutes after repeated blocked messages.", "g_modfail": "The message couldn't be checked, so it wasn't sent.", "g_sendfail": "The message didn't send.", "g_gone_kicked": "You were removed from that group.", "g_gone_left": "You left the group.", "g_gone_deleted": "That group was deleted.", "g_created": "Group created. Open the code below to invite people.", "g_e_name": "Enter a name.", "g_e_blocked": "That isn't allowed.", "g_e_perm": "You can't do that.", "g_e_nocode": "That code doesn't match a group.", "g_e_kicked": "You were removed from this group. Ask for a new code.", "g_e_full": "That group is full.", "g_e_rate": "Too many tries. Wait a few minutes.", "g_e_limit": "You're in too many groups.", "g_e_image": "That picture can't be used.", "g_efail": "Something went wrong. Try again."});
 Object.assign(T.hu,{"g_global": "Globális chat", "g_new": "Új csoport", "g_join": "Csatlakozás kóddal", "g_chats": "Csevegések", "g_nogr": "Még nincs csoportod. Hozz létre egyet, vagy csatlakozz kóddal.", "g_members": "{m} tag", "g_newt": "Új csoport", "g_gname": "Csoport neve", "g_gphname": "Hétvégi banda", "g_gpic": "Csoport képe", "g_gpicadd": "Kép hozzáadása", "g_create": "Csoport létrehozása", "g_joint": "Csatlakozás csoporthoz", "g_code": "Csoportkód", "g_codeph": "Illeszd be a kódot", "g_joinb": "Csatlakozás", "g_settings": "Csoport beállításai", "g_save": "Név mentése", "g_ownername": "Csak a tulajdonos változtathatja meg a nevet és a képet.", "g_code2": "Meghívókód", "g_uncover": "Felfedés", "g_hide": "Elrejtés", "g_copy": "Másolás", "g_copied": "Kód másolva.", "g_regen": "Új kód", "g_newcode": "Új kód kész. A régi már nem működik.", "g_mem": "Tagok", "g_r_owner": "Tulajdonos", "g_r_admin": "Admin", "g_r_member": "Tag", "g_mkadmin": "Legyen admin", "g_rmadmin": "Admin elvétele", "g_kick": "Kirúgás", "g_sure": "Biztos?", "g_leave": "Kilépés", "g_del": "Csoport törlése", "g_close": "Bezárás", "g_remove": "Eltávolítás", "g_incall": "hívásban", "g_call": "Hanghívás", "g_joincall": "Belépés a hívásba", "g_leavecall": "Kilépés", "g_mute": "Némítás", "g_unmute": "Némítás vége", "g_calling": "Hanghívás ({n})", "g_nomic": "Nem sikerült használni a mikrofont. Engedélyezd a böngészőben, és próbáld újra.", "g_callfull": "A hívás megtelt (6 fő).", "g_attach": "Csatolás", "g_anote": "Jegyzet", "g_alore": "Lorebook", "g_avid": "Videó", "g_pnote": "Jegyzet csatolása", "g_plore": "Lorebook csatolása", "g_pvid": "Videó csatolása", "g_pnone": "Itt még nincs semmi.", "g_vidnote": "Csak a videó előnézete kerül megosztásra. A fájl a küldő eszközén marad.", "g_sjoin": "{a} csatlakozott", "g_sleave": "{a} kilépett", "g_skick": "{a} el lett távolítva", "g_srename": "A csoport új neve: {a}", "g_srole": "{a} mostantól {b}", "g_blocked": "Az üzenet blokkolva: {r}.", "g_muted": "Ismételt blokkolt üzenetek miatt néhány percre némítva vagy.", "g_modfail": "Az üzenetet nem sikerült ellenőrizni, ezért nem ment el.", "g_sendfail": "Az üzenet nem ment el.", "g_gone_kicked": "Eltávolítottak a csoportból.", "g_gone_left": "Kiléptél a csoportból.", "g_gone_deleted": "A csoportot törölték.", "g_created": "Csoport létrehozva. A beállításokban találod a meghívókódot.", "g_e_name": "Adj meg egy nevet.", "g_e_blocked": "Ez nem megengedett.", "g_e_perm": "Ezt nem teheted meg.", "g_e_nocode": "Ez a kód nem tartozik csoporthoz.", "g_e_kicked": "Eltávolítottak ebből a csoportból. Kérj új kódot.", "g_e_full": "A csoport megtelt.", "g_e_rate": "Túl sok próbálkozás. Várj pár percet.", "g_e_limit": "Túl sok csoportban vagy.", "g_e_image": "Ez a kép nem használható.", "g_efail": "Hiba történt. Próbáld újra."});
 function cStatic(){
-  var M={cpt:"chat",cpback:"back2",cobk:"back2",chlogin:"loginsignup",cnewt:"g_new",cjoint:"g_join",cmnotet:"g_anote",cmloret:"g_alore",cmvidt:"g_avid",ccjoin:"g_joincall",ccleave:"g_leavecall",gnewt:"g_newt",gnnl:"g_gname",gnmake:"g_create",gncancel:"cancel",gjt:"g_joint",gjcl:"g_code",gjmake:"g_joinb",gjcancel:"cancel",gst:"g_settings",gnal:"g_gname",gnsave:"g_save",gcodeh:"g_code2",gcopy:"g_copy",gregen:"g_regen",gmemh:"g_mem",gleave:"g_leave",gdel:"g_del",gsclose:"g_close",gpcancel:"cancel",gvclose:"g_close"};
+  var M={cpt:"chat",cpback:"back2",cobk:"back2",chlogin:"loginsignup",cnewt:"g_new",cjoint:"g_join",cmnotet:"g_anote",cmloret:"g_alore",cmvidt:"g_avid",ccjoin:"g_joincall",ccleave:"g_leavecall",gnewt:"g_newt",gnnl:"g_gname",gnmake:"g_create",gncancel:"cancel",gjt:"g_joint",gjcl:"g_code",gjmake:"g_joinb",gjcancel:"cancel",gst:"g_settings",gnal:"g_gname",gnsave:"g_save",gcodeh:"g_code2",gcopy:"g_copy",gregen:"g_regen",gmemh:"g_mem",gleave:"g_leave",gdel:"g_del",gsclose:"g_close",gpcancel:"cancel",gvclose:"g_close",fh:"g_fh",fal:"g_fal",fcadd:"g_fadd"};
   Object.keys(M).forEach(function(i){var e=$(i);if(e)e.textContent=t(M[i])});
   sx("#chatbtn h3","chat");sx("#chatbtn .go","open");sx("#ort","orem");
   $("cinput").placeholder=t("chph");$("cplus").setAttribute("aria-label",t("g_attach"));$("ccallbtn").setAttribute("aria-label",t("g_call"));$("ccog").setAttribute("aria-label",t("g_settings"));$("chmb").setAttribute("aria-label",t("g_chats"));$("csend").setAttribute("aria-label",t("aisend"));
@@ -1972,7 +1973,7 @@ function cStatic(){
 }
 var _rc=render;render=function(){_rc();cStatic()};
 
-var CH={convs:[],cur:"global",meta:null,calls:[],att:null,pend:{},code:false,online:0,loaded:false,newPic:"",arm:null};
+var CH={friends:[],convs:[],cur:"global",meta:null,calls:[],att:null,pend:{},code:false,online:0,loaded:false,newPic:"",arm:null};
 var inCall=false,cstream=null,pcs={},ice=null,muted=false,cropCb=null,escTop=null;
 var IC={
   note:'<path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/>',
@@ -2010,10 +2011,12 @@ function syncAvatar(){
 
 /* ---- conversations ---- */
 function loadConvs(){
-  return api("/api/groups").then(function(j){
-    if(!me||!j.ok)return;
-    CH.convs=j.groups||[];drawConvs();
-    if(CH.cur!=="global"&&!CH.convs.some(function(g){return g.id===CH.cur}))openConv("global");
+  return Promise.all([api("/api/groups"),api("/api/friends")]).then(function(a){
+    if(!me)return;
+    if(a[0].ok)CH.convs=a[0].groups||[];
+    if(a[1].ok)CH.friends=a[1].friends||[];
+    drawConvs();
+    if(CH.cur!=="global"&&!CH.convs.some(function(g){return g.id===CH.cur})&&!friendOf(CH.cur))openConv("global");
   });
 }
 function mergeConv(meta){
@@ -2024,6 +2027,7 @@ function mergeConv(meta){
 }
 function noteLast(m){
   if(m.sys||CH.cur==="global")return;
+  CH.friends.forEach(function(g){if("dm:"+g.id===CH.cur)g.last={name:m.name,text:m.text||(m.att?"\ud83d\udcce "+m.att.title:""),ts:m.ts}});
   CH.convs.forEach(function(g){if(g.id===CH.cur)g.last={name:m.name,text:m.text||(m.att?"\ud83d\udcce "+m.att.title:""),ts:m.ts}});
   drawConvs();
 }
@@ -2037,14 +2041,21 @@ function drawConvs(){
     x.appendChild(el("span","",c.last?c.last.name+": "+c.last.text:c.global?t("chdesc"):t("g_members").replace("{m}",c.count)));
     b.appendChild(a);b.appendChild(x);b.onclick=function(){openConv(c.id,true)};box.appendChild(b);
   });
-  if(!gs.length)box.appendChild(el("p","cvempty",t("g_nogr")));
+  CH.friends.forEach(function(f){
+    var b=el("button","cv"+("dm:"+f.id===CH.cur?" on":"")),a=el("div","gav"),x=el("div","cvt");b.type="button";
+    fillAv(a,f.pic,f.name);x.appendChild(el("b","",f.name));x.appendChild(el("span","",f.last?f.last.name+": "+f.last.text:t("g_friend")));
+    b.appendChild(a);b.appendChild(x);b.onclick=function(){openConv("dm:"+f.id,true)};box.appendChild(b);
+  });
+  if(!gs.length&&!CH.friends.length)box.appendChild(el("p","cvempty",t("g_nogr")));
 }
+function dmId(c){return c.indexOf("dm:")===0?c.slice(3):""}
+function friendOf(c){var i=dmId(c),r=null;CH.friends.forEach(function(f){if(f.id===i)r=f});return r}
 function chHead(){
-  var g=CH.cur!=="global",m=CH.meta;
-  $("chtitle").textContent=g?(m?m.name:""):t("g_global");
-  if(g)fillAv($("chgav"),m?gPic(m):"",m?m.name:"?");else $("chgav").innerHTML=svg("globe");
+  var dm=CH.cur.indexOf("dm:")===0,f=dm?friendOf(CH.cur):null,g=CH.cur!=="global"&&!dm,m=CH.meta;
+  $("chtitle").textContent=dm?(f?f.name:""):g?(m?m.name:""):t("g_global");
+  if(dm)fillAv($("chgav"),f?f.pic:"",f?f.name:"?");else if(g)fillAv($("chgav"),m?gPic(m):"",m?m.name:"?");else $("chgav").innerHTML=svg("globe");
   $("chon").textContent=(g&&m?t("g_members").replace("{m}",m.count)+", ":"")+t("chon").replace("{n}",CH.online);
-  $("ccog").classList.toggle("hidden",!g);$("ccallbtn").classList.toggle("hidden",!g);
+  $("ccog").classList.toggle("hidden",CH.cur==="global");$("ccallbtn").classList.toggle("hidden",CH.cur==="global");
 }
 function openConv(id,user){
   if(ws){var w=ws;ws=null;try{w.close()}catch(e){}}
@@ -2114,7 +2125,7 @@ function chatConnect(){
   clearTimeout(wsTimer);
   var opened=false,key=CH.cur;
   $("cmsg").textContent=t("chconn");
-  var mine=ws=new WebSocket((location.protocol==="https:"?"wss://":"ws://")+location.host+(key==="global"?"/api/room/ws":"/api/group/"+key+"/ws"));
+  var mine=ws=new WebSocket((location.protocol==="https:"?"wss://":"ws://")+location.host+(key==="global"?"/api/room/ws":key.indexOf("dm:")===0?"/api/dm/"+key.slice(3)+"/ws":"/api/group/"+key+"/ws"));
   mine.onopen=function(){opened=true;wsFails=0;$("cmsg").textContent=""};
   mine.onmessage=function(e){
     if(ws!==mine)return;
@@ -2169,9 +2180,10 @@ function chatSend(){
 function chatUI(){
   var inn=!!me;
   $("chout").classList.toggle("hidden",inn);$("chapp").classList.toggle("hidden",!inn);
+  $("fbox").classList.toggle("hidden",!inn);if(inn&&!FC.code&&!FC.busy)loadFc();
   $("chloginmsg").textContent=current?t("chagain"):t("chloginmsg");
   $("chatdesc").textContent=current?t("chdesc"):t("chstart");
-  if(!inn){CH.convs=[];CH.cur="global";CH.meta=null;CH.loaded=false;CH.att=null}
+  if(!inn){CH.friends=[];CH.convs=[];CH.cur="global";CH.meta=null;CH.loaded=false;CH.att=null}
   if(chatOpen&&inn){if(!CH.loaded){CH.loaded=true;loadConvs()}drawConvs();chHead();chatConnect()}
 }
 function chatClose(hard){
@@ -2315,6 +2327,7 @@ function arm(b,key,label,fn){
   b.onclick=function(){if(CH.arm===key){CH.arm=null;fn()}else{CH.arm=key;gRender()}};
 }
 function gOpen(){
+  if(CH.cur.indexOf("dm:")===0){var f=friendOf(CH.cur);if(f&&confirm(t("g_unfriendq").replace("{a}",f.name)))api("/api/friends/remove",{id:f.id}).then(function(){CH.friends=CH.friends.filter(function(x){return x.id!==f.id});openConv("global")});return}
   if(CH.cur==="global"||!CH.meta)return;
   CH.code=false;CH.arm=null;$("gname").value=CH.meta.name;$("gsm").textContent="";gRender();mOpen("gset");
 }
@@ -2426,6 +2439,30 @@ $("gpcancel").onclick=function(){mClose("gpick")};
 $("gpick").addEventListener("click",function(e){if(e.target===$("gpick"))mClose("gpick")});
 $("gvclose").onclick=function(){mClose("gview")};
 $("gview").addEventListener("click",function(e){if(e.target===$("gview"))mClose("gview")});
+
+/* ---- friend code (profile menu) ---- */
+var FC={code:"",show:false,busy:false};
+function fcDraw(){
+  var c=FC.code||"",s=FC.show?c:c.replace(/./g,"\u2022");
+  $("fcv").textContent=s.replace(/(.{5})(?=.)/g,"$1-");
+  $("fctg").textContent=t(FC.show?"g_hide":"g_uncover");$("fccopy").classList.toggle("hidden",!FC.show);
+}
+function loadFc(){FC.busy=true;api("/api/friends/code").then(function(j){FC.busy=false;if(j.ok&&j.code){FC.code=j.code;fcDraw()}})}
+$("fctg").onclick=function(){FC.show=!FC.show;fcDraw()};
+$("fccopy").onclick=function(){if(FC.code&&navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(FC.code).then(function(){toast(t("g_copied"))},function(){})};
+$("fcadd").onclick=function(){
+  var c=$("fci").value.trim(),m=$("fcm"),b=this;if(!c)return;
+  b.disabled=true;m.textContent="";
+  api("/api/friends/add",{code:c}).then(function(r){
+    b.disabled=false;
+    if(!r.ok||!r.friend){var ek=r.error==="nocode"?"g_e_fnocode":"g_e_"+r.error;m.textContent=t(ek)===ek?t("g_efail"):t(ek);return}
+    $("fci").value="";CH.friends=CH.friends.filter(function(f){return f.id!==r.friend.id}).concat([r.friend]);drawConvs();
+    toast(t("g_fadded").replace("{a}",r.friend.name));
+  });
+};
+$("fci").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();$("fcadd").click()}});
+Object.assign(T.en,{g_friend:"Friend",g_fh:"Friend code",g_fal:"Add a friend",g_fadd:"Add friend",g_fadded:"{a} is now your friend. Say hi in Chat.",g_unfriendq:"Remove {a} from your friends?",g_e_fnocode:"That code doesn't match anyone.",g_e_self:"That's your own code.",g_e_already:"You're already friends."});
+Object.assign(T.hu,{g_friend:"Barát",g_fh:"Barátkód",g_fal:"Barát hozzáadása",g_fadd:"Barát hozzáadása",g_fadded:"{a} mostantól a barátod. Köszönj be a csevegésben.",g_unfriendq:"Eltávolítod {a} nevű barátodat?",g_e_fnocode:"Ez a kód nem tartozik senkihez.",g_e_self:"Ez a saját kódod.",g_e_already:"Már barátok vagytok."});
 
 /* ---- wiring ---- */
 $("chatbtn").onclick=function(){chatOpen=true;$("cp").classList.add("open");$("chapp").classList.remove("inroom");document.body.style.overflow="hidden";wsFails=0;refreshMe()};
