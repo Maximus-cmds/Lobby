@@ -4,8 +4,8 @@
 
 import { DurableObject } from "cloudflare:workers";
 import { moderateImage } from "./moderation.js";
-import { ChatRoom, GroupRoom, IMG_RE, MAX_AVATAR, imgResponse } from "./rooms.js";
-export { ChatRoom, GroupRoom };
+import { ChatRoom, GroupRoom, DmRoom, IMG_RE, MAX_AVATAR, imgResponse } from "./rooms.js";
+export { ChatRoom, GroupRoom, DmRoom };
 
 const SESSION_MS = 30 * 24 * 3600 * 1000;
 const enc = new TextEncoder();
@@ -235,6 +235,41 @@ export class LobbyDB extends DurableObject {
     for (const u of m.values()) { const p = this.#pub(u); out[u.id] = { name: p.name, pic: p.pic }; }
     return out;
   }
+  /* ----- friends ----- */
+  async friendCode(uid) {
+    const st = this.ctx.storage;
+    let c = await st.get("fc:" + uid);
+    if (c) return c;
+    const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    for (let i = 0; i < 6; i++) {
+      c = Array.from(crypto.getRandomValues(new Uint8Array(10)), (x) => A[x % 32]).join("");
+      if (!(await st.get("fcode:" + c))) { await st.put({ ["fc:" + uid]: c, ["fcode:" + c]: uid }); return c; }
+    }
+    throw new Error("code");
+  }
+  async friends(uid) { return (await this.ctx.storage.get("f:" + uid)) || []; }
+  async areFriends(a, b) { return (await this.friends(a)).includes(b); }
+  async addFriend(uid, code) {
+    const st = this.ctx.storage;
+    const other = await st.get("fcode:" + code);
+    if (!other) return { error: "nocode" };
+    if (other === uid) return { error: "self" };
+    const mine = await this.friends(uid), theirs = await this.friends(other);
+    if (mine.includes(other)) return { error: "already" };
+    if (mine.length >= 100 || theirs.length >= 100) return { error: "limit" };
+    await st.put({ ["f:" + uid]: [...mine, other], ["f:" + other]: [...theirs, uid] });
+    const m = await this.profiles([other]);
+    return { friend: { id: other, ...m[other] } };
+  }
+  async removeFriend(uid, other) {
+    const st = this.ctx.storage;
+    await st.put({ ["f:" + uid]: (await this.friends(uid)).filter((x) => x !== other), ["f:" + other]: (await this.friends(other)).filter((x) => x !== uid) });
+  }
+  async friendList(uid) {
+    const ids = await this.friends(uid), m = await this.profiles(ids);
+    return ids.filter((i) => m[i]).map((i) => ({ id: i, ...m[i] }));
+  }
+
   // 10 code guesses per 10 minutes per person
   async joinAllowed(uid) {
     const k = "j:" + uid, now = Date.now();
@@ -257,9 +292,9 @@ const sameOrigin = (req, url) => { const o = req.headers.get("Origin"); return !
 export async function handleLobby(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
-  const ours = path.startsWith("/api/auth/") || path.startsWith("/api/avatar/") || path.startsWith("/api/group/") || path.startsWith("/api/groups") || path === "/api/room/ws" || path === "/api/ice";
+  const ours = path.startsWith("/api/auth/") || path.startsWith("/api/avatar/") || path.startsWith("/api/group/") || path.startsWith("/api/groups") || path.startsWith("/api/friends") || path.startsWith("/api/dm/") || path === "/api/room/ws" || path === "/api/ice";
   if (!ours) return null;
-  if (!env.LOBBY_DB || !env.CHAT_ROOM || !env.GROUP_ROOM) return reply({ error: "Durable Objects not configured" }, 500);
+  if (!env.LOBBY_DB || !env.CHAT_ROOM || !env.GROUP_ROOM || !env.DM_ROOM) return reply({ error: "Durable Objects not configured" }, 500);
 
   /* chat socket */
   if (path === "/api/room/ws") {
@@ -299,6 +334,27 @@ export async function handleLobby(request, env) {
     if (!sameOrigin(request, url)) return new Response("Bad origin", { status: 403 });
     const h = new Headers({ Upgrade: "websocket", "X-Lobby-User": encodeURIComponent(JSON.stringify({ id: me.id, name: me.name, pic: me.pic })) });
     return stub.fetch(new Request("https://room/ws", { headers: h }));
+  }
+
+  /* private chat with a friend */
+  g = path.match(/^\/api\/dm\/([0-9a-f-]{36})\/ws$/);
+  if (g) {
+    if (!me) return new Response("Log in first", { status: 401 });
+    if (request.headers.get("Upgrade") !== "websocket") return new Response("Expected WebSocket", { status: 426 });
+    if (!sameOrigin(request, url)) return new Response("Bad origin", { status: 403 });
+    if (!(await db(env).areFriends(me.id, g[1]))) return new Response("Not friends", { status: 403 });
+    const h = new Headers({ Upgrade: "websocket", "X-Lobby-User": encodeURIComponent(JSON.stringify({ id: me.id, name: me.name, pic: me.pic })) });
+    return env.DM_ROOM.get(env.DM_ROOM.idFromName("dm:" + [me.id, g[1]].sort().join(":"))).fetch(new Request("https://room/ws", { headers: h }));
+  }
+
+  /* friends */
+  if (path === "/api/friends" && request.method === "GET") {
+    if (!me) return reply({ error: "auth" }, 401);
+    return reply({ friends: await db(env).friendList(me.id) });
+  }
+  if (path === "/api/friends/code" && request.method === "GET") {
+    if (!me) return reply({ error: "auth" }, 401);
+    return reply({ code: await db(env).friendCode(me.id) });
   }
 
   /* my groups */
@@ -406,6 +462,19 @@ export async function handleLobby(request, env) {
     if (!(await moderateImage(env, body.data)).ok) return reply({ error: "blocked" }, 400);
     const r = await db(env).setAvatar(me.id, body.data);
     return r.error ? reply({ error: r.error }, 400) : reply({ user: r.user });
+  }
+
+  if (path === "/api/friends/add") {
+    if (!me) return reply({ error: "auth" }, 401);
+    if (!(await db(env).joinAllowed(me.id))) return reply({ error: "rate" }, 429);
+    const code = String(body.code || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    const r = code.length === 10 ? await db(env).addFriend(me.id, code) : { error: "nocode" };
+    return r.error ? reply({ error: r.error }, 400) : reply(r);
+  }
+  if (path === "/api/friends/remove") {
+    if (!me) return reply({ error: "auth" }, 401);
+    await db(env).removeFriend(me.id, String(body.id || "").slice(0, 40));
+    return reply({ ok: true });
   }
 
   /* groups */

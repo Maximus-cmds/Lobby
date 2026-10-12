@@ -152,6 +152,9 @@ class RoomBase extends DurableObject {
   async webSocketError(ws) { this._count(ws); this._sendCall(ws); }
 }
 
+/* private chat between two friends (the router checks they are friends) */
+export class DmRoom extends RoomBase { calls = true; }
+
 /* global chat: everybody who is logged in */
 export class ChatRoom extends RoomBase {}
 
