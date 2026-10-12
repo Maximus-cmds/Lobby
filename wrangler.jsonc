@@ -8,5 +8,14 @@
     "directory": "./public",
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
-  }
+  },
+  "durable_objects": {
+    "bindings": [
+      { "name": "LOBBY_DB", "class_name": "LobbyDB" },
+      { "name": "CHAT_ROOM", "class_name": "ChatRoom" }
+    ]
+  },
+  "migrations": [
+    { "tag": "lobby-v1", "new_sqlite_classes": ["LobbyDB", "ChatRoom"] }
+  ]
 }

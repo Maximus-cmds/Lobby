@@ -2,6 +2,9 @@
 // Your website calls /api/chat, this file calls OpenRouter with the secret key.
 // Every other URL is just served as your normal website files.
 
+import { handleLobby, LobbyDB, ChatRoom } from "./lobby-server.js";
+export { LobbyDB, ChatRoom };
+
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), {
     status,
@@ -81,6 +84,9 @@ async function handleChat(request, env) {
 
 export default {
   async fetch(request, env) {
+    const lobby = await handleLobby(request, env);
+    if (lobby) return lobby;
+
     const url = new URL(request.url);
     if (url.pathname === "/api/chat") {
       if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
