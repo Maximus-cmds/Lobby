@@ -500,6 +500,10 @@ div.chatt{cursor:default}
 .gview:empty{display:none}
 .gvimg{width:100%;border-radius:12px;display:block}
 #cr{z-index:40}
+.chreq{padding:0 1.1rem .6rem;border-bottom:1.5px solid rgba(127,127,127,.25);max-height:30vh;overflow-y:auto}
+.chreq b,#frl b.frh{font-size:.85rem}
+.frr{display:flex;align-items:center;gap:.5rem;padding:.3rem 0}
+.frr .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:760px){
   .chapp{grid-template-columns:minmax(0,1fr)}
   .chapp:not(.inroom) .chmain{display:none}
@@ -533,7 +537,7 @@ div.chatt{cursor:default}
     <button class="btn dark full" id="ppick" type="button">Change picture</button>
     <label class="field">Name<input id="pname" maxlength="30" autocomplete="nickname" placeholder="Your name"></label>
     <button class="btn dark full" id="psave" type="button">Save profile</button>
-    <div id="fbox" class="hidden" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="fh">Friend code</b><div class="gcode"><code id="fcv"></code></div><div class="gcode"><button class="gmb" id="fctg" type="button">Uncover</button><button class="gmb hidden" id="fccopy" type="button">Copy</button></div><label class="field"><span id="fal">Add a friend</span><input id="fci" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false"></label><button class="btn dark full" id="fcadd" type="button">Add friend</button><p class="msg" id="fcm" role="status"></p></div>
+    <div id="fbox" class="hidden" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="fh">Friend code</b><div class="gcode"><code id="fcv"></code></div><div class="gcode"><button class="gmb" id="fctg" type="button">Uncover</button><button class="gmb hidden" id="fccopy" type="button">Copy</button></div><div id="frl"></div><label class="field"><span id="fal">Add a friend</span><input id="fci" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false"></label><button class="btn dark full" id="fcadd" type="button">Add friend</button><p class="msg" id="fcm" role="status"></p></div>
     <p class="msg ok" id="pmsg" role="status"></p>
     <button class="link" id="plogout" type="button">Log out</button>
   </div>
@@ -650,6 +654,7 @@ div.chatt{cursor:default}
     <aside class="chside">
       <div class="chsh"><button class="back" id="cpback" type="button">Back</button><h2 id="cpt">Chat</h2></div>
       <div class="chacts"><button class="chact" id="cnew" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span id="cnewt">New group</span></button><button class="chact" id="cjoin" type="button"><span id="cjoint">Join with code</span></button></div>
+      <div class="chreq hidden" id="chreq"></div>
       <div class="chconvs" id="chconvs"></div>
     </aside>
     <section class="chmain">
@@ -1973,7 +1978,7 @@ function cStatic(){
 }
 var _rc=render;render=function(){_rc();cStatic()};
 
-var CH={friends:[],convs:[],cur:"global",meta:null,calls:[],att:null,pend:{},code:false,online:0,loaded:false,newPic:"",arm:null};
+var CH={requests:[],friends:[],convs:[],cur:"global",meta:null,calls:[],att:null,pend:{},code:false,online:0,loaded:false,newPic:"",arm:null};
 var inCall=false,cstream=null,pcs={},ice=null,muted=false,cropCb=null,escTop=null;
 var IC={
   note:'<path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/>',
@@ -2014,7 +2019,8 @@ function loadConvs(){
   return Promise.all([api("/api/groups"),api("/api/friends")]).then(function(a){
     if(!me)return;
     if(a[0].ok)CH.convs=a[0].groups||[];
-    if(a[1].ok)CH.friends=a[1].friends||[];
+    if(a[1].ok){CH.friends=a[1].friends||[];CH.requests=a[1].requests||[]}
+    frDraw();
     drawConvs();
     if(CH.cur!=="global"&&!CH.convs.some(function(g){return g.id===CH.cur})&&!friendOf(CH.cur))openConv("global");
   });
@@ -2183,7 +2189,7 @@ function chatUI(){
   $("fbox").classList.toggle("hidden",!inn);if(inn&&!FC.code&&!FC.busy)loadFc();
   $("chloginmsg").textContent=current?t("chagain"):t("chloginmsg");
   $("chatdesc").textContent=current?t("chdesc"):t("chstart");
-  if(!inn){CH.friends=[];CH.convs=[];CH.cur="global";CH.meta=null;CH.loaded=false;CH.att=null}
+  if(!inn){CH.requests=[];CH.friends=[];CH.convs=[];CH.cur="global";CH.meta=null;CH.loaded=false;CH.att=null}
   if(chatOpen&&inn){if(!CH.loaded){CH.loaded=true;loadConvs()}drawConvs();chHead();chatConnect()}
 }
 function chatClose(hard){
@@ -2455,6 +2461,7 @@ $("fcadd").onclick=function(){
   b.disabled=true;m.textContent="";
   api("/api/friends/add",{code:c}).then(function(r){
     b.disabled=false;
+    if(r.ok&&r.sent){$("fci").value="";toast(t("g_fsent").replace("{a}",r.name||""));return}
     if(!r.ok||!r.friend){var ek=r.error==="nocode"?"g_e_fnocode":"g_e_"+r.error;m.textContent=t(ek)===ek?t("g_efail"):t(ek);return}
     $("fci").value="";CH.friends=CH.friends.filter(function(f){return f.id!==r.friend.id}).concat([r.friend]);drawConvs();
     toast(t("g_fadded").replace("{a}",r.friend.name));
@@ -2463,6 +2470,27 @@ $("fcadd").onclick=function(){
 $("fci").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();$("fcadd").click()}});
 Object.assign(T.en,{g_friend:"Friend",g_fh:"Friend code",g_fal:"Add a friend",g_fadd:"Add friend",g_fadded:"{a} is now your friend. Say hi in Chat.",g_unfriendq:"Remove {a} from your friends?",g_e_fnocode:"That code doesn't match anyone.",g_e_self:"That's your own code.",g_e_already:"You're already friends."});
 Object.assign(T.hu,{g_friend:"Barát",g_fh:"Barátkód",g_fal:"Barát hozzáadása",g_fadd:"Barát hozzáadása",g_fadded:"{a} mostantól a barátod. Köszönj be a csevegésben.",g_unfriendq:"Eltávolítod {a} nevű barátodat?",g_e_fnocode:"Ez a kód nem tartozik senkihez.",g_e_self:"Ez a saját kódod.",g_e_already:"Már barátok vagytok."});
+
+function frDraw(){
+  ["chreq","frl"].forEach(function(id){
+    var box=$(id);box.textContent="";if(id==="chreq")box.classList.toggle("hidden",!CH.requests.length);
+    if(!CH.requests.length)return;
+    var hd=el("b",id==="frl"?"frh":"",t("g_freq"));box.appendChild(hd);
+    CH.requests.forEach(function(q){
+      var row=el("div","frr"),a=el("div","gav sm");fillAv(a,q.pic,q.name);
+      var ok=el("button","gmb",t("g_accept")),no=el("button","gmb",t("g_decline"));ok.type=no.type="button";
+      ok.onclick=function(){api("/api/friends/accept",{id:q.id}).then(function(r){if(r.ok&&r.friend){CH.friends=CH.friends.filter(function(f){return f.id!==q.id}).concat([r.friend]);toast(t("g_fadded").replace("{a}",r.friend.name))}CH.requests=CH.requests.filter(function(x){return x.id!==q.id});drawConvs();frDraw()})};
+      no.onclick=function(){api("/api/friends/decline",{id:q.id}).then(function(){CH.requests=CH.requests.filter(function(x){return x.id!==q.id});frDraw()})};
+      row.appendChild(a);row.appendChild(el("span","nm",q.name));row.appendChild(ok);row.appendChild(no);box.appendChild(row);
+    });
+  });
+}
+function pollReq(){if(!me)return;api("/api/friends").then(function(j){if(j.ok){CH.requests=j.requests||[];frDraw()}})}
+$("pbtn").addEventListener("click",pollReq);
+setInterval(function(){if(chatOpen)pollReq()},30000);
+Object.assign(T.en,{g_freq:"Friend requests",g_accept:"Accept",g_decline:"Decline",g_fsent:"Request sent to {a}. They need to accept it.",g_e_pending:"You already sent them a request."});
+Object.assign(T.hu,{g_freq:"Barátkérések",g_accept:"Elfogadom",g_decline:"Elutasítom",g_fsent:"Kérés elküldve neki: {a}. El kell fogadnia.",g_e_pending:"Már küldtél neki kérést."});
+Object.assign(T.en,{g_fadded:"{a} is now your friend."});Object.assign(T.hu,{g_fadded:"{a} mostantól a barátod."});
 
 /* ---- wiring ---- */
 $("chatbtn").onclick=function(){chatOpen=true;$("cp").classList.add("open");$("chapp").classList.remove("inroom");document.body.style.overflow="hidden";wsFails=0;refreshMe()};
