@@ -2,8 +2,8 @@
 // Your website calls /api/chat, this file calls OpenRouter with the secret key.
 // Every other URL is just served as your normal website files.
 
-import { handleLobby, LobbyDB, ChatRoom } from "./lobby-server.js";
-export { LobbyDB, ChatRoom };
+import { handleLobby, LobbyDB, ChatRoom, GroupRoom } from "./lobby-server.js";
+export { LobbyDB, ChatRoom, GroupRoom };
 
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), {

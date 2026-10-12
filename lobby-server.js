@@ -3,6 +3,9 @@
 // Wire it into worker.js with two lines (see SETUP.md).
 
 import { DurableObject } from "cloudflare:workers";
+import { moderateImage } from "./moderation.js";
+import { ChatRoom, GroupRoom, IMG_RE, MAX_AVATAR, imgResponse } from "./rooms.js";
+export { ChatRoom, GroupRoom };
 
 const SESSION_MS = 30 * 24 * 3600 * 1000;
 const enc = new TextEncoder();
@@ -115,7 +118,7 @@ async function exchange(p, env, code, redirectUri, verifier) {
 
 /* ---------- accounts (one Durable Object, SQLite-backed storage) ---------- */
 export class LobbyDB extends DurableObject {
-  #pub(u) { return { id: u.id, email: u.email || "", name: u.name, pic: u.pic || "" }; }
+  #pub(u) { return { id: u.id, email: u.email || "", name: u.name, pic: u.av ? `/api/avatar/${u.id}?v=${u.av}` : u.pic || "" }; }
 
   async #newSession(uid) {
     const tok = rand();
@@ -196,62 +199,67 @@ export class LobbyDB extends DurableObject {
     await this.ctx.storage.put("u:" + uid, u);
     return this.#pub(u);
   }
-}
 
-/* ---------- chat room (hibernating WebSockets, history survives restarts) ---------- */
-export class ChatRoom extends DurableObject {
-  async fetch(req) {
-    let user;
-    try { user = JSON.parse(decodeURIComponent(req.headers.get("X-Lobby-User") || "")); } catch { return new Response("No user", { status: 401 }); }
-    const pair = new WebSocketPair();
-    const [client, server] = Object.values(pair);
-    this.ctx.acceptWebSocket(server);
-    server.serializeAttachment({ id: user.id, name: user.name, pic: user.pic, last: 0 });
-    const hist = (await this.ctx.storage.get("hist")) || [];
-    server.send(JSON.stringify({ type: "history", messages: hist }));
-    this.#count();
-    return new Response(null, { status: 101, webSocket: client });
+  /* ----- avatars ----- */
+  async setAvatar(uid, data) {
+    const st = this.ctx.storage;
+    if (typeof data !== "string" || !IMG_RE.test(data) || data.length > MAX_AVATAR) return { error: "image" };
+    const u = await st.get("u:" + uid);
+    if (!u) return { error: "auth" };
+    u.av = (u.av || 0) + 1;
+    await st.put({ ["u:" + uid]: u, ["a:" + uid]: data });
+    return { user: this.#pub(u) };
   }
+  async getAvatar(uid) { return (await this.ctx.storage.get("a:" + uid)) || null; }
 
-  #count(exclude) {
-    const all = this.ctx.getWebSockets().filter((w) => w !== exclude);
-    const msg = JSON.stringify({ type: "count", n: all.length });
-    for (const w of all) { try { w.send(msg); } catch {} }
+  /* ----- groups: which groups a person is in, and join codes ----- */
+  async groups(uid) { return (await this.ctx.storage.get("g:" + uid)) || []; }
+  async addGroup(uid, gid) {
+    const l = await this.groups(uid);
+    if (!l.includes(gid)) { l.push(gid); await this.ctx.storage.put("g:" + uid, l); }
   }
-
-  async webSocketMessage(ws, raw) {
-    if (typeof raw !== "string" || raw.length > 2000) return;
-    let d;
-    try { d = JSON.parse(raw); } catch { return; }
-    const text = String(d.text || "").trim().slice(0, 500);
-    if (!text) return;
-    const a = ws.deserializeAttachment();
-    const now = Date.now();
-    if (now - (a.last || 0) < 700) { ws.send(JSON.stringify({ type: "error", code: "slow" })); return; }
-    a.last = now;
-    ws.serializeAttachment(a);
-    const msg = { id: crypto.randomUUID(), uid: a.id, name: a.name, pic: a.pic, text, ts: now };
-    const hist = (await this.ctx.storage.get("hist")) || [];
-    hist.push(msg);
-    await this.ctx.storage.put("hist", hist.slice(-100));
-    const out = JSON.stringify({ type: "msg", message: msg });
-    for (const w of this.ctx.getWebSockets()) { try { w.send(out); } catch {} }
+  async removeGroup(uid, gid) {
+    const l = await this.groups(uid);
+    if (l.includes(gid)) await this.ctx.storage.put("g:" + uid, l.filter((x) => x !== gid));
   }
-
-  async webSocketClose(ws) { try { ws.close(); } catch {} this.#count(ws); }
-  async webSocketError(ws) { this.#count(ws); }
+  async claimCode(code, gid) {
+    if (await this.ctx.storage.get("c:" + code)) return false;
+    await this.ctx.storage.put("c:" + code, gid);
+    return true;
+  }
+  async freeCode(code) { await this.ctx.storage.delete("c:" + code); }
+  async lookup(code) { return (await this.ctx.storage.get("c:" + code)) || null; }
+  async profiles(ids) {
+    const m = await this.ctx.storage.get(ids.slice(0, 100).map((i) => "u:" + i));
+    const out = {};
+    for (const u of m.values()) { const p = this.#pub(u); out[u.id] = { name: p.name, pic: p.pic }; }
+    return out;
+  }
+  // 10 code guesses per 10 minutes per person
+  async joinAllowed(uid) {
+    const k = "j:" + uid, now = Date.now();
+    let j = (await this.ctx.storage.get(k)) || { n: 0, t: now };
+    if (now - j.t > 600000) j = { n: 0, t: now };
+    if (j.n >= 10) return false;
+    j.n++;
+    await this.ctx.storage.put(k, j);
+    return true;
+  }
 }
 
 /* ---------- router: returns a Response, or null if the path isn't ours ---------- */
 const db = (env) => env.LOBBY_DB.get(env.LOBBY_DB.idFromName("main"));
 const sidOf = (req) => getCookie(req, "lobby_sid");
+const groupStub = (env, gid) => env.GROUP_ROOM.get(env.GROUP_ROOM.idFromString(gid));
+const who = async (req, env) => { const tok = sidOf(req); return tok ? await db(env).session(tok) : null; };
 const sameOrigin = (req, url) => { const o = req.headers.get("Origin"); return !o || o === url.origin; };
 
 export async function handleLobby(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
-  if (!path.startsWith("/api/auth/") && path !== "/api/room/ws") return null;
-  if (!env.LOBBY_DB || !env.CHAT_ROOM) return reply({ error: "Durable Objects not configured" }, 500);
+  const ours = path.startsWith("/api/auth/") || path.startsWith("/api/avatar/") || path.startsWith("/api/group/") || path.startsWith("/api/groups") || path === "/api/room/ws" || path === "/api/ice";
+  if (!ours) return null;
+  if (!env.LOBBY_DB || !env.CHAT_ROOM || !env.GROUP_ROOM) return reply({ error: "Durable Objects not configured" }, 500);
 
   /* chat socket */
   if (path === "/api/room/ws") {
@@ -263,6 +271,62 @@ export async function handleLobby(request, env) {
     const h = new Headers({ Upgrade: "websocket", "X-Lobby-User": encodeURIComponent(JSON.stringify({ id: user.id, name: user.name, pic: user.pic })) });
     const room = env.CHAT_ROOM.get(env.CHAT_ROOM.idFromName("main"));
     return room.fetch(new Request("https://room/ws", { headers: h }));
+  }
+
+  /* profile pictures (anyone can view; ids are unguessable) */
+  let g = path.match(/^\/api\/avatar\/([0-9a-f-]{36})$/);
+  if (g) {
+    const data = await db(env).getAvatar(g[1]);
+    if (!data) return new Response("Not found", { status: 404 });
+    return imgResponse(data, url.searchParams.has("v") ? "public, max-age=31536000, immutable" : "public, max-age=300");
+  }
+
+  /* everything from here needs a logged-in user */
+  const me = await who(request, env);
+
+  /* group chat socket + group picture */
+  g = path.match(/^\/api\/group\/([0-9a-f]{64})\/(ws|pic)$/);
+  if (g) {
+    if (!me) return new Response("Log in first", { status: 401 });
+    const stub = groupStub(env, g[1]);
+    if (g[2] === "pic") {
+      if (!(await stub.isMember(me.id))) return new Response("Not found", { status: 404 });
+      const data = await stub.getPic();
+      if (!data) return new Response("Not found", { status: 404 });
+      return imgResponse(data, "private, max-age=31536000, immutable");
+    }
+    if (request.headers.get("Upgrade") !== "websocket") return new Response("Expected WebSocket", { status: 426 });
+    if (!sameOrigin(request, url)) return new Response("Bad origin", { status: 403 });
+    const h = new Headers({ Upgrade: "websocket", "X-Lobby-User": encodeURIComponent(JSON.stringify({ id: me.id, name: me.name, pic: me.pic })) });
+    return stub.fetch(new Request("https://room/ws", { headers: h }));
+  }
+
+  /* my groups */
+  if (path === "/api/groups" && request.method === "GET") {
+    if (!me) return reply({ error: "auth" }, 401);
+    const ids = await db(env).groups(me.id);
+    const views = await Promise.all(ids.map(async (gid) => { try { return await groupStub(env, gid).view(me.id, false); } catch { return undefined; } }));
+    const groups = [];
+    views.forEach((v, i) => { if (v) groups.push(v); else if (v === null) db(env).removeGroup(me.id, ids[i]); });
+    return reply({ groups });
+  }
+
+  /* voice call servers (STUN always; TURN too if Cloudflare TURN keys are set) */
+  if (path === "/api/ice") {
+    if (!me) return reply({ error: "auth" }, 401);
+    let iceServers = [{ urls: "stun:stun.cloudflare.com:3478" }, { urls: "stun:stun.l.google.com:19302" }];
+    if (env.TURN_KEY_ID && env.TURN_KEY_API_TOKEN) {
+      try {
+        const r = await fetch(`https://rtc.live.cloudflare.com/v1/turn/keys/${env.TURN_KEY_ID}/credentials/generate-ice-servers`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${env.TURN_KEY_API_TOKEN}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ ttl: 3600 }),
+        });
+        const j = await r.json();
+        if (Array.isArray(j.iceServers) && j.iceServers.length) iceServers = j.iceServers;
+      } catch {}
+    }
+    return reply({ iceServers });
   }
 
   /* which social buttons are configured */
@@ -332,11 +396,59 @@ export async function handleLobby(request, env) {
     return reply({ ok: true }, 200, [cookie("lobby_sid", "", 0)]);
   }
   if (path === "/api/auth/profile") {
-    const tok = sidOf(request);
-    const me = tok && (await db(env).session(tok));
     if (!me) return reply({ error: "auth" }, 401);
     const u = await db(env).setName(me.id, body.name);
     return u ? reply({ user: u }) : reply({ error: "name" }, 400);
+  }
+  if (path === "/api/auth/avatar") {
+    if (!me) return reply({ error: "auth" }, 401);
+    if (typeof body.data !== "string" || !IMG_RE.test(body.data) || body.data.length > MAX_AVATAR) return reply({ error: "image" }, 400);
+    if (!(await moderateImage(env, body.data)).ok) return reply({ error: "blocked" }, 400);
+    const r = await db(env).setAvatar(me.id, body.data);
+    return r.error ? reply({ error: r.error }, 400) : reply({ user: r.user });
+  }
+
+  /* groups */
+  if (path.startsWith("/api/group")) {
+    if (!me) return reply({ error: "auth" }, 401);
+    const fail = (r) => reply({ error: r.error }, r.error === "perm" ? 403 : r.error === "nocode" ? 404 : 400);
+
+    if (path === "/api/groups/create") {
+      if ((await db(env).groups(me.id)).length >= 15) return reply({ error: "limit" }, 400);
+      const stub = env.GROUP_ROOM.get(env.GROUP_ROOM.newUniqueId());
+      const r = await stub.init(me.id, me.name, body.name);
+      if (r.error) return fail(r);
+      if (typeof body.pic === "string" && body.pic) {
+        const p = await stub.setPic(me.id, body.pic);
+        if (p.view) r.view = p.view; else r.picError = p.error;
+      }
+      return reply(r);
+    }
+    if (path === "/api/groups/join") {
+      if (!(await db(env).joinAllowed(me.id))) return reply({ error: "rate" }, 429);
+      const code = String(body.code || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      const gid = code.length === 12 ? await db(env).lookup(code) : null;
+      if (!gid) return reply({ error: "nocode" }, 404);
+      if (!(await groupStub(env, gid).isMember(me.id)) && (await db(env).groups(me.id)).length >= 15) return reply({ error: "limit" }, 400);
+      const r = await groupStub(env, gid).join(me.id, me.name);
+      return r.error ? fail(r) : reply(r);
+    }
+    const g = path.match(/^\/api\/group\/([0-9a-f]{64})\/(rename|pic|role|kick|leave|regen|destroy)$/);
+    if (g) {
+      const stub = groupStub(env, g[1]);
+      const id = (x) => String(x || "").slice(0, 64);
+      let r;
+      switch (g[2]) {
+        case "rename": r = await stub.rename(me.id, body.name); break;
+        case "pic": r = await stub.setPic(me.id, body.data); break;
+        case "role": r = await stub.setRole(me.id, id(body.target), body.role); break;
+        case "kick": r = await stub.kick(me.id, id(body.target)); break;
+        case "leave": r = await stub.leave(me.id); break;
+        case "regen": r = await stub.regen(me.id); break;
+        case "destroy": r = await stub.destroy(me.id); break;
+      }
+      return r.error ? fail(r) : reply(r);
+    }
   }
   return reply({ error: "not found" }, 404);
 }

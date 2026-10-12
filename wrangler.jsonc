@@ -12,10 +12,12 @@
   "durable_objects": {
     "bindings": [
       { "name": "LOBBY_DB", "class_name": "LobbyDB" },
-      { "name": "CHAT_ROOM", "class_name": "ChatRoom" }
+      { "name": "CHAT_ROOM", "class_name": "ChatRoom" },
+      { "name": "GROUP_ROOM", "class_name": "GroupRoom" }
     ]
   },
   "migrations": [
-    { "tag": "lobby-v1", "new_sqlite_classes": ["LobbyDB", "ChatRoom"] }
+    { "tag": "lobby-v1", "new_sqlite_classes": ["LobbyDB", "ChatRoom"] },
+    { "tag": "lobby-v2", "new_sqlite_classes": ["GroupRoom"] }
   ]
 }
