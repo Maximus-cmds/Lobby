@@ -2193,7 +2193,7 @@ function chatUI(){
   if(chatOpen&&inn){if(!CH.loaded){CH.loaded=true;loadConvs()}drawConvs();chHead();chatConnect()}
 }
 function chatClose(hard){
-  chatOpen=false;clearTimeout(wsTimer);stopCall();
+  chatOpen=false;CH.loaded=false;clearTimeout(wsTimer);stopCall();
   if(ws){var w=ws;ws=null;try{w.close()}catch(e){}}
   if(hard){$("cp").classList.remove("open");["gnew","gjoin","gset","gpick","gview"].forEach(mClose)}
   document.body.style.overflow="";
@@ -2462,6 +2462,7 @@ $("fcadd").onclick=function(){
   api("/api/friends/add",{code:c}).then(function(r){
     b.disabled=false;
     if(r.ok&&r.sent){$("fci").value="";toast(t("g_fsent").replace("{a}",r.name||""));return}
+    if(r.error==="already")pollReq();
     if(!r.ok||!r.friend){var ek=r.error==="nocode"?"g_e_fnocode":"g_e_"+r.error;m.textContent=t(ek)===ek?t("g_efail"):t(ek);return}
     $("fci").value="";CH.friends=CH.friends.filter(function(f){return f.id!==r.friend.id}).concat([r.friend]);drawConvs();
     toast(t("g_fadded").replace("{a}",r.friend.name));
@@ -2485,7 +2486,12 @@ function frDraw(){
     });
   });
 }
-function pollReq(){if(!me)return;api("/api/friends").then(function(j){if(j.ok){CH.requests=j.requests||[];frDraw()}})}
+function pollReq(){if(!me)return;api("/api/friends").then(function(j){
+  if(!j.ok)return;
+  var old={};CH.friends.forEach(function(f){old[f.id]=f.last});
+  CH.requests=j.requests||[];CH.friends=(j.friends||[]).map(function(f){f.last=old[f.id];return f});
+  frDraw();drawConvs();
+})}
 $("pbtn").addEventListener("click",pollReq);
 setInterval(function(){if(chatOpen)pollReq()},30000);
 Object.assign(T.en,{g_freq:"Friend requests",g_accept:"Accept",g_decline:"Decline",g_fsent:"Request sent to {a}. They need to accept it.",g_e_pending:"You already sent them a request."});
