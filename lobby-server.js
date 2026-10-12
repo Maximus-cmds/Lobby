@@ -249,17 +249,46 @@ export class LobbyDB extends DurableObject {
   }
   async friends(uid) { return (await this.ctx.storage.get("f:" + uid)) || []; }
   async areFriends(a, b) { return (await this.friends(a)).includes(b); }
+  async #befriend(a, b) {
+    const st = this.ctx.storage, fa = await this.friends(a), fb = await this.friends(b);
+    await st.put({ ["f:" + a]: [...new Set([...fa, b])], ["f:" + b]: [...new Set([...fb, a])] });
+  }
+  async requests(uid) {
+    const ids = (await this.ctx.storage.get("r:" + uid)) || [], m = await this.profiles(ids);
+    return ids.filter((i) => m[i]).map((i) => ({ id: i, ...m[i] }));
+  }
+  // someone enters your code: that sends you a request. If you had already asked them, it is accepted at once.
   async addFriend(uid, code) {
     const st = this.ctx.storage;
     const other = await st.get("fcode:" + code);
     if (!other) return { error: "nocode" };
     if (other === uid) return { error: "self" };
-    const mine = await this.friends(uid), theirs = await this.friends(other);
+    const mine = await this.friends(uid);
     if (mine.includes(other)) return { error: "already" };
-    if (mine.length >= 100 || theirs.length >= 100) return { error: "limit" };
-    await st.put({ ["f:" + uid]: [...mine, other], ["f:" + other]: [...theirs, uid] });
-    const m = await this.profiles([other]);
-    return { friend: { id: other, ...m[other] } };
+    if (mine.length >= 100 || (await this.friends(other)).length >= 100) return { error: "limit" };
+    const inMine = (await st.get("r:" + uid)) || [], inTheirs = (await st.get("r:" + other)) || [];
+    const p = (await this.profiles([other]))[other] || {};
+    if (inMine.includes(other)) {
+      await st.put("r:" + uid, inMine.filter((x) => x !== other));
+      await this.#befriend(uid, other);
+      return { friend: { id: other, ...p } };
+    }
+    if (inTheirs.includes(uid)) return { error: "pending" };
+    if (inTheirs.length >= 50) return { error: "limit" };
+    await st.put("r:" + other, [...inTheirs, uid]);
+    return { sent: true, name: p.name || "" };
+  }
+  async acceptFriend(uid, other) {
+    const st = this.ctx.storage, inc = (await st.get("r:" + uid)) || [];
+    if (!inc.includes(other)) return { error: "nocode" };
+    await st.put("r:" + uid, inc.filter((x) => x !== other));
+    await this.#befriend(uid, other);
+    const p = (await this.profiles([other]))[other];
+    return p ? { friend: { id: other, ...p } } : { error: "nocode" };
+  }
+  async declineFriend(uid, other) {
+    const inc = (await this.ctx.storage.get("r:" + uid)) || [];
+    await this.ctx.storage.put("r:" + uid, inc.filter((x) => x !== other));
   }
   async removeFriend(uid, other) {
     const st = this.ctx.storage;
@@ -350,7 +379,7 @@ export async function handleLobby(request, env) {
   /* friends */
   if (path === "/api/friends" && request.method === "GET") {
     if (!me) return reply({ error: "auth" }, 401);
-    return reply({ friends: await db(env).friendList(me.id) });
+    return reply({ friends: await db(env).friendList(me.id), requests: await db(env).requests(me.id) });
   }
   if (path === "/api/friends/code" && request.method === "GET") {
     if (!me) return reply({ error: "auth" }, 401);
@@ -469,6 +498,13 @@ export async function handleLobby(request, env) {
     if (!(await db(env).joinAllowed(me.id))) return reply({ error: "rate" }, 429);
     const code = String(body.code || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
     const r = code.length === 10 ? await db(env).addFriend(me.id, code) : { error: "nocode" };
+    return r.error ? reply({ error: r.error }, 400) : reply(r);
+  }
+  if (path === "/api/friends/accept" || path === "/api/friends/decline") {
+    if (!me) return reply({ error: "auth" }, 401);
+    const id = String(body.id || "").slice(0, 40);
+    if (path.endsWith("decline")) { await db(env).declineFriend(me.id, id); return reply({ ok: true }); }
+    const r = await db(env).acceptFriend(me.id, id);
     return r.error ? reply({ error: r.error }, 400) : reply(r);
   }
   if (path === "/api/friends/remove") {
