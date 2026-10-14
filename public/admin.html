@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Lobby moderation</title>
+<style>:root{color-scheme:dark light}body{font:15px/1.5 system-ui,sans-serif;max-width:980px;margin:0 auto;padding:1.5rem 1rem 4rem;background:#14102a;color:#ebe7f7}input,button{font:inherit;padding:.45rem .8rem;border-radius:10px;border:1.5px solid #6d6785;background:transparent;color:inherit}button{cursor:pointer}.r{border:1.5px solid #3a3358;border-radius:14px;padding:.8rem 1rem;margin:.7rem 0}.r small{color:#9a93b5}.t{white-space:pre-wrap;overflow-wrap:anywhere;background:rgba(127,127,127,.15);padding:.5rem .7rem;border-radius:10px;margin:.4rem 0}.bad{color:#ff7a6b;border-color:#ff7a6b}@media(prefers-color-scheme:light){body{background:#ebe9f2;color:#2b2540}}</style></head><body>
+<h1>Reports</h1><p><input id="k" type="password" placeholder="Admin key" autocomplete="off"> <button id="go">Load</button> <span id="m"></span></p><div id="out"></div>
+<script>
+var k=document.getElementById("k"),out=document.getElementById("out"),m=document.getElementById("m");
+k.value=sessionStorage.getItem("ak")||"";
+function load(){
+  sessionStorage.setItem("ak",k.value);m.textContent="Loading...";out.textContent="";
+  fetch("/api/admin/reports",{headers:{"X-Admin-Key":k.value}}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
+    m.textContent=j.reports.length+" reports";
+    j.reports.forEach(function(r){
+      var d=document.createElement("div");d.className="r";
+      var h=document.createElement("div");h.innerHTML="<b></b> <small></small>";h.firstChild.textContent=r.reason+": "+r.whoName;h.lastChild.textContent=" reported by "+r.byName+", "+r.at+", chat "+r.conv;
+      var t=document.createElement("div");t.className="t";t.textContent=r.text||"(no message text)";
+      var id=document.createElement("small");id.textContent="user id: "+r.who;
+      var b=document.createElement("button");b.className="bad";b.textContent="Ban user";b.onclick=function(){ban(r.who,true,b)};
+      var u=document.createElement("button");u.textContent="Unban";u.onclick=function(){ban(r.who,false,u)};
+      d.appendChild(h);d.appendChild(t);d.appendChild(id);d.appendChild(document.createElement("br"));d.appendChild(b);d.appendChild(document.createTextNode(" "));d.appendChild(u);out.appendChild(d);
+    });
+  }).catch(function(){m.textContent="Wrong key, or ADMIN_KEY is not set."});
+}
+function ban(id,flag,btn){
+  if(flag&&!confirm("Ban this user? They will be logged out and unable to log in."))return;
+  fetch("/api/admin/ban",{method:"POST",headers:{"X-Admin-Key":k.value,"Content-Type":"application/json"},body:JSON.stringify({id:id,ban:flag})}).then(function(r){return r.json()}).then(function(j){btn.textContent=j.ok?(flag?"Banned":"Unbanned"):"Failed"});
+}
+document.getElementById("go").onclick=load;
+</script></body></html>
