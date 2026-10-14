@@ -3,7 +3,7 @@
 // Wire it into worker.js with two lines (see SETUP.md).
 
 import { DurableObject } from "cloudflare:workers";
-import { moderateImage } from "./moderation.js";
+import { moderate, moderateImage } from "./moderation.js";
 import { ChatRoom, GroupRoom, DmRoom, IMG_RE, MAX_AVATAR, imgResponse } from "./rooms.js";
 export { ChatRoom, GroupRoom, DmRoom };
 
@@ -118,7 +118,7 @@ async function exchange(p, env, code, redirectUri, verifier) {
 
 /* ---------- accounts (one Durable Object, SQLite-backed storage) ---------- */
 export class LobbyDB extends DurableObject {
-  #pub(u) { return { id: u.id, email: u.email || "", name: u.name, pic: u.av ? `/api/avatar/${u.id}?v=${u.av}` : u.pic || "" }; }
+  #pub(u) { return { id: u.id, email: u.email || "", name: u.name, pic: u.av ? `/api/avatar/${u.id}?v=${u.av}` : u.pic || "", bio: u.bio || "" }; }
 
   async #newSession(uid) {
     const tok = rand();
@@ -263,6 +263,7 @@ export class LobbyDB extends DurableObject {
     const other = await st.get("fcode:" + code);
     if (!other) return { error: "nocode" };
     if (other === uid) return { error: "self" };
+    if (await this.blockedBetween(uid, other)) return { error: "nocode" };
     const mine = await this.friends(uid);
     if (mine.includes(other)) return { error: "already" };
     if (mine.length >= 100 || (await this.friends(other)).length >= 100) return { error: "limit" };
@@ -299,6 +300,52 @@ export class LobbyDB extends DurableObject {
     return ids.filter((i) => m[i]).map((i) => ({ id: i, ...m[i] }));
   }
 
+  /* ----- blocking, reports, public profiles ----- */
+  async blocks(uid) { return (await this.ctx.storage.get("b:" + uid)) || []; }
+  async blockedBetween(a, b) { return (await this.blocks(a)).includes(b) || (await this.blocks(b)).includes(a); }
+  async block(uid, other) {
+    const st = this.ctx.storage;
+    if (uid === other) return;
+    const b = await this.blocks(uid);
+    if (!b.includes(other) && b.length < 200) await st.put("b:" + uid, [...b, other]);
+    await this.removeFriend(uid, other);
+    for (const [x, y] of [[uid, other], [other, uid]]) {
+      const r = (await st.get("r:" + x)) || [];
+      if (r.includes(y)) await st.put("r:" + x, r.filter((z) => z !== y));
+    }
+  }
+  async unblock(uid, other) { await this.ctx.storage.put("b:" + uid, (await this.blocks(uid)).filter((x) => x !== other)); }
+  async blockList(uid) {
+    const ids = await this.blocks(uid), m = await this.profiles(ids);
+    return ids.map((i) => ({ id: i, name: (m[i] && m[i].name) || "?", pic: (m[i] && m[i].pic) || "" }));
+  }
+  async report(rec) {
+    await this.ctx.storage.put("rp:" + String(Date.now()).padStart(15, "0") + ":" + crypto.randomUUID().slice(0, 6), rec);
+  }
+  async reports() { return [...(await this.ctx.storage.list({ prefix: "rp:", reverse: true, limit: 200 })).values()]; }
+  async reportAllowed(uid) {
+    const k = "rl:" + uid, now = Date.now();
+    let j = (await this.ctx.storage.get(k)) || { n: 0, t: now };
+    if (now - j.t > 86400000) j = { n: 0, t: now };
+    if (j.n >= 20) return false;
+    j.n++;
+    await this.ctx.storage.put(k, j);
+    return true;
+  }
+  async setBio(uid, bio) {
+    const u = await this.ctx.storage.get("u:" + uid);
+    if (!u) return null;
+    u.bio = String(bio || "").replace(/[\u0000-\u001f<>]/g, " ").trim().slice(0, 160);
+    await this.ctx.storage.put("u:" + uid, u);
+    return { bio: u.bio };
+  }
+  async profile(uid) {
+    const u = await this.ctx.storage.get("u:" + uid);
+    if (!u) return null;
+    const p = this.#pub(u);
+    return { id: u.id, name: p.name, pic: p.pic, bio: u.bio || "", since: u.created || 0 };
+  }
+
   // 10 code guesses per 10 minutes per person
   async joinAllowed(uid) {
     const k = "j:" + uid, now = Date.now();
@@ -321,7 +368,7 @@ const sameOrigin = (req, url) => { const o = req.headers.get("Origin"); return !
 export async function handleLobby(request, env) {
   const url = new URL(request.url);
   const path = url.pathname;
-  const ours = path.startsWith("/api/auth/") || path.startsWith("/api/avatar/") || path.startsWith("/api/group/") || path.startsWith("/api/groups") || path.startsWith("/api/friends") || path.startsWith("/api/dm/") || path === "/api/room/ws" || path === "/api/ice";
+  const ours = path.startsWith("/api/auth/") || path.startsWith("/api/avatar/") || path.startsWith("/api/group/") || path.startsWith("/api/groups") || path.startsWith("/api/friends") || path.startsWith("/api/blocks") || path.startsWith("/api/report") || path.startsWith("/api/profile/") || path.startsWith("/api/img/") || path.startsWith("/api/admin/") || path.startsWith("/api/dm/") || path === "/api/room/ws" || path === "/api/ice";
   if (!ours) return null;
   if (!env.LOBBY_DB || !env.CHAT_ROOM || !env.GROUP_ROOM || !env.DM_ROOM) return reply({ error: "Durable Objects not configured" }, 500);
 
@@ -363,6 +410,45 @@ export async function handleLobby(request, env) {
     if (!sameOrigin(request, url)) return new Response("Bad origin", { status: 403 });
     const h = new Headers({ Upgrade: "websocket", "X-Lobby-User": encodeURIComponent(JSON.stringify({ id: me.id, name: me.name, pic: me.pic })) });
     return stub.fetch(new Request("https://room/ws", { headers: h }));
+  }
+
+  /* reports, for you (the owner) to read: set ADMIN_KEY in Cloudflare, then open /api/admin/reports?key=YOURKEY */
+  if (path === "/api/admin/reports") {
+    if (!env.ADMIN_KEY || url.searchParams.get("key") !== env.ADMIN_KEY) return new Response("Not found", { status: 404 });
+    return reply({ reports: await db(env).reports() });
+  }
+
+  /* public profile + block list */
+  g = path.match(/^\/api\/profile\/([0-9a-f-]{36})$/);
+  if (g) {
+    if (!me) return reply({ error: "auth" }, 401);
+    const p = await db(env).profile(g[1]);
+    if (!p) return reply({ error: "nocode" }, 404);
+    p.blocked = (await db(env).blocks(me.id)).includes(g[1]);
+    return reply(p);
+  }
+  if (path === "/api/blocks" && request.method === "GET") {
+    if (!me) return reply({ error: "auth" }, 401);
+    return reply({ blocks: await db(env).blockList(me.id) });
+  }
+
+  /* pictures sent in chats (only people who are in that chat can see them) */
+  g = path.match(/^\/api\/img\/(global|g\/[0-9a-f]{64}|dm\/[0-9a-f-]{36})\/([0-9a-f-]{36})$/);
+  if (g) {
+    if (!me) return new Response("Log in first", { status: 401 });
+    let stub;
+    if (g[1] === "global") stub = env.CHAT_ROOM.get(env.CHAT_ROOM.idFromName("main"));
+    else if (g[1].startsWith("g/")) {
+      stub = groupStub(env, g[1].slice(2));
+      if (!(await stub.isMember(me.id))) return new Response("Not found", { status: 404 });
+    } else {
+      const other = g[1].slice(3);
+      if (!(await db(env).areFriends(me.id, other))) return new Response("Not found", { status: 404 });
+      stub = env.DM_ROOM.get(env.DM_ROOM.idFromName("dm:" + [me.id, other].sort().join(":")));
+    }
+    const data = await stub.getImg(g[2]);
+    if (!data) return new Response("Not found", { status: 404 });
+    return imgResponse(data, "private, max-age=31536000, immutable");
   }
 
   /* private chat with a friend */
@@ -490,6 +576,32 @@ export async function handleLobby(request, env) {
     if (!me) return reply({ error: "auth" }, 401);
     const u = await db(env).setName(me.id, body.name);
     return u ? reply({ user: u }) : reply({ error: "name" }, 400);
+  }
+  if (path === "/api/auth/bio") {
+    if (!me) return reply({ error: "auth" }, 401);
+    const bio = String(body.bio || "").slice(0, 160);
+    if (!(await moderate(env, bio)).ok) return reply({ error: "blocked" }, 400);
+    const r = await db(env).setBio(me.id, bio);
+    return r ? reply(r) : reply({ error: "auth" }, 401);
+  }
+  if (path === "/api/blocks/add" || path === "/api/blocks/remove") {
+    if (!me) return reply({ error: "auth" }, 401);
+    const id = String(body.id || "");
+    if (!/^[0-9a-f-]{36}$/.test(id) || id === me.id) return reply({ error: "perm" }, 400);
+    if (path.endsWith("remove")) { await db(env).unblock(me.id, id); return reply({ ok: true }); }
+    await db(env).block(me.id, id);
+    try { await env.DM_ROOM.get(env.DM_ROOM.idFromName("dm:" + [me.id, id].sort().join(":"))).shutdown(); } catch {}
+    return reply({ ok: true });
+  }
+  if (path === "/api/report") {
+    if (!me) return reply({ error: "auth" }, 401);
+    const id = String(body.uid || "");
+    const reasons = ["spam", "harassment", "illegal", "sexual", "other"];
+    if (!/^[0-9a-f-]{36}$/.test(id) || !reasons.includes(body.reason)) return reply({ error: "perm" }, 400);
+    if (!(await db(env).reportAllowed(me.id))) return reply({ error: "rate" }, 429);
+    const who = await db(env).profile(id);
+    await db(env).report({ at: new Date().toISOString(), by: me.id, byName: me.name, who: id, whoName: who ? who.name : "?", reason: body.reason, conv: String(body.conv || "").slice(0, 80), msgId: String(body.msgId || "").slice(0, 40), text: String(body.text || "").slice(0, 500) });
+    return reply({ ok: true });
   }
   if (path === "/api/auth/avatar") {
     if (!me) return reply({ error: "auth" }, 401);

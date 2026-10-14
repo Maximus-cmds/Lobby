@@ -12,7 +12,15 @@ const cleanText = (s, n) => String(s || "").replace(/[\u0000-\u0008\u000b\u000c\
 const cleanName = (s) => String(s || "").replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 30);
 const pad = (n) => String(n).padStart(9, "0");
 
+const REACTIONS = ["\u{1F44D}", "\u2764\uFE0F", "\u{1F602}", "\u{1F62E}", "\u{1F622}", "\u{1F525}"];
+function cleanReply(x) {
+  if (!x || typeof x !== "object") return null;
+  const id = String(x.id || "").replace(/[^0-9a-f-]/gi, "").slice(0, 40);
+  if (!id) return null;
+  return { id, name: cleanText(x.name, 30).replace(/[<>\n]/g, ""), text: cleanText(x.text, 80).replace(/\n/g, " ") };
+}
 function cleanAtt(a) {
+  if (a && typeof a === "object" && a.kind === "image") return { kind: "image", title: cleanText(a.title, 80).replace(/[<>\n]/g, "").trim(), sub: "", text: "" };
   if (!a || typeof a !== "object" || !["note", "lore", "video"].includes(a.kind)) return null;
   const out = { kind: a.kind, title: cleanText(a.title, 80).replace(/[<>\n]/g, "").trim(), sub: cleanText(a.sub, 80).replace(/[<>\n]/g, ""), text: cleanText(a.text, 4000) };
   if (a.kind === "video" && typeof a.thumb === "string" && a.thumb.length <= 30000 && IMG_RE.test(a.thumb)) out.thumb = a.thumb;
@@ -31,6 +39,8 @@ class RoomBase extends DurableObject {
   calls = false; // voice calls allowed in this room?
 
   async allow() { return true; }
+  async getImg(id) { return typeof id === "string" ? (await this.ctx.storage.get("i:" + id)) || null : null; }
+  async shutdown() { for (const w of this.ctx.getWebSockets()) { try { w.close(1000, "gone"); } catch {} } }
   async lastOf() { return (await this.ctx.storage.get("last")) || null; }
   async initMsg() { return { type: "init", history: await this._hist() }; }
 
@@ -41,10 +51,15 @@ class RoomBase extends DurableObject {
   async _push(msg) {
     const st = this.ctx.storage;
     const seq = ((await st.get("seq")) || 0) + 1;
+    msg.seq = seq;
     const puts = { seq, ["m:" + pad(seq)]: msg };
     if (!msg.sys) puts.last = { uid: msg.uid, name: msg.name, text: String(msg.text || (msg.att ? "📎 " + msg.att.title : "")).slice(0, 60), ts: msg.ts };
     await st.put(puts);
-    if (seq > HIST) await st.delete("m:" + pad(seq - HIST));
+    if (seq > HIST) {
+      const k = "m:" + pad(seq - HIST), old = await st.get(k);
+      await st.delete(k);
+      if (old && old.att && old.att.img) await st.delete("i:" + old.id);
+    }
   }
   _all(obj, exclude) {
     const s = JSON.stringify(obj);
@@ -80,7 +95,7 @@ class RoomBase extends DurableObject {
   }
 
   async webSocketMessage(ws, raw) {
-    if (typeof raw !== "string" || raw.length > 60000) return;
+    if (typeof raw !== "string" || raw.length > 220000) return;
     let d;
     try { d = JSON.parse(raw); } catch { return; }
     if (!d || typeof d !== "object") return;
@@ -88,13 +103,47 @@ class RoomBase extends DurableObject {
     if (d.type === "call-join" && this.calls) return this.#callJoin(ws, a);
     if (d.type === "call-leave") return this.#callLeave(ws, a);
     if (d.type === "rtc") return this.#rtc(ws, a, d);
+    if (d.type === "typing") return this.#typing(ws, a);
+    if (d.type === "react") return this.#react(a, d);
     return this.#say(ws, a, d);
+  }
+
+  #typing(ws, a) {
+    const now = Date.now();
+    if (now - (a.tt || 0) < 2000) return;
+    a.tt = now;
+    ws.serializeAttachment(a);
+    this._all({ type: "typing", id: a.id, name: a.name }, ws);
+  }
+  async #react(a, d) {
+    const seq = Number(d.seq);
+    if (!Number.isInteger(seq) || seq < 1 || !REACTIONS.includes(d.e)) return;
+    const key = "m:" + pad(seq), m = await this.ctx.storage.get(key);
+    if (!m || m.sys) return;
+    m.r = m.r || {};
+    const l = m.r[d.e] || [], i = l.indexOf(a.id);
+    if (i >= 0) l.splice(i, 1);
+    else {
+      if ((!m.r[d.e] && Object.keys(m.r).length >= 8) || l.length >= 60) return;
+      l.push(a.id);
+    }
+    if (l.length) m.r[d.e] = l; else delete m.r[d.e];
+    await this.ctx.storage.put(key, m);
+    this._all({ type: "react", seq, r: m.r });
   }
 
   async #say(ws, a, d) {
     const text = cleanText(d.text, 500).trim();
     const att = cleanAtt(d.att);
     if (!text && !att) return;
+    let imgData = null;
+    if (att && att.kind === "image") {
+      const dd = d.att.data;
+      if (typeof dd !== "string" || dd.length > 150000 || !IMG_RE.test(dd)) { try { ws.send(JSON.stringify({ type: "error", code: "image", cid: typeof d.cid === "string" ? d.cid.slice(0, 24) : "" })); } catch {} return; }
+      imgData = dd;
+      att.img = true;
+    }
+    const re = cleanReply(d.reply);
     const cid = typeof d.cid === "string" ? d.cid.slice(0, 24) : "";
     const out = (o) => { try { ws.send(JSON.stringify({ ...o, cid })); } catch {} };
     const now = Date.now();
@@ -107,6 +156,7 @@ class RoomBase extends DurableObject {
 
     let v = await moderate(this.env, [text, att && att.title, att && att.text].filter(Boolean).join("\n"));
     if (v.ok && att && att.thumb) v = await moderateImage(this.env, att.thumb);
+    if (v.ok && imgData) v = await moderateImage(this.env, imgData);
     if (!v.ok) {
       let muted = false;
       if (!v.failed) {
@@ -119,6 +169,8 @@ class RoomBase extends DurableObject {
     }
     const msg = { id: crypto.randomUUID(), uid: a.id, name: a.name, pic: a.pic, text, ts: Date.now() };
     if (att) msg.att = att;
+    if (re) msg.re = re;
+    if (imgData) await this.ctx.storage.put("i:" + msg.id, imgData);
     await this._push(msg);
     this._all({ type: "msg", message: msg, cid });
   }
