@@ -31,6 +31,7 @@ class RoomBase extends DurableObject {
   calls = false; // voice calls allowed in this room?
 
   async allow() { return true; }
+  async lastOf() { return (await this.ctx.storage.get("last")) || null; }
   async initMsg() { return { type: "init", history: await this._hist() }; }
 
   async _hist() {
@@ -41,7 +42,7 @@ class RoomBase extends DurableObject {
     const st = this.ctx.storage;
     const seq = ((await st.get("seq")) || 0) + 1;
     const puts = { seq, ["m:" + pad(seq)]: msg };
-    if (!msg.sys) puts.last = { name: msg.name, text: String(msg.text || (msg.att ? "📎 " + msg.att.title : "")).slice(0, 60), ts: msg.ts };
+    if (!msg.sys) puts.last = { uid: msg.uid, name: msg.name, text: String(msg.text || (msg.att ? "📎 " + msg.att.title : "")).slice(0, 60), ts: msg.ts };
     await st.put(puts);
     if (seq > HIST) await st.delete("m:" + pad(seq - HIST));
   }

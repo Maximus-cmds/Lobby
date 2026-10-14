@@ -379,7 +379,11 @@ export async function handleLobby(request, env) {
   /* friends */
   if (path === "/api/friends" && request.method === "GET") {
     if (!me) return reply({ error: "auth" }, 401);
-    return reply({ friends: await db(env).friendList(me.id), requests: await db(env).requests(me.id) });
+    const friends = await db(env).friendList(me.id);
+    await Promise.all(friends.map(async (f) => {
+      try { f.last = await env.DM_ROOM.get(env.DM_ROOM.idFromName("dm:" + [me.id, f.id].sort().join(":"))).lastOf(); } catch {}
+    }));
+    return reply({ friends, requests: await db(env).requests(me.id) });
   }
   if (path === "/api/friends/code" && request.method === "GET") {
     if (!me) return reply({ error: "auth" }, 401);
@@ -393,7 +397,9 @@ export async function handleLobby(request, env) {
     const views = await Promise.all(ids.map(async (gid) => { try { return await groupStub(env, gid).view(me.id, false); } catch { return undefined; } }));
     const groups = [];
     views.forEach((v, i) => { if (v) groups.push(v); else if (v === null) db(env).removeGroup(me.id, ids[i]); });
-    return reply({ groups });
+    let global = null;
+    try { global = await env.CHAT_ROOM.get(env.CHAT_ROOM.idFromName("main")).lastOf(); } catch {}
+    return reply({ groups, global });
   }
 
   /* voice call servers (STUN always; TURN too if Cloudflare TURN keys are set) */
