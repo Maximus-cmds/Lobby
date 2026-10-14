@@ -500,6 +500,29 @@ div.chatt{cursor:default}
 .gview:empty{display:none}
 .gvimg{width:100%;border-radius:12px;display:block}
 #cr{z-index:40}
+.gav.big{width:96px;height:96px;font-size:2.4rem}
+.chq{border-left:3px solid var(--accent);padding:.15rem .6rem;margin:0 0 .25rem;font-size:.8rem;color:var(--muted);cursor:pointer;max-width:100%;overflow:hidden}
+.chq b{display:block;font-weight:600}
+.chq span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chm.me .chq{border-left:0;border-right:3px solid var(--accent);text-align:right}
+.chr{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.2rem}
+.chr:empty{display:none}
+.chm.me .chr{justify-content:flex-end}
+.chreact{font:inherit;font-size:.78rem;padding:.05rem .5rem;border-radius:999px;border:1.5px solid rgba(127,127,127,.4);background:transparent;color:inherit;cursor:pointer}
+.chreact.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 25%,transparent)}
+.chmore{flex:none;align-self:center;opacity:.35;border:0;background:transparent;color:inherit;font-size:1.3rem;line-height:1;cursor:pointer;border-radius:8px;padding:.1rem .3rem}
+.chm:hover .chmore,.chmore:focus-visible{opacity:1}
+.chm.flash .chb,.chm.flash .chatt{outline:2px solid var(--accent)}
+.chn,.chm .gav{transition:none}
+.cmm{position:fixed;z-index:35;background:var(--panel);color:var(--panel-ink);border:1.5px solid rgba(127,127,127,.35);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.45);padding:.4rem;min-width:190px;display:flex;flex-direction:column}
+.cmm .emo{display:flex;gap:.1rem;padding:.2rem .2rem .4rem;border-bottom:1px solid rgba(127,127,127,.3);margin-bottom:.2rem}
+.cmm button{font:inherit;color:inherit;background:transparent;border:0;border-radius:10px;padding:.5rem .7rem;cursor:pointer;text-align:left}
+.cmm .emo button{font-size:1.3rem;padding:.2rem .35rem}
+.cmm button:hover,.cmm button:focus-visible{background:rgba(127,127,127,.18);outline:none}
+.chtyp{min-height:1.2em;font-size:.8rem;color:var(--muted);text-align:center;margin:0 0 .2rem}
+.chatt.img{padding:.3rem;min-width:0}
+.chatt.img img{max-width:min(320px,100%);max-height:320px;border-radius:10px;display:block}
+@media(hover:none){.chmore{opacity:.55}}
 .actx{width:min(760px,100%);margin:0 auto .5rem;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
 .cv.unread .cvt b{font-weight:800}
 .cv.unread .cvt span{color:inherit}
@@ -542,8 +565,9 @@ div.chatt{cursor:default}
     <button class="btn dark full" id="ppick" type="button">Change picture</button>
     <label class="field">Name<input id="pname" maxlength="30" autocomplete="nickname" placeholder="Your name"></label>
     <button class="btn dark full" id="psave" type="button">Save profile</button>
-    <div id="bkbox" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="bkh">Backup</b><p class="gnote" id="bkn"></p><button class="btn dark full" id="bkex" type="button">Export backup</button><button class="btn dark full" id="bkim" type="button">Import backup</button><input type="file" id="bkfile" accept="application/json,.json" hidden><p class="msg" id="bkm" role="status"></p></div>
-  <div id="fbox" class="hidden" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="fh">Friend code</b><div class="gcode"><code id="fcv"></code></div><div class="gcode"><button class="gmb" id="fctg" type="button">Uncover</button><button class="gmb hidden" id="fccopy" type="button">Copy</button></div><div id="frl"></div><label class="field"><span id="fal">Add a friend</span><input id="fci" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false"></label><button class="btn dark full" id="fcadd" type="button">Add friend</button><p class="msg" id="fcm" role="status"></p></div>
+    <div id="biobox" class="hidden" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="bioh">About you</b><textarea id="biot" rows="3" maxlength="160" style="font:inherit;padding:.5rem .7rem;border-radius:12px;border:1.5px solid rgba(127,127,127,.4);background:transparent;color:inherit;resize:vertical"></textarea><button class="btn dark full" id="biosave" type="button">Save bio</button><p class="msg" id="biom" role="status"></p></div>
+  <div id="bkbox" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="bkh">Backup</b><p class="gnote" id="bkn"></p><button class="btn dark full" id="bkex" type="button">Export backup</button><button class="btn dark full" id="bkim" type="button">Import backup</button><input type="file" id="bkfile" accept="application/json,.json" hidden><p class="msg" id="bkm" role="status"></p></div>
+  <div id="fbox" class="hidden" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="fh">Friend code</b><div class="gcode"><code id="fcv"></code></div><div class="gcode"><button class="gmb" id="fctg" type="button">Uncover</button><button class="gmb hidden" id="fccopy" type="button">Copy</button></div><div id="frl"></div><div id="blkl"></div><label class="field"><span id="fal">Add a friend</span><input id="fci" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false"></label><button class="btn dark full" id="fcadd" type="button">Add friend</button><p class="msg" id="fcm" role="status"></p></div>
     <p class="msg ok" id="pmsg" role="status"></p>
     <button class="link" id="plogout" type="button">Log out</button>
   </div>
@@ -675,7 +699,9 @@ div.chatt{cursor:default}
       <div class="chcall hidden" id="chcall"><span class="lbl" id="cclabel"></span><span class="who" id="chcpl"></span><button class="chcb go" id="ccjoin" type="button">Join call</button><button class="chcb" id="ccmute" type="button">Mute</button><button class="chcb end" id="ccleave" type="button">Leave</button><div id="chaud" hidden></div></div>
       <div class="chlist" id="chlist" aria-live="polite"></div>
       <footer class="chfoot" id="chfoot">
-        <div class="chmenu hidden" id="cmenu" role="menu"><button type="button" id="cmnote" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/></svg><span id="cmnotet">Note</span></button><button type="button" id="cmlore" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 8h6"/></svg><span id="cmloret">Lorebook</span></button><button type="button" id="cmvid" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10.5 9.5v5l4-2.5z"/></svg><span id="cmvidt">Video</span></button></div>
+        <div class="chmenu hidden" id="cmenu" role="menu"><button type="button" id="cmnote" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/></svg><span id="cmnotet">Note</span></button><button type="button" id="cmlore" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 8h6"/></svg><span id="cmloret">Lorebook</span></button><button type="button" id="cmvid" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10.5 9.5v5l4-2.5z"/></svg><span id="cmvidt">Video</span></button><button type="button" id="cmimg" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4 18l5-5 4 4 3-3 4 4"/></svg><span id="cmimgt">Picture</span></button></div><input type="file" id="cimgf" accept="image/*" hidden><div class="cmm hidden" id="cmm" role="menu"></div>
+        <p class="chtyp" id="chtyp" aria-live="polite"></p>
+        <div class="chstage hidden" id="chrep"></div>
         <div class="chstage hidden" id="chstage"></div>
         <div class="aicomp"><button class="chplus" id="cplus" type="button" aria-label="Attach" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><textarea id="cinput" rows="1" maxlength="500" aria-label="Message" placeholder="Message..."></textarea><button class="aisend" id="csend" type="button" aria-label="Send" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
         <p class="msg" id="cmsg" role="status"></p>
@@ -721,6 +747,22 @@ div.chatt{cursor:default}
   <p class="gnote hidden" id="gvn"></p>
   <button class="gmb" id="gvsave" type="button">Save to my notes</button>
   <button class="link" id="gvclose" type="button">Close</button>
+</div></div>
+<div class="overlay" id="gprof"><div class="modal-card" role="dialog" aria-labelledby="gpn" style="text-align:center;align-items:center">
+  <div class="gav big" id="gpav"></div>
+  <h2 id="gpn"></h2>
+  <p class="gnote" id="gps"></p>
+  <p id="gpb" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
+  <div id="gpact" style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center"><button class="gmb danger" id="gpblock" type="button">Block</button><button class="gmb danger" id="gprep" type="button">Report</button></div>
+  <button class="link" id="gpclose" type="button">Close</button>
+</div></div>
+<div class="overlay" id="grep"><div class="modal-card" role="dialog" aria-labelledby="grt">
+  <h2 id="grt">Report</h2>
+  <p class="gnote" id="grwho"></p>
+  <label class="field"><span id="grl">Why are you reporting this?</span><select id="grr"><option value="spam"></option><option value="harassment"></option><option value="illegal"></option><option value="sexual"></option><option value="other"></option></select></label>
+  <p class="msg" id="grm" role="alert"></p>
+  <button class="btn dark full" id="grsend" type="button">Send report</button>
+  <button class="link" id="grcancel" type="button">Cancel</button>
 </div></div>
 <div class="overlay" id="vup"><div class="modal-card" role="dialog" aria-labelledby="vupt">
   <h2 id="vupt">Add a video</h2>
@@ -1977,16 +2019,16 @@ $("psave").onclick=function(){_ps.call(this);var n=$("pname").value.trim();if(me
 Object.assign(T.en,{"g_global": "Global chat", "g_new": "New group", "g_join": "Join with code", "g_chats": "Chats", "g_nogr": "No groups yet. Make one, or join with a code.", "g_members": "{m} members", "g_newt": "New group", "g_gname": "Group name", "g_gphname": "Weekend crew", "g_gpic": "Group picture", "g_gpicadd": "Add picture", "g_create": "Create group", "g_joint": "Join a group", "g_code": "Group code", "g_codeph": "Paste the code", "g_joinb": "Join", "g_settings": "Group settings", "g_save": "Save name", "g_ownername": "Only the owner can change the name or picture.", "g_code2": "Invite code", "g_uncover": "Uncover", "g_hide": "Hide", "g_copy": "Copy", "g_copied": "Code copied.", "g_regen": "New code", "g_newcode": "New code made. The old one no longer works.", "g_mem": "Members", "g_r_owner": "Owner", "g_r_admin": "Admin", "g_r_member": "Member", "g_mkadmin": "Make admin", "g_rmadmin": "Remove admin", "g_kick": "Kick", "g_sure": "Sure?", "g_leave": "Leave group", "g_del": "Delete group", "g_close": "Close", "g_remove": "Remove", "g_incall": "in the call", "g_call": "Voice call", "g_joincall": "Join call", "g_leavecall": "Leave", "g_mute": "Mute", "g_unmute": "Unmute", "g_calling": "Voice call ({n})", "g_nomic": "Couldn't use the microphone. Allow it in your browser and try again.", "g_callfull": "The call is full (6 people).", "g_attach": "Attach", "g_anote": "Note", "g_alore": "Lorebook", "g_avid": "Video", "g_pnote": "Attach a note", "g_plore": "Attach a lorebook", "g_pvid": "Attach a video", "g_pnone": "Nothing here yet.", "g_vidnote": "Only a preview of the video is shared. The video file stays on the sender's device.", "g_sjoin": "{a} joined", "g_sleave": "{a} left", "g_skick": "{a} was removed", "g_srename": "Group renamed to {a}", "g_srole": "{a} is now {b}", "g_blocked": "Message blocked: {r}.", "g_muted": "You're muted for a few minutes after repeated blocked messages.", "g_modfail": "The message couldn't be checked, so it wasn't sent.", "g_sendfail": "The message didn't send.", "g_gone_kicked": "You were removed from that group.", "g_gone_left": "You left the group.", "g_gone_deleted": "That group was deleted.", "g_created": "Group created. Open the code below to invite people.", "g_e_name": "Enter a name.", "g_e_blocked": "That isn't allowed.", "g_e_perm": "You can't do that.", "g_e_nocode": "That code doesn't match a group.", "g_e_kicked": "You were removed from this group. Ask for a new code.", "g_e_full": "That group is full.", "g_e_rate": "Too many tries. Wait a few minutes.", "g_e_limit": "You're in too many groups.", "g_e_image": "That picture can't be used.", "g_efail": "Something went wrong. Try again."});
 Object.assign(T.hu,{"g_global": "Globális chat", "g_new": "Új csoport", "g_join": "Csatlakozás kóddal", "g_chats": "Csevegések", "g_nogr": "Még nincs csoportod. Hozz létre egyet, vagy csatlakozz kóddal.", "g_members": "{m} tag", "g_newt": "Új csoport", "g_gname": "Csoport neve", "g_gphname": "Hétvégi banda", "g_gpic": "Csoport képe", "g_gpicadd": "Kép hozzáadása", "g_create": "Csoport létrehozása", "g_joint": "Csatlakozás csoporthoz", "g_code": "Csoportkód", "g_codeph": "Illeszd be a kódot", "g_joinb": "Csatlakozás", "g_settings": "Csoport beállításai", "g_save": "Név mentése", "g_ownername": "Csak a tulajdonos változtathatja meg a nevet és a képet.", "g_code2": "Meghívókód", "g_uncover": "Felfedés", "g_hide": "Elrejtés", "g_copy": "Másolás", "g_copied": "Kód másolva.", "g_regen": "Új kód", "g_newcode": "Új kód kész. A régi már nem működik.", "g_mem": "Tagok", "g_r_owner": "Tulajdonos", "g_r_admin": "Admin", "g_r_member": "Tag", "g_mkadmin": "Legyen admin", "g_rmadmin": "Admin elvétele", "g_kick": "Kirúgás", "g_sure": "Biztos?", "g_leave": "Kilépés", "g_del": "Csoport törlése", "g_close": "Bezárás", "g_remove": "Eltávolítás", "g_incall": "hívásban", "g_call": "Hanghívás", "g_joincall": "Belépés a hívásba", "g_leavecall": "Kilépés", "g_mute": "Némítás", "g_unmute": "Némítás vége", "g_calling": "Hanghívás ({n})", "g_nomic": "Nem sikerült használni a mikrofont. Engedélyezd a böngészőben, és próbáld újra.", "g_callfull": "A hívás megtelt (6 fő).", "g_attach": "Csatolás", "g_anote": "Jegyzet", "g_alore": "Lorebook", "g_avid": "Videó", "g_pnote": "Jegyzet csatolása", "g_plore": "Lorebook csatolása", "g_pvid": "Videó csatolása", "g_pnone": "Itt még nincs semmi.", "g_vidnote": "Csak a videó előnézete kerül megosztásra. A fájl a küldő eszközén marad.", "g_sjoin": "{a} csatlakozott", "g_sleave": "{a} kilépett", "g_skick": "{a} el lett távolítva", "g_srename": "A csoport új neve: {a}", "g_srole": "{a} mostantól {b}", "g_blocked": "Az üzenet blokkolva: {r}.", "g_muted": "Ismételt blokkolt üzenetek miatt néhány percre némítva vagy.", "g_modfail": "Az üzenetet nem sikerült ellenőrizni, ezért nem ment el.", "g_sendfail": "Az üzenet nem ment el.", "g_gone_kicked": "Eltávolítottak a csoportból.", "g_gone_left": "Kiléptél a csoportból.", "g_gone_deleted": "A csoportot törölték.", "g_created": "Csoport létrehozva. A beállításokban találod a meghívókódot.", "g_e_name": "Adj meg egy nevet.", "g_e_blocked": "Ez nem megengedett.", "g_e_perm": "Ezt nem teheted meg.", "g_e_nocode": "Ez a kód nem tartozik csoporthoz.", "g_e_kicked": "Eltávolítottak ebből a csoportból. Kérj új kódot.", "g_e_full": "A csoport megtelt.", "g_e_rate": "Túl sok próbálkozás. Várj pár percet.", "g_e_limit": "Túl sok csoportban vagy.", "g_e_image": "Ez a kép nem használható.", "g_efail": "Hiba történt. Próbáld újra."});
 function cStatic(){
-  var M={cpt:"chat",cpback:"back2",cobk:"back2",chlogin:"loginsignup",cnewt:"g_new",cjoint:"g_join",cmnotet:"g_anote",cmloret:"g_alore",cmvidt:"g_avid",ccjoin:"g_joincall",ccleave:"g_leavecall",gnewt:"g_newt",gnnl:"g_gname",gnmake:"g_create",gncancel:"cancel",gjt:"g_joint",gjcl:"g_code",gjmake:"g_joinb",gjcancel:"cancel",gst:"g_settings",gnal:"g_gname",gnsave:"g_save",gcodeh:"g_code2",gcopy:"g_copy",gregen:"g_regen",gmemh:"g_mem",gleave:"g_leave",gdel:"g_del",gsclose:"g_close",gpcancel:"cancel",gvclose:"g_close",fh:"g_fh",bkh:"g_bkh",bkn:"g_bkn",bkex:"g_bkex",bkim:"g_bkim",gvsave:"g_gsave",fal:"g_fal",fcadd:"g_fadd"};
+  var M={cpt:"chat",cpback:"back2",cobk:"back2",chlogin:"loginsignup",cnewt:"g_new",cjoint:"g_join",cmnotet:"g_anote",cmloret:"g_alore",cmvidt:"g_avid",ccjoin:"g_joincall",ccleave:"g_leavecall",gnewt:"g_newt",gnnl:"g_gname",gnmake:"g_create",gncancel:"cancel",gjt:"g_joint",gjcl:"g_code",gjmake:"g_joinb",gjcancel:"cancel",gst:"g_settings",gnal:"g_gname",gnsave:"g_save",gcodeh:"g_code2",gcopy:"g_copy",gregen:"g_regen",gmemh:"g_mem",gleave:"g_leave",gdel:"g_del",gsclose:"g_close",gpcancel:"cancel",gvclose:"g_close",fh:"g_fh",bioh:"g_biohdr",biosave:"g_biosave",cmimgt:"g_pic",gprep:"g_report",grt:"g_report",grl:"g_rl",grsend:"g_repsend",grcancel:"cancel",gpclose:"g_close",bkh:"g_bkh",bkn:"g_bkn",bkex:"g_bkex",bkim:"g_bkim",gvsave:"g_gsave",fal:"g_fal",fcadd:"g_fadd"};
   Object.keys(M).forEach(function(i){var e=$(i);if(e)e.textContent=t(M[i])});
   sx("#chatbtn h3","chat");sx("#chatbtn .go","open");sx("#ort","orem");
-  $("cinput").placeholder=t("chph");$("cbell").setAttribute("aria-label",t("g_notif"));bellDraw();$("cplus").setAttribute("aria-label",t("g_attach"));$("ccallbtn").setAttribute("aria-label",t("g_call"));$("ccog").setAttribute("aria-label",t("g_settings"));$("chmb").setAttribute("aria-label",t("g_chats"));$("csend").setAttribute("aria-label",t("aisend"));
+  $("cinput").placeholder=t("chph");$("biot").placeholder=t("g_bioph");$("cbell").setAttribute("aria-label",t("g_notif"));bellDraw();$("cplus").setAttribute("aria-label",t("g_attach"));$("ccallbtn").setAttribute("aria-label",t("g_call"));$("ccog").setAttribute("aria-label",t("g_settings"));$("chmb").setAttribute("aria-label",t("g_chats"));$("csend").setAttribute("aria-label",t("aisend"));
   $("gnn").placeholder=t("g_gphname");$("gjc").placeholder=t("g_codeph");
   chatUI();
 }
 var _rc=render;render=function(){_rc();cStatic()};
 
-var CH={globalLast:null,requests:[],friends:[],convs:[],cur:"global",meta:null,calls:[],att:null,pend:{},code:false,online:0,loaded:false,newPic:"",arm:null};
+var CH={blk:{},blocks:[],reply:null,globalLast:null,requests:[],friends:[],convs:[],cur:"global",meta:null,calls:[],att:null,pend:{},code:false,online:0,loaded:false,newPic:"",arm:null};
 var inCall=false,cstream=null,pcs={},ice=null,muted=false,cropCb=null,escTop=null;
 var IC={
   note:'<path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/>',
@@ -2075,9 +2117,9 @@ function chHead(){
 function openConv(id,user){
   if(ws){var w=ws;ws=null;try{w.close()}catch(e){}}
   stopCall();failPend();
-  markRead(id);CH.cur=id;CH.meta=null;CH.calls=[];CH.att=null;CH.online=0;CH.pend={};
+  markRead(id);CH.cur=id;CH.meta=null;CH.reply=null;TY={};CH.calls=[];CH.att=null;CH.online=0;CH.pend={};
   $("chlist").textContent="";$("cinput").value="";$("csend").disabled=true;$("cmsg").textContent="";
-  $("cmenu").classList.add("hidden");stageDraw();drawCall();chHead();drawConvs();
+  $("cmenu").classList.add("hidden");closeMm();stageDraw();replyDraw();typDraw();drawCall();chHead();drawConvs();
   if(user||id!=="global")$("chapp").classList.add("inroom");
   wsFails=0;chatConnect();
 }
@@ -2087,9 +2129,21 @@ function sysText(m){
   var k={join:"g_sjoin",leave:"g_sleave",kick:"g_skick",rename:"g_srename",role:"g_srole"}[m.sys];
   return k?t(k).replace("{a}",m.a||"").replace("{b}",m.b?t("g_r_"+m.b).toLowerCase():""):"";
 }
-function attCard(a,open){
+function imgUrl(mid){
+  if(CH.cur==="global")return "/api/img/global/"+mid;
+  if(CH.cur.indexOf("dm:")===0)return "/api/img/dm/"+dmId(CH.cur)+"/"+mid;
+  return "/api/img/g/"+CH.cur+"/"+mid;
+}
+function attCard(a,open,mid){
+  if(a.kind==="image"){
+    var src=a.data||(mid?imgUrl(mid):""),ib=el(open?"button":"div","chatt img"),im=document.createElement("img");
+    if(open)ib.type="button";
+    im.alt=a.title||"";im.loading="lazy";im.src=src;ib.appendChild(im);
+    if(open)ib.onclick=function(){viewAtt(a,src)};
+    return ib;
+  }
   var vid=a.kind==="video"&&a.thumb,b=el(open?"button":"div","chatt"+(vid?" vid":""));if(open)b.type="button";
-  if(vid){var im=document.createElement("img");im.alt="";im.src=a.thumb;b.appendChild(im)}
+  if(vid){var vi=document.createElement("img");vi.alt="";vi.src=a.thumb;b.appendChild(vi)}
   var row=vid?el("div","row"):b,ic=el("span","ati"),tx=el("span","atx");
   ic.innerHTML=svg(a.kind);tx.appendChild(el("b","",a.title||"?"));if(a.sub)tx.appendChild(el("span","",a.sub));
   row.appendChild(ic);row.appendChild(tx);if(vid)b.appendChild(row);
@@ -2097,22 +2151,40 @@ function attCard(a,open){
   return b;
 }
 var viewing=null;
-function viewAtt(a){
-  viewing=a;$("gvsave").classList.toggle("hidden",a.kind==="video");
-  $("gvt").textContent=a.title||"";$("gvs").textContent=t({note:"g_anote",lore:"g_alore",video:"g_avid"}[a.kind])+(a.sub?", "+a.sub:"");
-  var im=$("gvi");if(a.thumb){im.src=a.thumb;im.classList.remove("hidden")}else{im.removeAttribute("src");im.classList.add("hidden")}
+function viewAtt(a,src){
+  viewing=a;$("gvsave").classList.toggle("hidden",a.kind!=="note"&&a.kind!=="lore");
+  $("gvt").textContent=a.title||"";
+  $("gvs").textContent=a.kind==="image"?t("g_pic"):t({note:"g_anote",lore:"g_alore",video:"g_avid"}[a.kind])+(a.sub?", "+a.sub:"");
+  var im=$("gvi"),pic=src||a.thumb;if(pic){im.src=pic;im.classList.remove("hidden")}else{im.removeAttribute("src");im.classList.add("hidden")}
   $("gvx").textContent=a.text||"";
   $("gvn").textContent=t("g_vidnote");$("gvn").classList.toggle("hidden",a.kind!=="video");
   mOpen("gview");
 }
+function drawReacts(box,seq,r){
+  box.textContent="";
+  Object.keys(r||{}).forEach(function(e){
+    var ids=r[e],b=el("button","chreact"+(me&&ids.indexOf(me.id)>=0?" on":""),e+" "+ids.length);b.type="button";
+    b.onclick=function(){wsSend({type:"react",seq:seq,e:e})};box.appendChild(b);
+  });
+}
+function rowBy(key,val){var rows=$("chlist").children,i;for(i=0;i<rows.length;i++)if(rows[i].dataset[key]===String(val))return rows[i];return null}
+function jumpTo(id){var r=rowBy("id",id);if(!r)return;r.scrollIntoView({block:"center",behavior:"smooth"});r.classList.add("flash");setTimeout(function(){r.classList.remove("flash")},1500)}
 function chatMsg(m){
   if(m.sys){var s=el("div","chsys",sysText(m));s.dataset.sys="1";return s}
+  if(CH.blk[m.uid])return null;
   var mine=me&&m.uid===me.id,row=el("div","chm"+(mine?" me":"")),c=el("div","chc"),a=el("div","gav sm");
-  row.dataset.uid=m.uid;row.dataset.ts=m.ts;fillAv(a,m.pic,m.name);
-  c.appendChild(el("div","chn",(mine?t("chyou"):m.name)+" \u00b7 "+new Date(m.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})));
+  row.dataset.uid=m.uid;row.dataset.ts=m.ts;if(m.id)row.dataset.id=m.id;if(m.seq)row.dataset.seq=m.seq;
+  fillAv(a,m.pic,m.name);
+  var nm=el("div","chn",(mine?t("chyou"):m.name)+" \u00b7 "+new Date(m.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));
+  if(!mine&&m.uid){a.style.cursor=nm.style.cursor="pointer";a.onclick=nm.onclick=function(){openProfile(m.uid)}}
+  c.appendChild(nm);
+  if(m.re){var q=el("div","chq");q.appendChild(el("b","",m.re.name));q.appendChild(el("span","",m.re.text));q.onclick=function(){jumpTo(m.re.id)};c.appendChild(q)}
   if(m.text)c.appendChild(el("div","chb",m.text));
-  if(m.att)c.appendChild(attCard(m.att,true));
-  row.appendChild(a);row.appendChild(c);return row;
+  if(m.att)c.appendChild(attCard(m.att,true,m.id));
+  var rx=el("div","chr");c.appendChild(rx);if(m.seq)drawReacts(rx,m.seq,m.r);
+  row.appendChild(a);row.appendChild(c);
+  if(m.id&&m.seq){var mb=el("button","chmore","\u22ef");mb.type="button";mb.setAttribute("aria-label",t("g_more"));mb.onclick=function(e){e.stopPropagation();openMsgMenu(mb,m)};row.appendChild(mb)}
+  return row;
 }
 function regroup(){
   var rows=$("chlist").children,prev=null,i,r;
@@ -2124,7 +2196,7 @@ function regroup(){
 }
 function chatAdd(m,skip){
   var l=$("chlist"),e=l.querySelector(".chempty");if(e)e.remove();
-  var row=chatMsg(m);l.appendChild(row);
+  var row=chatMsg(m);if(!row)return null;l.appendChild(row);
   while(l.children.length>200)l.removeChild(l.firstChild);
   if(!skip)regroup();
   return row;
@@ -2132,7 +2204,7 @@ function chatAdd(m,skip){
 function pendDrop(cid,keep){var p=cid&&CH.pend[cid];if(!p)return null;clearTimeout(p.timer);p.row.remove();delete CH.pend[cid];return p}
 function pendRestore(p){
   if(!p)return;var i=$("cinput");
-  if(!i.value&&!CH.att){i.value=p.text;CH.att=p.att||null;i.dispatchEvent(new Event("input"));stageDraw()}
+  if(!i.value&&!CH.att){i.value=p.text;CH.att=p.att||null;if(!CH.reply)CH.reply=p.reply||null;i.dispatchEvent(new Event("input"));stageDraw();replyDraw()}
 }
 function failPend(){Object.keys(CH.pend).forEach(function(c){pendRestore(pendDrop(c))});regroup()}
 function flash(txt,ms){var m=$("cmsg");m.textContent=txt;setTimeout(function(){if(m.textContent===txt)m.textContent=""},ms||4000)}
@@ -2156,9 +2228,11 @@ function chatConnect(){
       regroup();setCall((d.call&&d.call.users)||[]);chHead();l.scrollTop=l.scrollHeight;
     }else if(d.type==="msg"){
       var near=l.scrollHeight-l.scrollTop-l.clientHeight<100,mineMsg=me&&d.message.uid===me.id;
-      pendDrop(d.cid);chatAdd(d.message);noteLast(d.message);
+      delete TY[d.message.uid];typDraw();pendDrop(d.cid);chatAdd(d.message);noteLast(d.message);
       if(near||mineMsg)l.scrollTop=l.scrollHeight;
     }else if(d.type==="count"){CH.online=d.n;chHead()}
+    else if(d.type==="react"){var rw=rowBy("seq",d.seq);if(rw)drawReacts(rw.querySelector(".chr"),d.seq,d.r)}
+    else if(d.type==="typing"){if(!CH.blk[d.id]){TY[d.id]={name:d.name,t:Date.now()};typDraw()}}
     else if(d.type==="meta"){CH.meta=d.meta;mergeConv(d.meta);chHead();if($("gset").classList.contains("open"))gRender()}
     else if(d.type==="call")setCall(d.users||[]);
     else if(d.type==="call-peers")startPeers(d.peers||[]);
@@ -2167,7 +2241,7 @@ function chatConnect(){
       pendRestore(pendDrop(d.cid));regroup();
       flash(d.failed?t("g_modfail"):d.muted?t("g_muted"):t("g_blocked").replace("{r}",d.reason||""),6000);
     }else if(d.type==="error"){
-      if(d.code==="slow"||d.code==="muted"){pendRestore(pendDrop(d.cid));regroup();flash(t(d.code==="slow"?"chslow":"g_muted"),2500)}
+      if(d.code==="slow"||d.code==="muted"||d.code==="image"){pendRestore(pendDrop(d.cid));regroup();flash(t(d.code==="slow"?"chslow":d.code==="image"?"g_imgbad":"g_muted"),2500)}
       else if(d.code==="callfull"){stopCall();toast(t("g_callfull"))}
     }else if(d.type==="kicked"||d.type==="left"||d.type==="deleted")gone(d.type);
   };
@@ -2184,29 +2258,29 @@ function gone(why){
   mClose("gset");toast(t("g_gone_"+why));openConv("global");
 }
 function chatSend(){
-  var i=$("cinput"),v=i.value.trim(),a=CH.att;
+  var i=$("cinput"),v=i.value.trim(),a=CH.att,rp=CH.reply;
   if((!v&&!a)||!ws||ws.readyState!==1||!me)return;
   var cid=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
-  var row=chatAdd({uid:me.id,name:me.name,pic:me.pic,text:v,att:a||undefined,ts:Date.now()});
+  var row=chatAdd({uid:me.id,name:me.name,pic:me.pic,text:v,att:a||undefined,re:rp||undefined,ts:Date.now()});
   row.classList.add("pending");
-  var p=CH.pend[cid]={row:row,text:v,att:a,timer:setTimeout(function(){if(CH.pend[cid]){pendRestore(pendDrop(cid));regroup();flash(t("g_sendfail"))}},25000)};
-  ws.send(JSON.stringify({text:v,att:a,cid:cid}));
-  i.value="";i.style.height="auto";$("csend").disabled=true;CH.att=null;stageDraw();
+  CH.pend[cid]={row:row,text:v,att:a,reply:rp,timer:setTimeout(function(){if(CH.pend[cid]){pendRestore(pendDrop(cid));regroup();flash(t("g_sendfail"))}},25000)};
+  ws.send(JSON.stringify({text:v,att:a,reply:rp,cid:cid}));
+  i.value="";i.style.height="auto";$("csend").disabled=true;CH.att=null;CH.reply=null;stageDraw();replyDraw();
   $("chlist").scrollTop=$("chlist").scrollHeight;
 }
 function chatUI(){
   var inn=!!me;
   $("chout").classList.toggle("hidden",inn);$("chapp").classList.toggle("hidden",!inn);
-  $("fbox").classList.toggle("hidden",!inn);if(inn&&!FC.code&&!FC.busy)loadFc();
+  $("fbox").classList.toggle("hidden",!inn);$("biobox").classList.toggle("hidden",!inn);if(inn&&!$("biot").dataset.set){$("biot").value=me.bio||"";$("biot").dataset.set="1"}if(inn&&!FC.code&&!FC.busy)loadFc();
   $("chloginmsg").textContent=current?t("chagain"):t("chloginmsg");
   $("chatdesc").textContent=current?t("chdesc"):t("chstart");
-  if(!inn){firstPoll=true;NT={};$("chbadge").classList.add("hidden");CH.globalLast=null;CH.requests=[];CH.friends=[];CH.convs=[];CH.cur="global";CH.meta=null;CH.loaded=false;CH.att=null}
+  if(!inn){CH.blk={};CH.blocks=[];$("biot").dataset.set="";firstPoll=true;NT={};$("chbadge").classList.add("hidden");CH.globalLast=null;CH.requests=[];CH.friends=[];CH.convs=[];CH.cur="global";CH.meta=null;CH.loaded=false;CH.att=null}
   if(chatOpen&&inn){if(!CH.loaded){CH.loaded=true;loadConvs()}drawConvs();chHead();chatConnect()}
 }
 function chatClose(hard){
   chatOpen=false;CH.loaded=false;clearTimeout(wsTimer);stopCall();
   if(ws){var w=ws;ws=null;try{w.close()}catch(e){}}
-  if(hard){$("cp").classList.remove("open");["gnew","gjoin","gset","gpick","gview"].forEach(mClose)}
+  if(hard){$("cp").classList.remove("open");["gnew","gjoin","gset","gpick","gview","gprof","grep"].forEach(mClose)}
   document.body.style.overflow="";
 }
 
@@ -2547,11 +2621,12 @@ function unreadUpdate(){
 }
 function pollAll(){
   if(!me)return Promise.resolve();
-  return Promise.all([api("/api/groups"),api("/api/friends")]).then(function(a){
+  return Promise.all([api("/api/groups"),api("/api/friends"),api("/api/blocks")]).then(function(a){
     if(!me)return;
     if(a[0].ok){CH.convs=a[0].groups||[];CH.globalLast=a[0].global||null}
     if(a[1].ok){CH.friends=a[1].friends||[];CH.requests=a[1].requests||[]}
-    frDraw();unreadUpdate();
+    if(a[2].ok){CH.blocks=a[2].blocks||[];CH.blk={};CH.blocks.forEach(function(b){CH.blk[b.id]=1})}
+    frDraw();blkDraw();unreadUpdate();
   });
 }
 function bellDraw(){$("cbell").classList.toggle("hidden",!("Notification" in window)||Notification.permission!=="default")}
@@ -2637,6 +2712,148 @@ $("bkfile").onchange=function(){
 Object.assign(T.en,{g_saved:"Saved to your notes.",g_actx:"Add notes or lorebooks",g_bkh:"Backup",g_bkn:"Saves your notes, lorebooks and AI chats to a file you keep. Videos are not included.",g_bkex:"Export backup",g_bkim:"Import backup",g_bkdone:"Backup downloaded.",g_bkbad:"That isn't a Lobby backup file.",g_bkfull:"Not enough space to import that.",g_bkok:"Backup imported. Nothing was deleted.",g_notif:"Turn on notifications",g_gsave:"Save to my notes"});
 Object.assign(T.hu,{g_saved:"Elmentve a jegyzeteid közé.",g_actx:"Jegyzetek vagy lorebookok hozzáadása",g_bkh:"Biztonsági mentés",g_bkn:"A jegyzeteidet, lorebookjaidat és az AI-csevegéseidet fájlba menti. A videók nem kerülnek bele.",g_bkex:"Mentés exportálása",g_bkim:"Mentés importálása",g_bkdone:"A mentés letöltve.",g_bkbad:"Ez nem Lobby mentésfájl.",g_bkfull:"Nincs elég hely az importáláshoz.",g_bkok:"Mentés importálva. Semmi sem lett törölve.",g_notif:"Értesítések bekapcsolása",g_gsave:"Mentés a jegyzeteimbe"});
 
+/* ---- message menu, replies, reactions ---- */
+var EMO=["\ud83d\udc4d","\u2764\ufe0f","\ud83d\ude02","\ud83d\ude2e","\ud83d\ude22","\ud83d\udd25"];
+function closeMm(){$("cmm").classList.add("hidden")}
+function openMsgMenu(btn,m){
+  var box=$("cmm");box.textContent="";
+  var er=el("div","emo");
+  EMO.forEach(function(e){var b=el("button","",e);b.type="button";b.onclick=function(){wsSend({type:"react",seq:m.seq,e:e});closeMm()};er.appendChild(b)});
+  box.appendChild(er);
+  function item(label,fn){var b=el("button","",label);b.type="button";b.onclick=function(){closeMm();fn()};box.appendChild(b)}
+  item(t("g_reply"),function(){CH.reply={id:m.id,name:m.name,text:(m.text||(m.att?m.att.title:"")||"").slice(0,80)};replyDraw();$("cinput").focus()});
+  if(m.text)item(t("g_copy"),function(){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(m.text)});
+  if(me&&m.uid!==me.id){
+    item(t("g_profile"),function(){openProfile(m.uid)});
+    item(t("g_report"),function(){openReport({uid:m.uid,name:m.name,msgId:m.id,text:m.text||(m.att?m.att.title:"")})});
+    item(t("g_block"),function(){doBlock(m.uid,m.name)});
+  }
+  box.classList.remove("hidden");
+  var r=btn.getBoundingClientRect(),w=box.offsetWidth,hh=box.offsetHeight;
+  box.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left-w/2))+"px";
+  box.style.top=(r.bottom+hh+8>innerHeight?Math.max(8,r.top-hh-4):r.bottom+4)+"px";
+}
+document.addEventListener("click",function(e){if(!$("cmm").contains(e.target))closeMm()});
+function replyDraw(){
+  var s=$("chrep");s.textContent="";s.classList.toggle("hidden",!CH.reply);
+  if(!CH.reply)return;
+  var q=el("div","chq");q.style.flex="1";q.style.cursor="default";q.appendChild(el("b","",t("g_replying").replace("{a}",CH.reply.name)));q.appendChild(el("span","",CH.reply.text));
+  var x=el("button","chib");x.type="button";x.setAttribute("aria-label",t("g_remove"));x.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  x.onclick=function(){CH.reply=null;replyDraw()};
+  s.appendChild(q);s.appendChild(x);
+}
+
+/* ---- typing ---- */
+var TY={},tyTimer=null,lastTy=0;
+function typDraw(){
+  var now=Date.now(),n=[];
+  Object.keys(TY).forEach(function(k){if(now-TY[k].t>4500)delete TY[k];else n.push(TY[k].name)});
+  $("chtyp").textContent=!n.length?"":n.length===1?t("g_typ1").replace("{a}",n[0]):n.length===2?t("g_typ2").replace("{a}",n[0]).replace("{b}",n[1]):t("g_typn");
+  if(!n.length&&tyTimer){clearInterval(tyTimer);tyTimer=null}else if(n.length&&!tyTimer)tyTimer=setInterval(typDraw,1000);
+}
+$("cinput").addEventListener("input",function(){if(this.value&&Date.now()-lastTy>2500){lastTy=Date.now();wsSend({type:"typing"})}});
+
+/* ---- pictures in chat ---- */
+function shrink(f){
+  return new Promise(function(res){
+    var u=URL.createObjectURL(f),im=new Image();
+    im.onload=function(){
+      URL.revokeObjectURL(u);
+      var w=im.naturalWidth,hh=im.naturalHeight,sc=Math.min(1,1280/Math.max(w,hh)),q=.8,i,c,x,out;
+      for(i=0;i<8;i++){
+        c=document.createElement("canvas");c.width=Math.max(1,Math.round(w*sc));c.height=Math.max(1,Math.round(hh*sc));
+        x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+        out=c.toDataURL("image/jpeg",q);if(out.length<=140000)return res(out);
+        q=Math.max(.45,q-.1);sc*=.8;
+      }
+      res("");
+    };
+    im.onerror=function(){URL.revokeObjectURL(u);res("")};im.src=u;
+  });
+}
+$("cmimg").onclick=function(){$("cmenu").classList.add("hidden");$("cimgf").value="";$("cimgf").click()};
+$("cimgf").onchange=function(){
+  var f=this.files[0];if(!f||f.type.indexOf("image/")!==0)return;
+  shrink(f).then(function(d){if(!d){flash(t("g_imgbad"));return}CH.att={kind:"image",title:f.name.replace(/[<>]/g,"").slice(0,80),data:d};stageDraw()});
+};
+
+/* ---- profiles, block, report ---- */
+function openProfile(uid){
+  api("/api/profile/"+uid).then(function(p){
+    if(!p.ok){toast(t("g_efail"));return}
+    fillAv($("gpav"),p.pic,p.name);$("gpn").textContent=p.name;
+    $("gpb").textContent=p.bio||t("g_nobio");
+    $("gps").textContent=p.since?t("g_since").replace("{d}",new Date(p.since).toLocaleDateString(loc())):"";
+    var self=me&&p.id===me.id;$("gpact").classList.toggle("hidden",self);
+    $("gpblock").textContent=t(p.blocked?"g_unblock":"g_block");
+    $("gpblock").onclick=function(){if(p.blocked)doUnblock(p.id,p.name);else doBlock(p.id,p.name)};
+    $("gprep").onclick=function(){openReport({uid:p.id,name:p.name})};
+    mOpen("gprof");
+  });
+}
+function doBlock(uid,name){
+  if(!confirm(t("g_blockq").replace("{a}",name)))return;
+  api("/api/blocks/add",{id:uid}).then(function(r){
+    if(!r.ok){toast(t("g_efail"));return}
+    CH.blk[uid]=1;CH.blocks=CH.blocks.filter(function(b){return b.id!==uid}).concat([{id:uid,name:name,pic:""}]);
+    CH.friends=CH.friends.filter(function(f){return f.id!==uid});CH.requests=CH.requests.filter(function(q){return q.id!==uid});
+    if(CH.cur==="dm:"+uid)openConv("global");
+    Array.prototype.slice.call($("chlist").children).forEach(function(r2){if(r2.dataset.uid===uid)r2.remove()});
+    regroup();drawConvs();frDraw();blkDraw();mClose("gprof");toast(t("g_blockdone").replace("{a}",name));
+  });
+}
+function doUnblock(uid,name){
+  api("/api/blocks/remove",{id:uid}).then(function(r){
+    if(!r.ok){toast(t("g_efail"));return}
+    delete CH.blk[uid];CH.blocks=CH.blocks.filter(function(b){return b.id!==uid});
+    blkDraw();mClose("gprof");toast(t("g_unblockdone").replace("{a}",name));
+    if(chatOpen&&me)openConv(CH.cur);
+  });
+}
+function blkDraw(){
+  var box=$("blkl");box.textContent="";if(!CH.blocks.length)return;
+  box.appendChild(el("b","frh",t("g_blklist")));
+  CH.blocks.forEach(function(b){
+    var row=el("div","frr"),a=el("div","gav sm"),u=el("button","gmb",t("g_unblock"));u.type="button";
+    fillAv(a,b.pic,b.name);u.onclick=function(){doUnblock(b.id,b.name)};
+    row.appendChild(a);row.appendChild(el("span","nm",b.name));row.appendChild(u);box.appendChild(row);
+  });
+}
+var repCtx=null;
+function openReport(c){
+  repCtx=c;$("grwho").textContent=c.name;$("grm").textContent="";
+  var o=$("grr").options,k=["spam","harassment","illegal","sexual","other"],i;for(i=0;i<o.length;i++)o[i].textContent=t("g_rr_"+k[i]);
+  mClose("gprof");mOpen("grep");
+}
+$("grsend").onclick=function(){
+  if(!repCtx)return;var b=this;b.disabled=true;
+  api("/api/report",{uid:repCtx.uid,msgId:repCtx.msgId||"",text:repCtx.text||"",conv:CH.cur,reason:$("grr").value}).then(function(r){
+    b.disabled=false;
+    if(!r.ok){$("grm").textContent=r.error==="rate"?t("g_e_rate"):t("g_efail");return}
+    mClose("grep");toast(t("g_repthanks"));
+  });
+};
+$("grcancel").onclick=function(){mClose("grep")};
+$("grep").addEventListener("click",function(e){if(e.target===$("grep"))mClose("grep")});
+$("gpclose").onclick=function(){mClose("gprof")};
+$("gprof").addEventListener("click",function(e){if(e.target===$("gprof"))mClose("gprof")});
+$("biosave").onclick=function(){
+  api("/api/auth/bio",{bio:$("biot").value}).then(function(r){
+    var m=$("biom");
+    if(r.ok){if(me)me.bio=r.bio;m.classList.add("ok");m.textContent=t("g_biosaved")}else{m.classList.remove("ok");m.textContent=errText(r)}
+  });
+};
+Object.assign(T.en,{g_more:"More",g_reply:"Reply",g_replying:"Replying to {a}",g_report:"Report",g_block:"Block",g_unblock:"Unblock",g_profile:"View profile",g_since:"Joined {d}",g_nobio:"No bio yet.",
+ g_blockq:"Block {a}? Their messages will be hidden and you will stop being friends.",g_blockdone:"{a} blocked.",g_unblockdone:"{a} unblocked.",g_blklist:"Blocked people",
+ g_rr_spam:"Spam or scams",g_rr_harass:"Harassment or threats",g_rr_illegal:"Illegal content",g_rr_sexual:"Sexual or graphic content",g_rr_other:"Something else",g_rl:"Why are you reporting this?",g_repsend:"Send report",g_repthanks:"Report sent. Thank you.",
+ g_pic:"Picture",g_imgbad:"Couldn't use that picture.",g_typ1:"{a} is typing...",g_typ2:"{a} and {b} are typing...",g_typn:"Several people are typing...",
+ g_biohdr:"About you",g_bioph:"A short bio (160 characters)",g_biosave:"Save bio",g_biosaved:"Bio saved."});
+Object.assign(T.hu,{g_more:"Több",g_reply:"Válasz",g_replying:"Válasz neki: {a}",g_report:"Jelentés",g_block:"Letiltás",g_unblock:"Tiltás feloldása",g_profile:"Profil megtekintése",g_since:"Csatlakozott: {d}",g_nobio:"Még nincs bemutatkozás.",
+ g_blockq:"Letiltod {a} felhasználót? Az üzenetei el lesznek rejtve, és megszűntök barátok lenni.",g_blockdone:"{a} letiltva.",g_unblockdone:"{a} tiltása feloldva.",g_blklist:"Letiltott emberek",
+ g_rr_spam:"Spam vagy átverés",g_rr_harass:"Zaklatás vagy fenyegetés",g_rr_illegal:"Illegális tartalom",g_rr_sexual:"Szexuális vagy durva tartalom",g_rr_other:"Valami más",g_rl:"Miért jelented ezt?",g_repsend:"Jelentés küldése",g_repthanks:"Jelentés elküldve. Köszönjük.",
+ g_pic:"Kép",g_imgbad:"Ezt a képet nem lehet használni.",g_typ1:"{a} ír...",g_typ2:"{a} és {b} ír...",g_typn:"Többen írnak...",
+ g_biohdr:"Rólad",g_bioph:"Rövid bemutatkozás (160 karakter)",g_biosave:"Bemutatkozás mentése",g_biosaved:"Bemutatkozás mentve."});
+
 /* ---- wiring ---- */
 $("chatbtn").onclick=function(){chatOpen=true;$("cp").classList.add("open");$("chapp").classList.remove("inroom");document.body.style.overflow="hidden";wsFails=0;refreshMe()};
 $("cpback").onclick=function(){chatClose(true)};
@@ -2658,11 +2875,12 @@ $("cinput").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftK
 // Escape: close only the top-most thing (the crop box handles itself)
 document.addEventListener("keydown",function(e){
   if(e.key!=="Escape")return;escTop=null;
-  ["cr","ov","gview","gpick","gjoin","gnew","gset"].forEach(function(id){if(!escTop&&$(id).classList.contains("open"))escTop=id});
+  ["cr","ov","grep","gprof","gview","gpick","gjoin","gnew","gset"].forEach(function(id){if(!escTop&&$(id).classList.contains("open"))escTop=id});
 },true);
 document.addEventListener("keydown",function(e){
   if(e.key!=="Escape"||!$("cp").classList.contains("open"))return;
-  if(escTop){if(["gview","gpick","gjoin","gnew","gset"].indexOf(escTop)>=0)mClose(escTop);return}
+  if(escTop){if(["grep","gprof","gview","gpick","gjoin","gnew","gset"].indexOf(escTop)>=0)mClose(escTop);return}
+  if(!$("cmm").classList.contains("hidden")){closeMm();return}
   if(!$("cmenu").classList.contains("hidden")){$("cmenu").classList.add("hidden");return}
   chatClose(true);
 });
