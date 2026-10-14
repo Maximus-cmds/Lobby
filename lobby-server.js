@@ -186,7 +186,7 @@ export class LobbyDB extends DurableObject {
     if (!s) return null;
     if (s.exp < Date.now()) { await st.delete(k); return null; }
     const u = await st.get("u:" + s.uid);
-    return u ? this.#pub(u) : null;
+    return u && !u.banned ? this.#pub(u) : null;
   }
 
   async logout(tok) { await this.ctx.storage.delete("s:" + (await sha256(tok))); }
@@ -298,6 +298,25 @@ export class LobbyDB extends DurableObject {
   async friendList(uid) {
     const ids = await this.friends(uid), m = await this.profiles(ids);
     return ids.filter((i) => m[i]).map((i) => ({ id: i, ...m[i] }));
+  }
+
+  /* ----- bans and account deletion ----- */
+  async setBanned(uid, flag) {
+    const u = await this.ctx.storage.get("u:" + uid);
+    if (!u) return false;
+    u.banned = !!flag;
+    await this.ctx.storage.put("u:" + uid, u);
+    return true;
+  }
+  async deleteAccount(uid) {
+    const st = this.ctx.storage, u = await st.get("u:" + uid);
+    if (!u) return;
+    const keys = ["u:" + uid, "a:" + uid, "f:" + uid, "r:" + uid, "b:" + uid, "g:" + uid, "j:" + uid, "rl:" + uid, "fc:" + uid];
+    if (u.email) keys.push("e:" + u.email);
+    const fc = await st.get("fc:" + uid);
+    if (fc) keys.push("fcode:" + fc);
+    for (const [k, v] of await st.list({ prefix: "p:" })) if (v === uid) keys.push(k);
+    for (let i = 0; i < keys.length; i += 100) await st.delete(keys.slice(i, i + 100));
   }
 
   /* ----- blocking, reports, public profiles ----- */
@@ -414,7 +433,7 @@ export async function handleLobby(request, env) {
 
   /* reports, for you (the owner) to read: set ADMIN_KEY in Cloudflare, then open /api/admin/reports?key=YOURKEY */
   if (path === "/api/admin/reports") {
-    if (!env.ADMIN_KEY || url.searchParams.get("key") !== env.ADMIN_KEY) return new Response("Not found", { status: 404 });
+    if (!env.ADMIN_KEY || (request.headers.get("X-Admin-Key") || url.searchParams.get("key")) !== env.ADMIN_KEY) return new Response("Not found", { status: 404 });
     return reply({ reports: await db(env).reports() });
   }
 
@@ -576,6 +595,27 @@ export async function handleLobby(request, env) {
     if (!me) return reply({ error: "auth" }, 401);
     const u = await db(env).setName(me.id, body.name);
     return u ? reply({ user: u }) : reply({ error: "name" }, 400);
+  }
+  if (path === "/api/admin/ban") {
+    if (!env.ADMIN_KEY || request.headers.get("X-Admin-Key") !== env.ADMIN_KEY) return new Response("Not found", { status: 404 });
+    const id = String(body.id || "");
+    if (!/^[0-9a-f-]{36}$/.test(id)) return reply({ error: "perm" }, 400);
+    const ok = await db(env).setBanned(id, !!body.ban);
+    return reply({ ok });
+  }
+  if (path === "/api/auth/delete") {
+    if (!me) return reply({ error: "auth" }, 401);
+    if (body.confirm !== "DELETE") return reply({ error: "perm" }, 400);
+    const d = db(env);
+    for (const gid of await d.groups(me.id)) {
+      try { const st = groupStub(env, gid), r = await st.destroy(me.id); if (r && r.error) await st.leave(me.id); } catch {}
+    }
+    for (const f of await d.friends(me.id)) {
+      await d.removeFriend(me.id, f);
+      try { await env.DM_ROOM.get(env.DM_ROOM.idFromName("dm:" + [me.id, f].sort().join(":"))).shutdown(); } catch {}
+    }
+    await d.deleteAccount(me.id);
+    return reply({ ok: true }, 200, [cookie("lobby_sid", "", 0)]);
   }
   if (path === "/api/auth/bio") {
     if (!me) return reply({ error: "auth" }, 401);
