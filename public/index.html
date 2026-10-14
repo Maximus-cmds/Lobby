@@ -500,6 +500,11 @@ div.chatt{cursor:default}
 .gview:empty{display:none}
 .gvimg{width:100%;border-radius:12px;display:block}
 #cr{z-index:40}
+.actx{width:min(760px,100%);margin:0 auto .5rem;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.cv.unread .cvt b{font-weight:800}
+.cv.unread .cvt span{color:inherit}
+.cvdot{margin-left:auto;flex:none;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.ubadge{position:absolute;top:.8rem;right:.8rem;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--accent);color:#14102a;font-size:.8rem;font-weight:700;display:grid;place-items:center}
 .chreq{padding:0 1.1rem .6rem;border-bottom:1.5px solid rgba(127,127,127,.25);max-height:30vh;overflow-y:auto}
 .chreq b,#frl b.frh{font-size:.85rem}
 .frr{display:flex;align-items:center;gap:.5rem;padding:.3rem 0}
@@ -537,7 +542,8 @@ div.chatt{cursor:default}
     <button class="btn dark full" id="ppick" type="button">Change picture</button>
     <label class="field">Name<input id="pname" maxlength="30" autocomplete="nickname" placeholder="Your name"></label>
     <button class="btn dark full" id="psave" type="button">Save profile</button>
-    <div id="fbox" class="hidden" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="fh">Friend code</b><div class="gcode"><code id="fcv"></code></div><div class="gcode"><button class="gmb" id="fctg" type="button">Uncover</button><button class="gmb hidden" id="fccopy" type="button">Copy</button></div><div id="frl"></div><label class="field"><span id="fal">Add a friend</span><input id="fci" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false"></label><button class="btn dark full" id="fcadd" type="button">Add friend</button><p class="msg" id="fcm" role="status"></p></div>
+    <div id="bkbox" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="bkh">Backup</b><p class="gnote" id="bkn"></p><button class="btn dark full" id="bkex" type="button">Export backup</button><button class="btn dark full" id="bkim" type="button">Import backup</button><input type="file" id="bkfile" accept="application/json,.json" hidden><p class="msg" id="bkm" role="status"></p></div>
+  <div id="fbox" class="hidden" style="display:flex;flex-direction:column;gap:.5rem;border-top:1.5px solid rgba(127,127,127,.3);padding-top:.8rem"><b id="fh">Friend code</b><div class="gcode"><code id="fcv"></code></div><div class="gcode"><button class="gmb" id="fctg" type="button">Uncover</button><button class="gmb hidden" id="fccopy" type="button">Copy</button></div><div id="frl"></div><label class="field"><span id="fal">Add a friend</span><input id="fci" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false"></label><button class="btn dark full" id="fcadd" type="button">Add friend</button><p class="msg" id="fcm" role="status"></p></div>
     <p class="msg ok" id="pmsg" role="status"></p>
     <button class="link" id="plogout" type="button">Log out</button>
   </div>
@@ -642,6 +648,7 @@ div.chatt{cursor:default}
     <div class="aiscroll" id="ascroll"><div class="aithread" id="amsgs" aria-live="polite"></div></div>
     <div class="aiout hidden" id="aiout"><p id="ailoginmsg">Log in to use the AI.</p><button class="btn dark" id="ailogin" type="button">Log in / Sign up</button></div>
     <footer class="aifoot" id="aifoot">
+      <div class="actx" id="actx"></div>
       <div class="aicomp"><textarea id="ainput" rows="1" aria-label="Message" placeholder="Message..."></textarea><button class="aisend" id="asend" type="button" aria-label="Send" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
       <p class="msg" id="amsg" role="alert"></p>
       <p class="aitiny" id="aitiny">AI can make mistakes. Check important info.</p>
@@ -652,7 +659,7 @@ div.chatt{cursor:default}
   <div class="chout hidden" id="chout"><button class="back" id="cobk" type="button">Back</button><p id="chloginmsg">Log in to chat with other people.</p><button class="btn dark" id="chlogin" type="button">Log in / Sign up</button></div>
   <div class="chapp" id="chapp">
     <aside class="chside">
-      <div class="chsh"><button class="back" id="cpback" type="button">Back</button><h2 id="cpt">Chat</h2></div>
+      <div class="chsh"><button class="back" id="cpback" type="button">Back</button><h2 id="cpt">Chat</h2><button class="chib hidden" id="cbell" type="button" style="margin-left:auto" aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></button></div>
       <div class="chacts"><button class="chact" id="cnew" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span id="cnewt">New group</span></button><button class="chact" id="cjoin" type="button"><span id="cjoint">Join with code</span></button></div>
       <div class="chreq hidden" id="chreq"></div>
       <div class="chconvs" id="chconvs"></div>
@@ -712,6 +719,7 @@ div.chatt{cursor:default}
   <img class="gvimg hidden" id="gvi" alt="">
   <div class="gview" id="gvx"></div>
   <p class="gnote hidden" id="gvn"></p>
+  <button class="gmb" id="gvsave" type="button">Save to my notes</button>
   <button class="link" id="gvclose" type="button">Close</button>
 </div></div>
 <div class="overlay" id="vup"><div class="modal-card" role="dialog" aria-labelledby="vupt">
@@ -764,7 +772,7 @@ div.chatt{cursor:default}
         <p id="aidesc">Ask anything.</p>
         <span class="go">Open &rarr;</span>
       </button>
-      <button class="card" id="chatbtn" type="button">
+      <button class="card" id="chatbtn" type="button" style="position:relative"><span class="ubadge hidden" id="chbadge"></span>
         <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-9l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 13h5"/></svg></span>
         <h3>Chat</h3>
         <p id="chatdesc">Log in to chat.</p>
@@ -1893,13 +1901,13 @@ async function aSend(txt){
   var inp=$("ainput");txt=(typeof txt==="string"?txt:inp.value).trim();
   if(!txt)return;
   var st=AIS,c=aCur();
-  if(!c){c={id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:aTitle(txt),ts:Date.now(),msgs:[]};st.chats.push(c);st.cur=c.id}
+  if(!c){c={id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:aTitle(txt),ts:Date.now(),msgs:[],ctx:aiPend};aiPend=[];st.chats.push(c);st.cur=c.id}
   $("amsg").textContent="";aiDel=null;
   c.msgs.push({role:"user",content:txt});c.ts=Date.now();
   inp.value="";inp.style.height="";aiBusy=c.id;aSave(st);aUI();aCount();
   var why="";
   try{
-    var r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:c.msgs.slice(-20),language:aLangName()})});
+    var r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:c.msgs.slice(-20),language:aLangName(),context:aCtxText()})});
     var d=await r.json();
     if(!r.ok||!d.reply){why=d.error||"";throw 0}
     c.msgs.push({role:"assistant",content:d.reply});
@@ -1917,7 +1925,7 @@ $("aibtn").onclick=function(){aSyncUser();$("ap").classList.add("open");document
 function aClose(){$("ap").classList.remove("open");$("apop").classList.remove("open");aSb(false);document.body.style.overflow=""}
 $("apback").onclick=aClose;
 $("ailogin").onclick=function(){openAuth("login")};
-$("anew").onclick=function(){AIS.cur=null;aiDel=null;aSb(false);aUI();$("ainput").focus()};
+$("anew").onclick=function(){aiPend=[];AIS.cur=null;aiDel=null;aSb(false);aUI();$("ainput").focus()};
 $("amenu").onclick=function(){aSb(true)};
 $("ascrim").onclick=function(){aSb(false)};
 $("acog").onclick=function(e){e.stopPropagation();$("apop").classList.toggle("open")};
@@ -1946,7 +1954,7 @@ function adopt(u){
   if(current!==key){current=key;save(SESS,key);render()}
 }
 function refreshMe(){
-  return fetch("/api/auth/me",{credentials:"same-origin"}).then(function(r){return r.json()}).then(function(j){me=j.user||null;if(me){adopt(me);syncAvatar()}chatUI();return me}).catch(function(){chatUI();return null});
+  return fetch("/api/auth/me",{credentials:"same-origin"}).then(function(r){return r.json()}).then(function(j){me=j.user||null;if(me){adopt(me);syncAvatar();rdLoad();pollAll()}chatUI();return me}).catch(function(){chatUI();return null});
 }
 // keep the server session in step with the existing email/password form
 var _as=$("asubmit").onclick;
@@ -1957,7 +1965,7 @@ $("asubmit").onclick=async function(){
   try{
     var r=await post(m0==="signup"?"signup":"login",{email:email,password:pw,name:(users()[email]||{}).name});
     if(!r.ok)r=await post(m0==="signup"?"login":"signup",{email:email,password:pw,name:(users()[email]||{}).name});
-    me=r.ok?r.user:null;if(me)syncAvatar();
+    me=r.ok?r.user:null;if(me){syncAvatar();rdLoad();pollAll()}
   }catch(e){me=null}
   chatUI();
 };
@@ -1969,16 +1977,16 @@ $("psave").onclick=function(){_ps.call(this);var n=$("pname").value.trim();if(me
 Object.assign(T.en,{"g_global": "Global chat", "g_new": "New group", "g_join": "Join with code", "g_chats": "Chats", "g_nogr": "No groups yet. Make one, or join with a code.", "g_members": "{m} members", "g_newt": "New group", "g_gname": "Group name", "g_gphname": "Weekend crew", "g_gpic": "Group picture", "g_gpicadd": "Add picture", "g_create": "Create group", "g_joint": "Join a group", "g_code": "Group code", "g_codeph": "Paste the code", "g_joinb": "Join", "g_settings": "Group settings", "g_save": "Save name", "g_ownername": "Only the owner can change the name or picture.", "g_code2": "Invite code", "g_uncover": "Uncover", "g_hide": "Hide", "g_copy": "Copy", "g_copied": "Code copied.", "g_regen": "New code", "g_newcode": "New code made. The old one no longer works.", "g_mem": "Members", "g_r_owner": "Owner", "g_r_admin": "Admin", "g_r_member": "Member", "g_mkadmin": "Make admin", "g_rmadmin": "Remove admin", "g_kick": "Kick", "g_sure": "Sure?", "g_leave": "Leave group", "g_del": "Delete group", "g_close": "Close", "g_remove": "Remove", "g_incall": "in the call", "g_call": "Voice call", "g_joincall": "Join call", "g_leavecall": "Leave", "g_mute": "Mute", "g_unmute": "Unmute", "g_calling": "Voice call ({n})", "g_nomic": "Couldn't use the microphone. Allow it in your browser and try again.", "g_callfull": "The call is full (6 people).", "g_attach": "Attach", "g_anote": "Note", "g_alore": "Lorebook", "g_avid": "Video", "g_pnote": "Attach a note", "g_plore": "Attach a lorebook", "g_pvid": "Attach a video", "g_pnone": "Nothing here yet.", "g_vidnote": "Only a preview of the video is shared. The video file stays on the sender's device.", "g_sjoin": "{a} joined", "g_sleave": "{a} left", "g_skick": "{a} was removed", "g_srename": "Group renamed to {a}", "g_srole": "{a} is now {b}", "g_blocked": "Message blocked: {r}.", "g_muted": "You're muted for a few minutes after repeated blocked messages.", "g_modfail": "The message couldn't be checked, so it wasn't sent.", "g_sendfail": "The message didn't send.", "g_gone_kicked": "You were removed from that group.", "g_gone_left": "You left the group.", "g_gone_deleted": "That group was deleted.", "g_created": "Group created. Open the code below to invite people.", "g_e_name": "Enter a name.", "g_e_blocked": "That isn't allowed.", "g_e_perm": "You can't do that.", "g_e_nocode": "That code doesn't match a group.", "g_e_kicked": "You were removed from this group. Ask for a new code.", "g_e_full": "That group is full.", "g_e_rate": "Too many tries. Wait a few minutes.", "g_e_limit": "You're in too many groups.", "g_e_image": "That picture can't be used.", "g_efail": "Something went wrong. Try again."});
 Object.assign(T.hu,{"g_global": "Globális chat", "g_new": "Új csoport", "g_join": "Csatlakozás kóddal", "g_chats": "Csevegések", "g_nogr": "Még nincs csoportod. Hozz létre egyet, vagy csatlakozz kóddal.", "g_members": "{m} tag", "g_newt": "Új csoport", "g_gname": "Csoport neve", "g_gphname": "Hétvégi banda", "g_gpic": "Csoport képe", "g_gpicadd": "Kép hozzáadása", "g_create": "Csoport létrehozása", "g_joint": "Csatlakozás csoporthoz", "g_code": "Csoportkód", "g_codeph": "Illeszd be a kódot", "g_joinb": "Csatlakozás", "g_settings": "Csoport beállításai", "g_save": "Név mentése", "g_ownername": "Csak a tulajdonos változtathatja meg a nevet és a képet.", "g_code2": "Meghívókód", "g_uncover": "Felfedés", "g_hide": "Elrejtés", "g_copy": "Másolás", "g_copied": "Kód másolva.", "g_regen": "Új kód", "g_newcode": "Új kód kész. A régi már nem működik.", "g_mem": "Tagok", "g_r_owner": "Tulajdonos", "g_r_admin": "Admin", "g_r_member": "Tag", "g_mkadmin": "Legyen admin", "g_rmadmin": "Admin elvétele", "g_kick": "Kirúgás", "g_sure": "Biztos?", "g_leave": "Kilépés", "g_del": "Csoport törlése", "g_close": "Bezárás", "g_remove": "Eltávolítás", "g_incall": "hívásban", "g_call": "Hanghívás", "g_joincall": "Belépés a hívásba", "g_leavecall": "Kilépés", "g_mute": "Némítás", "g_unmute": "Némítás vége", "g_calling": "Hanghívás ({n})", "g_nomic": "Nem sikerült használni a mikrofont. Engedélyezd a böngészőben, és próbáld újra.", "g_callfull": "A hívás megtelt (6 fő).", "g_attach": "Csatolás", "g_anote": "Jegyzet", "g_alore": "Lorebook", "g_avid": "Videó", "g_pnote": "Jegyzet csatolása", "g_plore": "Lorebook csatolása", "g_pvid": "Videó csatolása", "g_pnone": "Itt még nincs semmi.", "g_vidnote": "Csak a videó előnézete kerül megosztásra. A fájl a küldő eszközén marad.", "g_sjoin": "{a} csatlakozott", "g_sleave": "{a} kilépett", "g_skick": "{a} el lett távolítva", "g_srename": "A csoport új neve: {a}", "g_srole": "{a} mostantól {b}", "g_blocked": "Az üzenet blokkolva: {r}.", "g_muted": "Ismételt blokkolt üzenetek miatt néhány percre némítva vagy.", "g_modfail": "Az üzenetet nem sikerült ellenőrizni, ezért nem ment el.", "g_sendfail": "Az üzenet nem ment el.", "g_gone_kicked": "Eltávolítottak a csoportból.", "g_gone_left": "Kiléptél a csoportból.", "g_gone_deleted": "A csoportot törölték.", "g_created": "Csoport létrehozva. A beállításokban találod a meghívókódot.", "g_e_name": "Adj meg egy nevet.", "g_e_blocked": "Ez nem megengedett.", "g_e_perm": "Ezt nem teheted meg.", "g_e_nocode": "Ez a kód nem tartozik csoporthoz.", "g_e_kicked": "Eltávolítottak ebből a csoportból. Kérj új kódot.", "g_e_full": "A csoport megtelt.", "g_e_rate": "Túl sok próbálkozás. Várj pár percet.", "g_e_limit": "Túl sok csoportban vagy.", "g_e_image": "Ez a kép nem használható.", "g_efail": "Hiba történt. Próbáld újra."});
 function cStatic(){
-  var M={cpt:"chat",cpback:"back2",cobk:"back2",chlogin:"loginsignup",cnewt:"g_new",cjoint:"g_join",cmnotet:"g_anote",cmloret:"g_alore",cmvidt:"g_avid",ccjoin:"g_joincall",ccleave:"g_leavecall",gnewt:"g_newt",gnnl:"g_gname",gnmake:"g_create",gncancel:"cancel",gjt:"g_joint",gjcl:"g_code",gjmake:"g_joinb",gjcancel:"cancel",gst:"g_settings",gnal:"g_gname",gnsave:"g_save",gcodeh:"g_code2",gcopy:"g_copy",gregen:"g_regen",gmemh:"g_mem",gleave:"g_leave",gdel:"g_del",gsclose:"g_close",gpcancel:"cancel",gvclose:"g_close",fh:"g_fh",fal:"g_fal",fcadd:"g_fadd"};
+  var M={cpt:"chat",cpback:"back2",cobk:"back2",chlogin:"loginsignup",cnewt:"g_new",cjoint:"g_join",cmnotet:"g_anote",cmloret:"g_alore",cmvidt:"g_avid",ccjoin:"g_joincall",ccleave:"g_leavecall",gnewt:"g_newt",gnnl:"g_gname",gnmake:"g_create",gncancel:"cancel",gjt:"g_joint",gjcl:"g_code",gjmake:"g_joinb",gjcancel:"cancel",gst:"g_settings",gnal:"g_gname",gnsave:"g_save",gcodeh:"g_code2",gcopy:"g_copy",gregen:"g_regen",gmemh:"g_mem",gleave:"g_leave",gdel:"g_del",gsclose:"g_close",gpcancel:"cancel",gvclose:"g_close",fh:"g_fh",bkh:"g_bkh",bkn:"g_bkn",bkex:"g_bkex",bkim:"g_bkim",gvsave:"g_gsave",fal:"g_fal",fcadd:"g_fadd"};
   Object.keys(M).forEach(function(i){var e=$(i);if(e)e.textContent=t(M[i])});
   sx("#chatbtn h3","chat");sx("#chatbtn .go","open");sx("#ort","orem");
-  $("cinput").placeholder=t("chph");$("cplus").setAttribute("aria-label",t("g_attach"));$("ccallbtn").setAttribute("aria-label",t("g_call"));$("ccog").setAttribute("aria-label",t("g_settings"));$("chmb").setAttribute("aria-label",t("g_chats"));$("csend").setAttribute("aria-label",t("aisend"));
+  $("cinput").placeholder=t("chph");$("cbell").setAttribute("aria-label",t("g_notif"));bellDraw();$("cplus").setAttribute("aria-label",t("g_attach"));$("ccallbtn").setAttribute("aria-label",t("g_call"));$("ccog").setAttribute("aria-label",t("g_settings"));$("chmb").setAttribute("aria-label",t("g_chats"));$("csend").setAttribute("aria-label",t("aisend"));
   $("gnn").placeholder=t("g_gphname");$("gjc").placeholder=t("g_codeph");
   chatUI();
 }
 var _rc=render;render=function(){_rc();cStatic()};
 
-var CH={requests:[],friends:[],convs:[],cur:"global",meta:null,calls:[],att:null,pend:{},code:false,online:0,loaded:false,newPic:"",arm:null};
+var CH={globalLast:null,requests:[],friends:[],convs:[],cur:"global",meta:null,calls:[],att:null,pend:{},code:false,online:0,loaded:false,newPic:"",arm:null};
 var inCall=false,cstream=null,pcs={},ice=null,muted=false,cropCb=null,escTop=null;
 var IC={
   note:'<path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/>',
@@ -2016,12 +2024,8 @@ function syncAvatar(){
 
 /* ---- conversations ---- */
 function loadConvs(){
-  return Promise.all([api("/api/groups"),api("/api/friends")]).then(function(a){
+  return pollAll().then(function(){
     if(!me)return;
-    if(a[0].ok)CH.convs=a[0].groups||[];
-    if(a[1].ok){CH.friends=a[1].friends||[];CH.requests=a[1].requests||[]}
-    frDraw();
-    drawConvs();
     if(CH.cur!=="global"&&!CH.convs.some(function(g){return g.id===CH.cur})&&!friendOf(CH.cur))openConv("global");
   });
 }
@@ -2032,25 +2036,30 @@ function mergeConv(meta){
   drawConvs();
 }
 function noteLast(m){
-  if(m.sys||CH.cur==="global")return;
-  CH.friends.forEach(function(g){if("dm:"+g.id===CH.cur)g.last={name:m.name,text:m.text||(m.att?"\ud83d\udcce "+m.att.title:""),ts:m.ts}});
-  CH.convs.forEach(function(g){if(g.id===CH.cur)g.last={name:m.name,text:m.text||(m.att?"\ud83d\udcce "+m.att.title:""),ts:m.ts}});
+  if(m.sys)return;
+  var lt={uid:m.uid,name:m.name,text:m.text||(m.att?"\ud83d\udcce "+m.att.title:""),ts:m.ts};
+  if(CH.cur==="global"){CH.globalLast=lt;if(chatOpen)markRead("global");return}
+  if(chatOpen)markRead(CH.cur);
+  CH.friends.forEach(function(g){if("dm:"+g.id===CH.cur)g.last={uid:m.uid,name:m.name,text:m.text||(m.att?"\ud83d\udcce "+m.att.title:""),ts:m.ts}});
+  CH.convs.forEach(function(g){if(g.id===CH.cur)g.last={uid:m.uid,name:m.name,text:m.text||(m.att?"\ud83d\udcce "+m.att.title:""),ts:m.ts}});
   drawConvs();
 }
 function drawConvs(){
   var box=$("chconvs");box.textContent="";
   var gs=CH.convs.slice().sort(function(a,b){return((b.last&&b.last.ts)||b.created||0)-((a.last&&a.last.ts)||a.created||0)});
   [{id:"global",name:t("g_global"),global:true}].concat(gs).forEach(function(c){
-    var b=el("button","cv"+(c.id===CH.cur?" on":"")),a=el("div","gav"),x=el("div","cvt");b.type="button";
+    var un=isUnread(c.id,c.global?CH.globalLast:c.last);
+    var b=el("button","cv"+(c.id===CH.cur?" on":"")+(un?" unread":"")),a=el("div","gav"),x=el("div","cvt");b.type="button";
     if(c.global)a.innerHTML=svg("globe");else fillAv(a,gPic(c),c.name);
     x.appendChild(el("b","",c.name));
     x.appendChild(el("span","",c.last?c.last.name+": "+c.last.text:c.global?t("chdesc"):t("g_members").replace("{m}",c.count)));
-    b.appendChild(a);b.appendChild(x);b.onclick=function(){openConv(c.id,true)};box.appendChild(b);
+    b.appendChild(a);b.appendChild(x);if(un)b.appendChild(el("span","cvdot"));b.onclick=function(){openConv(c.id,true)};box.appendChild(b);
   });
   CH.friends.forEach(function(f){
-    var b=el("button","cv"+("dm:"+f.id===CH.cur?" on":"")),a=el("div","gav"),x=el("div","cvt");b.type="button";
+    var un=isUnread("dm:"+f.id,f.last);
+    var b=el("button","cv"+("dm:"+f.id===CH.cur?" on":"")+(un?" unread":"")),a=el("div","gav"),x=el("div","cvt");b.type="button";
     fillAv(a,f.pic,f.name);x.appendChild(el("b","",f.name));x.appendChild(el("span","",f.last?f.last.name+": "+f.last.text:t("g_friend")));
-    b.appendChild(a);b.appendChild(x);b.onclick=function(){openConv("dm:"+f.id,true)};box.appendChild(b);
+    b.appendChild(a);b.appendChild(x);if(un)b.appendChild(el("span","cvdot"));b.onclick=function(){openConv("dm:"+f.id,true)};box.appendChild(b);
   });
   if(!gs.length&&!CH.friends.length)box.appendChild(el("p","cvempty",t("g_nogr")));
 }
@@ -2066,7 +2075,7 @@ function chHead(){
 function openConv(id,user){
   if(ws){var w=ws;ws=null;try{w.close()}catch(e){}}
   stopCall();failPend();
-  CH.cur=id;CH.meta=null;CH.calls=[];CH.att=null;CH.online=0;CH.pend={};
+  markRead(id);CH.cur=id;CH.meta=null;CH.calls=[];CH.att=null;CH.online=0;CH.pend={};
   $("chlist").textContent="";$("cinput").value="";$("csend").disabled=true;$("cmsg").textContent="";
   $("cmenu").classList.add("hidden");stageDraw();drawCall();chHead();drawConvs();
   if(user||id!=="global")$("chapp").classList.add("inroom");
@@ -2087,7 +2096,9 @@ function attCard(a,open){
   if(open)b.onclick=function(){viewAtt(a)};
   return b;
 }
+var viewing=null;
 function viewAtt(a){
+  viewing=a;$("gvsave").classList.toggle("hidden",a.kind==="video");
   $("gvt").textContent=a.title||"";$("gvs").textContent=t({note:"g_anote",lore:"g_alore",video:"g_avid"}[a.kind])+(a.sub?", "+a.sub:"");
   var im=$("gvi");if(a.thumb){im.src=a.thumb;im.classList.remove("hidden")}else{im.removeAttribute("src");im.classList.add("hidden")}
   $("gvx").textContent=a.text||"";
@@ -2189,7 +2200,7 @@ function chatUI(){
   $("fbox").classList.toggle("hidden",!inn);if(inn&&!FC.code&&!FC.busy)loadFc();
   $("chloginmsg").textContent=current?t("chagain"):t("chloginmsg");
   $("chatdesc").textContent=current?t("chdesc"):t("chstart");
-  if(!inn){CH.requests=[];CH.friends=[];CH.convs=[];CH.cur="global";CH.meta=null;CH.loaded=false;CH.att=null}
+  if(!inn){firstPoll=true;NT={};$("chbadge").classList.add("hidden");CH.globalLast=null;CH.requests=[];CH.friends=[];CH.convs=[];CH.cur="global";CH.meta=null;CH.loaded=false;CH.att=null}
   if(chatOpen&&inn){if(!CH.loaded){CH.loaded=true;loadConvs()}drawConvs();chHead();chatConnect()}
 }
 function chatClose(hard){
@@ -2486,17 +2497,145 @@ function frDraw(){
     });
   });
 }
-function pollReq(){if(!me)return;api("/api/friends").then(function(j){
-  if(!j.ok)return;
-  var old={};CH.friends.forEach(function(f){old[f.id]=f.last});
-  CH.requests=j.requests||[];CH.friends=(j.friends||[]).map(function(f){f.last=old[f.id];return f});
-  frDraw();drawConvs();
-})}
+function pollReq(){pollAll()}
 $("pbtn").addEventListener("click",pollReq);
-setInterval(function(){if(chatOpen)pollReq()},30000);
 Object.assign(T.en,{g_freq:"Friend requests",g_accept:"Accept",g_decline:"Decline",g_fsent:"Request sent to {a}. They need to accept it.",g_e_pending:"You already sent them a request."});
 Object.assign(T.hu,{g_freq:"Barátkérések",g_accept:"Elfogadom",g_decline:"Elutasítom",g_fsent:"Kérés elküldve neki: {a}. El kell fogadnia.",g_e_pending:"Már küldtél neki kérést."});
 Object.assign(T.en,{g_fadded:"{a} is now your friend."});Object.assign(T.hu,{g_fadded:"{a} mostantól a barátod."});
+
+$("gvsave").onclick=function(){
+  var a=viewing,n=myNotes();if(!a||!n)return;
+  n.push({id:"n"+Date.now(),name:(a.title||"Note").slice(0,60),text:a.text||"",updated:Date.now()});
+  if(!saveNotes(n)){toast(t("failsave"));return}
+  buildNotes();toast(t("g_saved"));
+};
+
+/* ---- unread badges + notifications ---- */
+var RD={},NT={},firstPoll=true;
+function rdLoad(){RD=me?load("lobby_read_"+me.id,{}):{}}
+function markRead(id){if(!me)return;RD[id]=Date.now();save("lobby_read_"+me.id,RD)}
+function isUnread(id,last){return !!(last&&me&&last.uid!==me.id&&last.ts>(RD[id]||0))}
+function convName(id){
+  if(id==="global")return t("g_global");
+  var n=id,i=dmId(id);
+  if(i){var f=friendOf(id);return f?f.name:n}
+  CH.convs.forEach(function(g){if(g.id===id)n=g.name});return n;
+}
+function convLasts(){
+  var o=[["global",CH.globalLast]];
+  CH.convs.forEach(function(g){o.push([g.id,g.last])});
+  CH.friends.forEach(function(f){o.push(["dm:"+f.id,f.last])});
+  return o;
+}
+function unreadUpdate(){
+  if(!me)return;
+  var ls=convLasts(),fresh=[],n=0;
+  if(!RD.__i){ls.forEach(function(p){RD[p[0]]=Date.now()});RD.__i=1;save("lobby_read_"+me.id,RD)}
+  ls.forEach(function(p){
+    if(chatOpen&&p[0]===CH.cur&&document.visibilityState==="visible")markRead(p[0]);
+    if(isUnread(p[0],p[1])){n++;if(!firstPoll&&NT[p[0]]!==p[1].ts)fresh.push(p);NT[p[0]]=p[1].ts}
+  });
+  firstPoll=false;
+  var b=$("chbadge");b.textContent=n>99?"99+":n;b.classList.toggle("hidden",!n);
+  document.title=(n?"("+n+") ":"")+document.title.replace(/^\(\d+\) /,"");
+  fresh.forEach(function(p){
+    if(!("Notification" in window)||Notification.permission!=="granted")return;
+    if(chatOpen&&p[0]===CH.cur&&document.visibilityState==="visible")return;
+    try{var nt=new Notification(convName(p[0]),{body:p[1].name+": "+p[1].text,tag:p[0]});nt.onclick=function(){window.focus();chatOpen=true;$("cp").classList.add("open");openConv(p[0],true);nt.close()}}catch(e){}
+  });
+  drawConvs();
+}
+function pollAll(){
+  if(!me)return Promise.resolve();
+  return Promise.all([api("/api/groups"),api("/api/friends")]).then(function(a){
+    if(!me)return;
+    if(a[0].ok){CH.convs=a[0].groups||[];CH.globalLast=a[0].global||null}
+    if(a[1].ok){CH.friends=a[1].friends||[];CH.requests=a[1].requests||[]}
+    frDraw();unreadUpdate();
+  });
+}
+function bellDraw(){$("cbell").classList.toggle("hidden",!("Notification" in window)||Notification.permission!=="default")}
+$("cbell").onclick=function(){if("Notification" in window)Notification.requestPermission().then(bellDraw)};
+setInterval(function(){if(me&&document.visibilityState==="visible"||me&&chatOpen)pollAll()},30000);
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&me)pollAll()});
+
+/* ---- AI: share notes / lorebooks as context ---- */
+var aiPend=[];
+function aCtxGet(){var c=aCur();return c?(c.ctx||(c.ctx=[])):aiPend}
+function aCtxFind(x){
+  var l=x.kind==="note"?(myNotes()||[]):(myLore()||[]),it=l.filter(function(z){return z.id===x.id})[0];
+  return it?{kind:x.kind,title:it.name,text:x.kind==="note"?(it.text||""):loreText(it)}:null;
+}
+function aCtxText(){
+  var out=[],used=0;
+  aCtxGet().forEach(function(x){
+    var it=aCtxFind(x);if(!it)return;
+    var s="## "+(it.kind==="note"?"Note":"Lorebook")+": "+it.title+"\n"+it.text.slice(0,Math.max(0,Math.min(3000,8000-used)));
+    used+=s.length;out.push(s);
+  });
+  return out.join("\n\n");
+}
+function aCtxDraw(){
+  var box=$("actx");box.textContent="";
+  var l=aCtxGet();
+  l.forEach(function(x,i){
+    var it=aCtxFind(x);if(!it)return;
+    var b=el("button","gmb",it.title+"  \u00d7");b.type="button";b.title=t("g_remove");
+    b.onclick=function(){l.splice(i,1);var st=AIS;aSave(st);aCtxDraw()};box.appendChild(b);
+  });
+  if(l.length<3){var add=el("button","gmb","+ "+t("g_actx"));add.type="button";add.onclick=aCtxPick;box.appendChild(add)}
+}
+function aCtxPick(){
+  $("gpt").textContent=t("g_actx");var l=$("gpl");l.textContent="";var any=false;
+  [["note",myNotes()||[]],["lore",myLore()||[]]].forEach(function(g){
+    g[1].slice().sort(function(a,b){return b.updated-a.updated}).forEach(function(it){
+      any=true;var b=el("button","nbox");b.type="button";b.appendChild(el("b","",it.name||"?"));b.appendChild(el("span","",t(g[0]==="note"?"g_anote":"g_alore")));
+      b.onclick=function(){var c=aCtxGet();if(!c.some(function(x){return x.id===it.id}))c.push({kind:g[0],id:it.id});aSave(AIS);aCtxDraw();mClose("gpick")};
+      l.appendChild(b);
+    });
+  });
+  if(!any)l.appendChild(el("p","empty",t("g_pnone")));
+  mOpen("gpick");
+}
+var _aUI=aUI;aUI=function(){_aUI.apply(this,arguments);aCtxDraw()};
+
+/* ---- backup ---- */
+function bkMsg(k,ok){var m=$("bkm");m.textContent=t(k);m.classList.toggle("ok",!!ok)}
+$("bkex").onclick=function(){
+  var u=current&&users()[current];if(!u)return;
+  var data={app:"lobby",v:1,date:new Date().toISOString(),notes:u.notes||[],lore:u.lore||[],aiChats:load("lobby_ai_chats_"+current,null)};
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));
+  a.download="lobby-backup-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},2000);
+  bkMsg("g_bkdone",true);
+};
+$("bkim").onclick=function(){$("bkfile").value="";$("bkfile").click()};
+function mergeById(cur,inc){
+  var map={};cur.forEach(function(x){map[x.id]=x});
+  inc.forEach(function(x){if(x&&typeof x.id==="string"&&(!map[x.id]||(x.updated||0)>(map[x.id].updated||0)))map[x.id]=x});
+  return Object.keys(map).map(function(k){return map[k]});
+}
+$("bkfile").onchange=function(){
+  var f=this.files[0];if(!f||!current)return;
+  if(f.size>25e6){bkMsg("g_bkbad");return}
+  var r=new FileReader();
+  r.onload=function(){
+    var d;try{d=JSON.parse(r.result)}catch(e){bkMsg("g_bkbad");return}
+    if(!d||d.app!=="lobby"||!Array.isArray(d.notes)||!Array.isArray(d.lore)){bkMsg("g_bkbad");return}
+    var all=users(),u=all[current];if(!u)return;
+    u.notes=mergeById(u.notes||[],d.notes);u.lore=mergeById(u.lore||[],d.lore);
+    if(!save(USERS,all)){bkMsg("g_bkfull");return}
+    if(d.aiChats&&Array.isArray(d.aiChats.chats)){
+      var k="lobby_ai_chats_"+current,mine=load(k,{chats:[],cur:null});
+      mine.chats=mergeById(mine.chats||[],d.aiChats.chats);save(k,mine);
+    }
+    bkMsg("g_bkok",true);render();
+  };
+  r.readAsText(f);
+};
+Object.assign(T.en,{g_saved:"Saved to your notes.",g_actx:"Add notes or lorebooks",g_bkh:"Backup",g_bkn:"Saves your notes, lorebooks and AI chats to a file you keep. Videos are not included.",g_bkex:"Export backup",g_bkim:"Import backup",g_bkdone:"Backup downloaded.",g_bkbad:"That isn't a Lobby backup file.",g_bkfull:"Not enough space to import that.",g_bkok:"Backup imported. Nothing was deleted.",g_notif:"Turn on notifications",g_gsave:"Save to my notes"});
+Object.assign(T.hu,{g_saved:"Elmentve a jegyzeteid közé.",g_actx:"Jegyzetek vagy lorebookok hozzáadása",g_bkh:"Biztonsági mentés",g_bkn:"A jegyzeteidet, lorebookjaidat és az AI-csevegéseidet fájlba menti. A videók nem kerülnek bele.",g_bkex:"Mentés exportálása",g_bkim:"Mentés importálása",g_bkdone:"A mentés letöltve.",g_bkbad:"Ez nem Lobby mentésfájl.",g_bkfull:"Nincs elég hely az importáláshoz.",g_bkok:"Mentés importálva. Semmi sem lett törölve.",g_notif:"Értesítések bekapcsolása",g_gsave:"Mentés a jegyzeteimbe"});
 
 /* ---- wiring ---- */
 $("chatbtn").onclick=function(){chatOpen=true;$("cp").classList.add("open");$("chapp").classList.remove("inroom");document.body.style.overflow="hidden";wsFails=0;refreshMe()};
